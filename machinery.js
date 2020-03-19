@@ -2,18 +2,13 @@
 function engineAnalysis (){
 
 this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumber,pistonStroke){
-    // this.mean_p = mean_P,
-    // this.cylinderBore = cylinderBore,
-    // this.pistonStroke = pistonStroke,
-    // this.speed = speed,
-    // this.pistonSpeed = pistonSpeed
     
     this.mean_p = mean_Presure;// bar 
     this.cylinderBore = cylinderBore*0.001;//m
     this.pistonStroke = pistonStroke *0.001;//m
     this.speedRPM = speedRPM;
     this.engineStroke = Strokes;
-
+    
     if (this.engineStroke === "4 Stroke"){
         this.cranshaftRev = 2
     }
@@ -21,7 +16,7 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
         this.cranshaftRev = 1
     }
 
-    
+   
     // this.pistonSpeed = 
     this.cylinderNumber = cylinderNumber,
     this.area = (3.1413*this.cylinderBore*this.cylinderBore)/4
@@ -30,8 +25,8 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
 
     this.Torque = ((this.mean_p*100000*this.volume)/(2*3.143*this.cranshaftRev))/1000
 
-    this.power = ((this.Torque*2*3.143*this.speedRPM)/60)/1000
-    load = this.power
+    // this.power = ((this.Torque*1000*2*3.143*this.speedRPM)/60)/1000
+    // load = this.power
     console.log("mean", this.mean_p)
     torque = (this.Torque).toFixed(1)
     console.log("Piston ",this.pistonStroke)
@@ -39,30 +34,38 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     console.log("cranshit",this.cranshaftRev)
     console.log("",this.engineStroke)
     console.log("torque",this.Torque)
+    console.log("power",this.power)
+    alert(this.power)
    
 },
 
 //NOTE: SFOC is use of the baseline for teh engine is not provided my supplier  
  this.SFOC = function(load, enginePower, SFOC,supplier) {
     this.supplier = supplier
-    this.EL = load/enginePower
+    this.load = load
+    this.enginePower = enginePower
+    this.EL = this.load/this.enginePower
     this.sfocBase = SFOC // used as the baseline for the engine if not provided 
+    // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
+    engine_loadPercent = this.EL*100
     this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-    engine_loadPercent
-
+    this.SFOC_main = this.sfocRelative*this.sfocBase
+    sfoc_cal = this.SFOC_main;
     if (this.supplier === "wartsila") {
       this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-        
+      sfoc_cal = this.SFOC_main;
     } 
     else if (this.supplier === "Cat") {
         this.sfocRelative = 0.7024*this.EL *this.EL-0.97728*this.EL + 1.35;
-        
+        sfoc_cal = this.SFOC_main;
     } 
     else if (this.supplier === "MAN") {
         this.sfocRelative = 0.2933*this.EL *this.EL-0.432*this.EL + 1.1565;
-        
+        sfoc_cal = this.SFOC_main;
     } 
-    this.SFOC_main = this.sfocBase*this.sfocRelative;
+    // this.SFOC_main = this.sfocBase*this.sfocRelative;
+    // sfoc_cal = this.SFOC_main;
+    console.log(sfoc_cal)
     
 }
 

@@ -86,7 +86,7 @@ tr:hover {background-color: #ddd;}
       }
      
     .range{
-        width: 70%;
+        width: 60%;
     }
     .chart{
         border: solid #333 2px;
@@ -99,14 +99,42 @@ tr:hover {background-color: #ddd;}
       } 
     
     .grides{
+    width: 60%;
      background-color:rgba(0, 2, 4, 0.7);
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: auto;
+    grid-template-columns: 33% 33% 33%;
     grid-auto-flow: column;
     margin: 30px;
 
     }
+ 
+    .testing{
+        display: flex;
+        flex-wrap: nowrap;
+    }
+    .testing > .dashboardControl{
+        width: 40%;
+       border: solid #4CAF50 2px;
+    }
+    .dashboardControl{
+    width: 60%;
+     /* background-color:rgba(0, 2, 4, 0.7); */
+    display: grid;
+    grid-template-rows: 1fr;
+    /* grid-template-columns: 33% 33% auto; */
+    grid-auto-flow: column;
+    margin: 30px;
+    border: solid pink 2px;
+    /* margin-left: 30%; */
+
+    }
+
+
+.chartDisp{
+    
+    
+}
     .hide {
     display: none;
     }
@@ -132,10 +160,7 @@ tr:hover {background-color: #ddd;}
      grid-row: 2;
       grid-column: 3;
     } */
-    .chart{
-        
-        width: 50%;
-    }
+
   
       .column {
         flex: 50%;
@@ -164,10 +189,10 @@ tr:hover {background-color: #ddd;}
         <a href="#about"></a> -->
       </div>
 
-    <p>This example demonstrates how to dynamically update a slider value with oninput.</p>
+    <!-- <p>This example demonstrates how to dynamically update a slider value with oninput.</p>
 
-    <input type="range" oninput="myFunction(event)">                             
-    <p id="demo"></p>
+    this:<input type="range" step="5" oninput="myFunction(this.value)">                             
+    <p id="demo"></p> -->
 
     <div class="main">
         <h1>Ship Machinery Configuration</h1>
@@ -183,9 +208,9 @@ tr:hover {background-color: #ddd;}
            </select>
      
         </div>
+
         <div class="dashboard ">
-            <div class="engineDash"></div>
-               
+
                 <div  id="engineTable" class=" hide">
                     <table id="Table" class="Table">
                       <thead>
@@ -204,77 +229,93 @@ tr:hover {background-color: #ddd;}
                       </tr>
                       
                     </table>
-
-                    <div class="engineInput">
-                        <h2>Engine configuration and darshboard </h2>
-        
-                        <form  id="simple_form" class="form">
-                
-                        <p class="P_range">Speed RPM : <input type="range" id="RPM" class="range" onchange= "getValues(event)" > 
-                            <p class="P_range">Speed RPM : <input type="range" id="RPMs" class="range" onchange= "getValues(event)">or
-                         <input type="text" onchange="getValues(event)"  id="RPMInput"><span class="inputValue"id="displayRPM"> </span><br> </p>
-                
-                         <p>Load %: <input type="range" max="98" min="20"id="load" class="range" onchange="getValues(event)" > or
-                       <input type="text" onchange="getValues(event)"  id="loadInput"><span  class="inputValue" id="loadDisplay"> </span><br> </p>
-                
-                    <p>Desired Power kW: <input type="range" max="12000" min="500"id="power" class="range" onchange="getValues(event)" > or
-                         <input type="text" onchange="getValues(event)"  id="powerInput">
-                        <span  class="powerDisplay" id="powerDisplay"> </span> </p>
-                
-                            </form>
-              
-              </div>
               
             </div>
 
                 
-        </div>
+         </div>
+
+        <div class="testing ">
+
          <div id="engineDashboard" class="grides">
-            
                  
-                <div class="power" id="power">
-                    <h3>Engine Load in percentage </h3>
+                <div class="power chartDisp" id="power">
+                    <p>Engine Load in percentage </p>
                     <div id="powerChart" class="chart"></div>
 
                 </div>
 
-                <div class="torque" id="torque">
-                    <h3>Engine Torque kN</h3>
+                <div class="torque chartDisp" id="torque">
+                    <p>Engine Torque kN</p>
                     <div id="torqueChart" class="chart"></div>
 
                 </div>
-                <div class="RPM" id="RPM">
+                <div class="RPM chartDisp" id="RPM">
                     <h3>Engine Speed RPM</h3>
                     <div id="RPMchart" class="chart"></div>
 
                 </div>
-                <div class="load" id="load">
-                <h3>Engine load </h3> 
+                <div class="load chartDisp" id="load">
+                <p>Engine load </p> 
                     <div id="loadChart" class="chart">
 
                 </div>
             </div>
 
-                <div class="RatedPower" id="RatedPower">
-                    <h3>Engine rated power </h3>
+                <div class="RatedPower chartDisp" id="RatedPower">
+                    <p>Engine rated power </p>
                     <div id="RatedPowerChart" class="chart"></div>
                 </div>
 
-                <div class="SFOC_chart" id="SFOC_chart">
-                    <div id="sfocChart" class="sfocChart"></div>
+                <div class="SFOC_chart chartDisp" id="SFOC_chart">
+                    <p>SFOC consumption </p>
+                    <div id="sfocChart" class="chart"></div>
               </div>
 
 
               
             </div>
+
+
+         
+        <div class="dashboardControl">
+
+   
+            <!-- parameters control and configuration  -->
+            <div class="engineInput">
+              <!-- <h2>Engine configuration and darshboard </h2> -->
+  
+              <form  id="simple_form" class="form">
+      
+              <p class="P_range">Speed RPM : <input type="range" step="10" id="RPM" class="range" onchange= "getValues(event)"  oninput="myFunction(this.value)"> or
+               <input type="text" placeholder="input engine speed.." onchange="getValues(event)"  id="RPMInput"><span class="inputValue"id="displayRPM"> </span><br> </p>
+      
+               <p>Load %: <input type="range" max="98" min="10"id="load" class="range" step="2" onchange="getValues(event)" > or
+             <input type="text" placeholder="input engine load %.." onchange="getValues(event)"  id="loadInput"><span  class="inputValue" id="loadDisplay"> </span><br> </p>
+      
+          <p>Desired Power kW: <input type="range" step="2" id="power" class="range" onchange="getValues(event)" oninput="powerSfoc(this.value)" > or
+               <input type="text" placeholder="input Power.."onchange="getValues(event)"  id="powerInput">
+              <span  class="powerDisplay" id="powerDisplay"> </span> </p>
+      
+                  </form>
+    </div>
+  
+          </div>
+
         </div>
-        <div class="SFOC" id="SFOC">
-            <div id="plot" class="plot"></div>
-      </div>
-           
+
+       
+
+        
+
+                       <!-- grapph ploting here -->
+                       <div class="SFOC" id="SFOC">
+                        <div id="plot" class="plot"></div>
+                  </div>
             
       
     </div>
+
     <div class="addedMachinery">
         <h2>The chose machinery will be dispplay here  </h2>
         
@@ -283,7 +324,7 @@ tr:hover {background-color: #ddd;}
     <script>
    
     let data, data2, RPM, Power,enginetype,speedRPM, engineStrokes, meanPressure,cylinderBore,pistonStroke,sfoc_cal,
-    power,power_perc, LHV,fuelType,ratedPower,rpm_min, rpm_max, torque, load;
+    enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed;
 //    function getData() {
 //          return Math.random();
 // }
@@ -318,26 +359,59 @@ tr:hover {background-color: #ddd;}
 
 
 function sfocDisplay (){
-    
-var data11 = {
+
+
+// var liveSfoc = {
+//   type: 'scatter',
+//   x: [engine_loadPercent],
+//   y: [sfoc_cal],
+// }
+
+// var datas = [ liveSfoc ]
+// var layout = {
+ 
+//   xaxis:
+// 	{
+//         range: [0, 100],
+//         showgrid: false,
+//         title: 'engine load in %'
+//     },
+//     yaxis:{
+//         showgrid: false,
+//         range: [0, 300],
+//         title: 'SFOC'
+
+//     },
+// //   title: 'SFOC Vs engine load',
+// //   plot_bgcolor: 'yellow',
+//   width:600,
+//   height:400,
+// //   paper_bgcolor: 'purple'
+  
+// }
+// Plotly.newPlot('plot',datas,layout);
+var cnt = 0;
+
+var interval = setInterval(function() {
+  console.log(sfoc_cal)
+  Plotly.extendTraces('plot', {
+    x: [[engine_loadPercent]],
+    y: [[sfoc_cal]]
+  }, [0], 10000) 
+  if(engine_loadPercent > 100) clearInterval(interval);
+}, 10);
+
+}
+
+
+
+var liveSfoc = {
   type: 'scatter',
-  x: [-3, -2,-1],
+  x: [],
   y: [],
-};
-
 }
-function rand() {
-  return Math.random();
-}
-
-var data11 = {
-  type: 'scatter',
-  x: [power_perc],
-  y: [sfoc_cal],
   
-};
-  
-var datas = [ data11 ]
+var datas = [ liveSfoc ]
 var layout = {
  
   xaxis:
@@ -359,20 +433,7 @@ var layout = {
 //   paper_bgcolor: 'purple'
   
 }
-Plotly.plot('plot',datas,layout);
-
-var cnt = 0;
-
-var interval = setInterval(function() {
-  
-  Plotly.extendTraces('plot', {
-    x: [[cnt]],
-    y: [[rand()]]
-  }, [0], 50) 
-
-  cnt++
-  if(cnt === 100) clearInterval(interval);
-}, 600);
+Plotly.newPlot('plot',datas,layout);
 
 
 
@@ -393,6 +454,70 @@ var interval = setInterval(function() {
 
 // var layout = { width: 500, height: 400 };
 // Plotly.newPlot('RatedPowerChart', data1, layout);
+
+
+function powerDisplay (){
+var chart = c3.generate({
+    
+    bindto: '#powerChart',
+    
+    data: {
+        columns: [
+            ['Engine power', enginePower*0.01]
+        ],
+        type: 'gauge',
+        onclick: function (d, i) { console.log("onclick", d, i); },
+        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+    },
+
+    gauge: {
+      label: {
+          format: function(value, ratio) {
+              return value;
+          },
+          show: true // to turn off the min/max labels.
+        },
+    min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+    max: enginePower, // 100 is default
+    units: '  kW',
+    width: 39 // for adjusting arc thickness
+    
+    },
+
+    color: {
+        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
+        threshold: {
+//            unit: 'value', // percentage is default
+//            max: 200, // 100 is default
+            values: [enginePower*0.25, enginePower*0.33, enginePower*0.6, enginePower]
+        },
+       
+    },
+    size: {
+        height: 180
+    }
+});
+
+setTimeout(function () {
+    chart.load({
+        columns: [['Engine power', enginePower*0.1]]
+    });
+}, 1000);
+
+setTimeout(function () {
+    chart.load({
+        columns: [['Engine power', enginePower*0.5]]
+    });
+}, 2000);
+
+setTimeout(function () {
+    chart.load({
+        columns: [['Engine power', enginePower]]
+    });
+}, 3000);
+}
+
 function torqueDisplay (){
 
 var chart1 = c3.generate({
@@ -418,7 +543,7 @@ var chart1 = c3.generate({
       },
   min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
   max: torque, // 100 is default
- units: '  kn',
+ units: '  kN',
   width: 39 // for adjusting arc thickness
   
   },
@@ -453,86 +578,40 @@ setTimeout(function () {
     });
 }, 9000);
 
-// setTimeout(function () {
-//     chart1.load({
-//         columns: [['data', 50]]
-//     });
-// }, 2000);
-
-
 
 }
 
 
-var chart = c3.generate({
-    
-    bindto: '#powerChart',
-    
-    data: {
-        columns: [
-            ['data', 91.4]
-        ],
-        type: 'gauge',
-        onclick: function (d, i) { console.log("onclick", d, i); },
-        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-    },
 
-    color: {
-        pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
-        threshold: {
-//            unit: 'value', // percentage is default
-//            max: 200, // 100 is default
-            values: [30, 60, 90, 100]
-        }
-    },
-    size: {
-        height: 180
-    }
-});
+function rpmDisplay(){
 
-setTimeout(function () {
-    chart.load({
-        columns: [['data', 10]]
-    });
-}, 1000);
-
-setTimeout(function () {
-    chart1.load({
-        columns: [['data', 50]]
-    });
-}, 2000);
-
-setTimeout(function () {
-    chart.load({
-        columns: [['data', 100]]
-    });
-}, 3000);
-
-
-
-// setTimeout(function () {
-//     chart.load({
-//         columns: [['data', 100]]
-//     });
-// }, 5000);
-
-
-
-
-var chart2 = c3.generate({
+    var chart2 = c3.generate({
     
     bindto: '#RPMchart',
     
     data: {
         columns: [
-            ['data', 91.4]
+            ['Speed', ratedSpeed]
         ],
         type: 'gauge',
         onclick: function (d, i) { console.log("onclick", d, i); },
         onmouseover: function (d, i) { console.log("onmouseover", d, i); },
         onmouseout: function (d, i) { console.log("onmouseout", d, i); }
     },
+    gauge: {
+      label: {
+          format: function(value, ratio) {
+              return value;
+          },
+          show: true // to turn off the min/max labels.
+      },
+  min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
+  max: ratedSpeed, // 100 is default
+ units: '  rpm',
+  width: 39 // for adjusting arc thickness
+  
+  },
+    
 
     color: {
         pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
@@ -549,19 +628,19 @@ var chart2 = c3.generate({
 
 setTimeout(function () {
     chart2.load({
-        columns: [['data', 10]]
+        columns: [['Speed', 10]]
     });
 }, 1000);
 
 setTimeout(function () {
     chart2.load({
-        columns: [['data', 50]]
+        columns: [['Speed', 50]]
     });
 }, 2000);
 
 setTimeout(function () {
     chart2.load({
-        columns: [['data', 70]]
+        columns: [['Speed', 70]]
     });
 }, 3000);
 
@@ -569,13 +648,14 @@ setTimeout(function () {
 
 setTimeout(function () {
     chart2.load({
-        columns: [['data', 100]]
+        columns: [['Speed', 100]]
     });
 }, 5000);
 
+}
 
 
-
+function testing(){
 
 var chart4 = c3.generate({
   
@@ -619,19 +699,19 @@ var chart4 = c3.generate({
 });
 
 setTimeout(function () {
-  chart1.load({
+  chart4.load({
       columns: [['data', 10]]
   });
 }, 1000);
 
 setTimeout(function () {
-  chart1.load({
+  chart4.load({
       columns: [['data', 50]]
   });
 }, 2000);
 
 setTimeout(function () {
-  chart1.load({
+  chart4.load({
       columns: [['data', 70]]
   });
 }, 3000);
@@ -639,10 +719,15 @@ setTimeout(function () {
 
 
 setTimeout(function () {
-  chart1.load({
+  chart4.load({
       columns: [['data', 200]]
   });
 }, 5000);
+
+
+}
+
+
 
 
 function ratedPowerDisplay (){
@@ -689,7 +774,7 @@ var chart3 = c3.generate({
 });
 
 setTimeout(function () {
-  chart1.load({
+  chart3.load({
       columns: [['enginePower', ratedPower]]
   });
 }, 1000);
@@ -705,7 +790,7 @@ function currentSfocDisplay (){
     
       data: {
           columns: [
-              ['enginePower', 10]
+              ['sfoc', 10]
           ],
           
           type: 'gauge',
@@ -721,8 +806,8 @@ function currentSfocDisplay (){
               show: true // to turn off the min/max labels.
           },
       min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-      max: ratedPower, // 100 is default
-     units: '  kN',
+      max: 220, // 100 is default
+     units: '  g/kWh',
       width: 39 // for adjusting arc thickness
       
       },
@@ -732,7 +817,7 @@ function currentSfocDisplay (){
           threshold: {
     //            unit: 'value', // percentage is default
               // max: 200, // 100 is default g 
-              values: [200]
+              values: [sfoc_cal]
           }
       },
       size: {
@@ -740,22 +825,88 @@ function currentSfocDisplay (){
       }
     });
     
-    setTimeout(function () {
-      chart1.load({
-          columns: [['enginePower', ratedPower]]
+    // setTimeout(function () {
+    //   chart1.load({
+    //       columns: [['sfoc', sfoc_cal]]
+    //   });
+    // }, 1000);
+
+    var interval = setInterval(function() {
+        console.log("test sfoc", sfoc_cal)
+        chart1.load({
+          columns: [['sfoc', sfoc_cal]]
       });
-    }, 1000);
+    
+        // if( > 10) clearInterval(interval);
+      }, 100);
     
     
     }
     
 
+let lastRPM;
+let i = 1;
+function loadSfoc(val){
+ document.getElementById('loadDisplay').innerHTML= val + " engine load %"
+ load = (val/100)*enginePower
+EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+    
+}
 
-function myFunction(event) {
-//   document.getElementById("demo").innerHTML = val; 
-  console.log("is printing")
-//   console.log(val)
-EngineCal.SFOC(load,power,SFOC,supplier)
+function powerSfoc(val){
+ document.getElementById('powerDisplay').innerHTML= val + " engine load %"
+ load = val
+EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+    
+if(i <= 1){
+ sfocDisplay ()
+ alert(alert)
+}
+i++
+}
+
+
+function myFunction(val) {
+    
+
+document.getElementById("demo").innerHTML = val; 
+console.log(val)
+// lastRPM= document.getElementById("demo").min; 
+// lastRPM= document.getElementById("demo").max;
+document.getElementById('displayRPM').innerHTML= val + " rpm"
+speedRPM = val
+alert("Estimation using the RPM is still under improvemnt !, use other methods")
+EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
+EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+
+if(i <= 1){
+//  sfocDisplay ()
+currentSfocDisplay()
+ 
+}
+i++
+
+
+
+// else if (val > lastRPM ){
+// speedRPM = val;
+// lastRPM = val;
+// do {
+//   i = i + 10;
+//   result = result + i;
+// } while (lastRPM < speedRPM);
+
+// }
+
+// if(lastRPM <1){
+//     EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+// }
+// }
+
+// var interval = setInterval(function() {
+  
+//   if(engine_loadPercent > 100) clearInterval(interval);
+// }, 60);
 }
 
 function showEngineDashbaord (){
@@ -800,10 +951,8 @@ function showEngineDashbaord (){
 
 function displayEngineType(event,) {
   document.getElementById("engineTable").classList.remove("hide");
-  showEngineDashbaord ()
+//   showEngineDashbaord ()
  
- 
-
   const table = document.getElementById("Table");
   let i = 0
   let row, engineDetail;
@@ -830,21 +979,27 @@ if (EventID==="wartsila 32"){
  cylinderBore = parseFloat(wartsila32.cylinderBore) 
  cylinders = parseFloat(wartsila32.cylinders) 
  pistonStroke = parseFloat(wartsila32.pistonStroke) 
- 
+ enginePower = parseFloat(wartsila32.power)
+ ratedSfoc = parseFloat(wartsila32.SFOC)
+ supplier = wartsila32.supplier
+ ratedSpeed = parseFloat(wartsila32.Engine_speed)
 
-
- speedRPM  = 432
+//  speedRPM  = 432
 
  EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
- EngineCal.SFOC()
+//  EngineCal.SFOC(load,power,ratedSfoc,supplier)
  torqueDisplay ()
- 
+ powerDisplay()
+ rpmDisplay()
+ testing()
+ ratedPowerDisplay ()
+ currentSfocDisplay()
     // updating sliders 
 
   if(engineDetail.speed_type=== "Medium-Speed"){
    rpm_min = 400
    rpm_max = parseFloat(engineDetail.Engine_speed)
-   alert(rpm_max)
+   
  }
 
  else if(engineDetail.speed_type=== "Slow-Speed"){
@@ -856,15 +1011,31 @@ if (EventID==="wartsila 32"){
    rpm_min = 1400
    rpm_max = parseFloat(engineDetail.Engine_speed) 
  }
+//  else if (load){
+//      if(){
+        
+//      }
+//  }
 
+   let minLoad, minPower
  
     document.getElementById('displayRPM').innerHTML= rpm_min + " minimun rpm"
-    document.getElementById('RPMs').value = rpm_min
-    document.getElementById('RPMs').max = rpm_max 
-    document.getElementById('RPMs').min = rpm_min
-    
-}
+    document.getElementById('RPM').value = rpm_min
+    document.getElementById('RPM').max = rpm_max 
+    document.getElementById('RPM').min = rpm_min
 
+   minLoad= document.getElementById('load').min
+    document.getElementById('loadDisplay').innerHTML= minLoad+ " minimun load %"
+    document.getElementById('load').value = minLoad
+
+    minPower = enginePower*0.05
+    
+    document.getElementById('power').max = (enginePower-10)
+    document.getElementById('power').min = minPower
+    document.getElementById('power').value = minPower
+    document.getElementById('powerDisplay').innerHTML= minPower+ " minimun desired power "
+  
+}
 
 //  else if(engineDetail.speed_type=== "slow-Speed"){
 //     document.getElementById('RPM').max = 
@@ -908,7 +1079,6 @@ function getValues(event){
 
  if (EventID ==='RPM' || EventID === 'RPMInput') {
       RPM  = event.target.value
-    document.getElementById('displayRPM').innerHTML= RPM + " rpm"
 
     if (EventID ==='RPMInput') {
      document.getElementById(EventID).value = ""
