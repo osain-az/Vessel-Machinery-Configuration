@@ -86,57 +86,53 @@ tr:hover {background-color: #ddd;}
       }
      
     .range{
-        width: 60%;
+    width: 60%;
      margin-bottom: 20px;
     margin-top: 20px;
     }
-    .chart{
-        border: solid #333 2px;
-        text-decoration-color: aqua;
-        background-color: bisque;
-    }
-      .engineDashboard{
-         
-         
-      } 
     
     .grides{
     width: 60%;
-     background-color:rgba(0, 2, 4, 0.7);
+     background-color:rgba(44, 81, 117, 0.7);
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 33% 33% 33%;
     grid-auto-flow: column;
-    margin: 30px;
+    /* margin: 30px; */
+    margin-left: 15px;
 
     }
  
-    .testing{
+    .mainDashboard{
         display: flex;
         flex-wrap: nowrap;
+        background-color: #01040edb;
     }
-    .testing > .dashboardControl{
+    .mainDashboard > .dashboardControl{
         width: 40%;
        border: solid #4CAF50 2px;
+       margin-left: 15px;
     }
     .dashboardControl{
-    width: 60%;
      /* background-color:rgba(0, 2, 4, 0.7); */
     display: grid;
     grid-template-rows: 1fr;
     /* grid-template-columns: 33% 33% auto; */
     grid-auto-flow: column;
-    margin: 30px;
-    border: solid pink 2px;
+   
+   
     /* margin-left: 30%; */
 
     }
+    .chart{
+        border: solid #333 2px;
+        text-decoration-color: aqua;
+        background-color:#4e2b5d9e;
+    }
+    .chartDisp{
+        margin: 15px;
+    }
 
-
-.chartDisp{
-    
-    
-}
     .hide {
     display: none;
     }
@@ -162,8 +158,6 @@ tr:hover {background-color: #ddd;}
      grid-row: 2;
       grid-column: 3;
     } */
-
-  
       .column {
         flex: 50%;
         padding: 40px;
@@ -211,7 +205,6 @@ tr:hover {background-color: #ddd;}
      
         </div>
 
-        <div class="dashboard ">
 
                 <div  id="engineTable" class=" hide">
                     <table id="Table" class="Table">
@@ -235,9 +228,9 @@ tr:hover {background-color: #ddd;}
             </div>
 
                 
-         </div>
 
-        <div class="testing ">
+
+        <div id="mainDashboard" class="mainDashboard hide">
 
          <div id="engineDashboard" class="grides">
                  
@@ -912,6 +905,7 @@ i++
 }
 
 function showEngineDashbaord (){
+    document.getElementById("mainDashboard").classList.remove("hide");
     document.getElementById("engineDashboard").classList.remove("hide");
   document.getElementById("engineDashboard").classList.add("grides");
   document.getElementById("power").classList.add("power");
@@ -953,6 +947,7 @@ function showEngineDashbaord (){
 
 function displayEngineType(event,) {
   document.getElementById("engineTable").classList.remove("hide");
+  document.getElementById("mainDashboard").classList.remove("hide");
 //   showEngineDashbaord ()
  
   const table = document.getElementById("Table");
