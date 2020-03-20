@@ -127,10 +127,13 @@ tr:hover {background-color: #ddd;}
     .chart{
         border: solid #333 2px;
         text-decoration-color: aqua;
-        background-color:#4e2b5d9e;
+        background-color:#91b3aea3;
     }
     .chartDisp{
         margin: 15px;
+        color: green;
+        font-size: 1.3em;
+
     }
 
     .hide {
@@ -179,10 +182,11 @@ tr:hover {background-color: #ddd;}
     </style>
     <div class="topnav">
         <a class="active" href="#home">Home</a>
-        <!-- <a href="https://github.com/osain-az/Vessel-Machinery">GitHub Rep</a>
-        <a  href="introduction/">Introduction/theories </a>
-         <a href="Flowchat/"> Flowchat and Status </a>
-        <a href="#about"></a> -->
+        <a href="https://github.com/osain-az/Vessel-Machinery-Configuration">GitHub Rep</a>
+        <!-- <a  href="introduction/">Introduction/theories </a> -->
+         <!-- <a href="Flowchat/"> Flowchat and Status </a> -->
+         <!-- https://osain-az.github.io/Vessel-Machinery-Configuration/ -->
+        <!-- <a href="#about"></a> -->
       </div>
 
     <!-- <p>This example demonstrates how to dynamically update a slider value with oninput.</p>
@@ -235,7 +239,7 @@ tr:hover {background-color: #ddd;}
          <div id="engineDashboard" class="grides">
                  
                 <div class="power chartDisp" id="power">
-                    <p>Engine Load in percentage </p>
+                    <p>Engine Load in % </p>
                     <div id="powerChart" class="chart"></div>
 
                 </div>
@@ -246,7 +250,7 @@ tr:hover {background-color: #ddd;}
 
                 </div>
                 <div class="RPM chartDisp" id="RPM">
-                    <h3>Engine Speed RPM</h3>
+                    <p>Engine Speed RPM</p>
                     <div id="RPMchart" class="chart"></div>
 
                 </div>
@@ -377,7 +381,7 @@ function sfocDisplay (){
 //         title: 'SFOC'
 
 //     },
-// //   title: 'SFOC Vs engine load',
+   
 // //   plot_bgcolor: 'yellow',
 //   width:600,
 //   height:400,
@@ -417,14 +421,15 @@ var layout = {
     },
     yaxis:{
         showgrid: false,
-        range: [0, 250],
+        range: [100, 220],
+        rangemode:"tozero",
         title: 'SFOC'
 
     },
-//   title: 'SFOC Vs engine load',
+   title: 'Live SFOC Vs engine load % ',
 //   plot_bgcolor: 'yellow',
   width:600,
-  height:400,
+  height:600,
 //   paper_bgcolor: 'purple'
   
 }
@@ -490,7 +495,7 @@ var chart = c3.generate({
        
     },
     size: {
-        height: 180
+        height: 150
     }
 });
 
@@ -514,6 +519,13 @@ setTimeout(function () {
 }
 
 function torqueDisplay (){
+    let torqueMax,i 
+    i = 10
+    console.log("torque",torque)
+    console.log("torque max")
+    torqueMax = i+torque
+
+    alert(torqueMax)
 
 var chart1 = c3.generate({
   
@@ -537,19 +549,20 @@ var chart1 = c3.generate({
           show: true // to turn off the min/max labels.
       },
   min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-  max: torque, // 100 is default
- units: '  kN',
+  max: torqueMax, // 100 is default
+ units: ' kN',
   width: 39 // for adjusting arc thickness
   
   },
 
   color: {
-      pattern: ['#FF0000','#F43500', '#F50009'], // the three color levels for the percentage values.
+      pattern: ['#FF0000','#F43500', '#b2d2c2'], // the three color levels for the percentage values.
       threshold: {
 //            unit: 'value', // percentage is default
-          // max: 200, // 100 is default
+        //   max: (200), // 100 is default
           values: [torque/3,torque/2, torque ]
-      }
+      },
+      
   },
   size: {
       height: 150
@@ -579,6 +592,9 @@ setTimeout(function () {
 
 
 function rpmDisplay(){
+    if(!speedRPM){
+        speedRPM = ratedPower
+    }
 
     var chart2 = c3.generate({
     
@@ -601,7 +617,7 @@ function rpmDisplay(){
           show: true // to turn off the min/max labels.
       },
   min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-  max: ratedSpeed, // 100 is default
+  max: ratedSpeed+10, // 100 is default
  units: '  rpm',
   width: 39 // for adjusting arc thickness
   
@@ -613,29 +629,29 @@ function rpmDisplay(){
         threshold: {
 //            unit: 'value', // percentage is default
 //            max: 200, // 100 is default
-            values: [30, 60, 90, 100]
+            values: [speedRPM*0.25, speedRPM*0.5, speedRPM*0.7, speedRPM]
         }
     },
     size: {
-        height: 180
+        height: 150
     }
 });
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', 10]]
+        columns: [['Speed', speedRPM*0.01]]
     });
 }, 1000);
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', 50]]
+        columns: [['Speed', speedRPM*0.3]]
     });
 }, 2000);
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', 70]]
+        columns: [['Speed', speedRPM*0.7]]
     });
 }, 3000);
 
@@ -643,14 +659,17 @@ setTimeout(function () {
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', 100]]
+        columns: [['Speed', speedRPM]]
     });
 }, 5000);
 
 }
 
 
-function testing(){
+function loadDisplay(){
+    if(!load){
+        load = 1
+    }
 
 var chart4 = c3.generate({
   
@@ -699,25 +718,14 @@ setTimeout(function () {
   });
 }, 1000);
 
-setTimeout(function () {
-  chart4.load({
-      columns: [['data', 50]]
-  });
-}, 2000);
-
-setTimeout(function () {
-  chart4.load({
-      columns: [['data', 70]]
-  });
-}, 3000);
-
-
-
-setTimeout(function () {
-  chart4.load({
-      columns: [['data', 200]]
-  });
-}, 5000);
+var interval = setInterval(function() {
+        console.log("test sfoc", sfoc_cal)
+        chart4.load({
+          columns: [['sfoc', sfoc_cal]]
+      });
+    
+        // if( > 10) clearInterval(interval);
+      }, 100);
 
 
 }
@@ -988,7 +996,7 @@ if (EventID==="wartsila 32"){
  torqueDisplay ()
  powerDisplay()
  rpmDisplay()
- testing()
+ loadDisplay()
  ratedPowerDisplay ()
  currentSfocDisplay()
     // updating sliders 

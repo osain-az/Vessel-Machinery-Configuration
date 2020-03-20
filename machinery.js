@@ -29,6 +29,7 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     // load = this.power
     console.log("mean", this.mean_p)
     torque = (this.Torque).toFixed(1)
+    torque = parseFloat(torque)
     console.log("Piston ",this.pistonStroke)
     console.log("speedt",this.speedRPM)
     console.log("cranshit",this.cranshaftRev)
