@@ -48,10 +48,10 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     this.EL = this.load/this.enginePower
     this.sfocBase = SFOC // used as the baseline for the engine if not provided 
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-    engine_loadPercent = this.EL*100
+    engine_loadPercent = parseFloat((this.EL*100).toFixed(1))
     this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-    this.SFOC_main = this.sfocRelative*this.sfocBase
-    sfoc_cal = this.SFOC_main;
+    this.SFOC_main = (this.sfocRelative*this.sfocBase).toFixed(1)
+    sfoc_cal = parseFloat(this.SFOC_main);
     if (this.supplier === "wartsila") {
       this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
       sfoc_cal = this.SFOC_main;
