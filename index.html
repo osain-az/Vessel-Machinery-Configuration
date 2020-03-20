@@ -99,7 +99,7 @@ tr:hover {background-color: #ddd;}
     grid-template-columns: 33% 33% 33%;
     grid-auto-flow: column;
     /* margin: 30px; */
-    margin-left: 15px;
+    margin: 15px;
 
     }
  
@@ -110,19 +110,24 @@ tr:hover {background-color: #ddd;}
     }
     .mainDashboard > .dashboardControl{
         width: 40%;
-       border: solid #4CAF50 2px;
        margin-left: 15px;
     }
     .dashboardControl{
      /* background-color:rgba(0, 2, 4, 0.7); */
+     background-color:rgba(44, 81, 117, 0.7);
     display: grid;
     grid-template-rows: 1fr;
     /* grid-template-columns: 33% 33% auto; */
     grid-auto-flow: column;
-   
-   
-    /* margin-left: 30%; */
+    margin: 15px;
+    margin-left: 0;
 
+    }
+
+.testin{
+        margin: 30px;
+        color: green;
+        font-size: 1.3em;
     }
     .chart{
         border: solid #333 2px;
@@ -131,9 +136,12 @@ tr:hover {background-color: #ddd;}
     }
     .chartDisp{
         margin: 15px;
-        color: green;
+        color: aqua;
         font-size: 1.3em;
 
+    }
+    .engineInput{
+        color: aqua;
     }
 
     .hide {
@@ -285,13 +293,13 @@ tr:hover {background-color: #ddd;}
   
               <form  id="simple_form" class="form">
       
-              <p class="P_range">Speed RPM : <input type="range" step="10" id="RPM" class="range" onchange= "getValues(event)"  oninput="myFunction(this.value)"> or
+              <p class="P_range testing" >Speed RPM : <input type="range" step="10" id="RPM" class="range" onchange= "getValues(event)"  oninput="myFunction(this.value)"> or
                <input type="text" placeholder="input engine speed.." onchange="getValues(event)"  id="RPMInput"><span class="inputValue"id="displayRPM"> </span><br> </p>
       
-               <p>Load %: <input type="range" max="98" min="10"id="load" class="range" step="2" onchange="getValues(event)"oninput="loadSfoc(this.value)" > or
+               <p class="P_range">Load %: <input type="range" max="98" min="10"id="load" class="range" step="2" onchange="getValues(event)"oninput="loadSfoc(this.value)" > or
              <input type="text" placeholder="input engine load %.." onchange="getValues(event)"  id="loadInput"><span  class="inputValue" id="loadDisplay"> </span><br> </p>
       
-          <p>Desired Power kW: <input type="range" step="2" id="power" class="range" onchange="getValues(event)" oninput="powerSfoc(this.value)" > or
+          <p class="P_range" >Desired Power kW: <input type="range" step="2" id="power" class="range" onchange="getValues(event)" oninput="powerSfoc(this.value)" > or
                <input type="text" placeholder="input Power.."onchange="getValues(event)"  id="powerInput">
               <span  class="powerDisplay" id="powerDisplay"> </span> </p>
       
