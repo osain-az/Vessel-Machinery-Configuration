@@ -191,7 +191,7 @@ tr:hover {background-color: #ddd;}
     <div class="topnav">
         <a class="active" href="#home">Home</a>
         <a href="https://github.com/osain-az/Vessel-Machinery-Configuration">GitHub Rep</a>
-        <!-- <a  href="introduction/">Introduction/theories </a> -->
+        <a  href="information/index.html">information</a> 
          <!-- <a href="Flowchat/"> Flowchat and Status </a> -->
          <!-- https://osain-az.github.io/Vessel-Machinery-Configuration/ -->
         <!-- <a href="#about"></a> -->
@@ -330,7 +330,8 @@ tr:hover {background-color: #ddd;}
     <script>
    
     let data, data2, RPM, Power,enginetype,speedRPM, engineStrokes, meanPressure,cylinderBore,pistonStroke,sfoc_cal,
-    enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed;
+    enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed,
+    minLoad, minPower
 //    function getData() {
 //          return Math.random();
 // }
@@ -749,13 +750,6 @@ setTimeout(function () {
 }
 
 
-
-
-
-
-
-
-
 function loadWattDisplay (){
     if(!load){
         load = 0
@@ -981,7 +975,7 @@ function showEngineDashbaord (){
 // }
   
 
-function displayEngineType(event,) {
+function displayEngineType(event) {
   document.getElementById("engineTable").classList.remove("hide");
   document.getElementById("mainDashboard").classList.remove("hide");
 //   showEngineDashbaord ()
@@ -1050,7 +1044,6 @@ if (EventID==="wartsila 32"){
 //      }
 //  }
 
-   let minLoad, minPower
     document.getElementById('displayRPM').innerHTML= rpm_min + " minimun rpm"
     document.getElementById('RPM').value = rpm_min
     document.getElementById('RPM').max = rpm_max 
@@ -1060,7 +1053,7 @@ if (EventID==="wartsila 32"){
     document.getElementById('loadDisplay').innerHTML= minLoad+ " minimun load %"
     document.getElementById('load').value = minLoad
 
-    minPower = enginePower*0.05
+    minPower = enginePower*0.1
     
     document.getElementById('power').max = (enginePower-10)
     document.getElementById('power').min = minPower
@@ -1102,11 +1095,10 @@ else if (EventID==="wartsila 46F") {
 
 }
 
+
 function getValues(event){
-   //speed =  document.getElementById('speedinput').value
-   //resistance = document.getElementById('resistance').value
-   //resistance = document.getElementById('resistanceInput').value
-   //voyage = document.getElementById('voyage').value
+    let val, k,i, n, c
+   
   const EventID = event.target.id;
 
  if (EventID ==='RPM' || EventID === 'RPMInput') {
@@ -1121,31 +1113,101 @@ function getValues(event){
 //  }
 }
 
-else if(EventID ==='load' || EventID === 'loadInput'){
-    let val
+else if(EventID ==='load'){
+    
  val  = event.target.value
  load = (val/100)*enginePower
  engine_loadPercent = val
 EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
           
-    document.getElementById("loadDisplay").innerHTML= val + "% engine power "
-
-    if (EventID ==='loadInput') {
-     document.getElementById(EventID).value = ""
-     
-    }
+ document.getElementById("loadDisplay").innerHTML= val + "% engine power"
+    
 
 }
-else if(EventID ==='power' || EventID === 'powerInput'){
+
+
+else if(EventID ==='loadInput'){
+
+    val = document.getElementById(EventID).value
+
+    document.getElementById(EventID).value = ""
+ 
+    document.getElementById("loadDisplay").innerHTML= val + "% engine power"
+     c= (10/100)*val;
+     n = 20
+     if(val >=20 && val <= 100){
+        i = 0
+      for ( k = 20; k < val;k +=c) { 
           
-    power  = event.target.value
-    document.getElementById("powerDisplay").innerHTML= power + " required power "
+        inputData(i); 
+        i++
+        } 
+        
+        function inputData(i) { 
+        setTimeout(function() { 
+            
+            console.log(i);
+                if(val -n >c ){
+                load = (n/100)*enginePower
+                EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+                console.log("this is the load 1",load)
+             }else{
+            load = (val/100)*enginePower
+            EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+            console.log("this is the load last",load)
+                }
+              n+=c
+              
+        }, 2000 * i); 
+        } 
+}
+}
 
-    if (EventID ==='powerInput') {
-     document.getElementById(EventID).value = ""
-     
-    }
 
+else if(EventID ==='power'){
+
+}
+
+else if(EventID === 'powerInput'){
+
+    val = parseFloat(document.getElementById(EventID).value)
+
+    document.getElementById(EventID).value = ""
+ 
+    document.getElementById("powerDisplay").innerHTML= val + "engine load kW"
+   
+    c= (10/100)*val;
+     if(val >=minPower && val <= enginePower){
+        i = 0
+        n= minPower;
+      for ( k = minPower; k < val;k +=c) { 
+          
+        inputData(i); 
+        i++
+        } 
+        
+        function inputData(i) { 
+        setTimeout(function() { 
+            
+            console.log("K", n);
+            console.log("Val",val);
+            console.log(i);
+                if(val -n >c ){
+                    console.log("testing")
+                load = n
+                EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+                console.log("this is the load 1",load)
+             }else{
+            load = val
+            EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+            console.log("this is the load last",load)
+                }
+              n+=c
+              
+        }, 2000 * i); 
+        } 
+}
+    
 }
 }
 
