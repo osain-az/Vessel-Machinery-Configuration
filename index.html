@@ -247,13 +247,13 @@ tr:hover {background-color: #ddd;}
          <div id="engineDashboard" class="grides">
                  
                 <div class="power chartDisp" >
-                    <p>Engine Load in % </p>
+                    <p>Engine rated power </p>
                     <div id="powerChart" class="chart"></div>
 
                 </div>
 
                 <div class="torque chartDisp" id="torque">
-                    <p>Engine Torque kN</p>
+                    <p>Engine Torque kNm</p>
                     <div id="torqueChart" class="chart"></div>
 
                 </div>
@@ -262,19 +262,19 @@ tr:hover {background-color: #ddd;}
                     <div id="RPMchart" class="chart"></div>
                 </div>
                 <div class="load chartDisp" >
-                <p>Engine load </p> 
+                <p>Engine load in %</p> 
                     <div id="loadChart" class="chart">
 
                 </div>
             </div>
 
                 <div class="loadwatt chartDisp" id="loadwatt">
-                    <p>Engine rated power </p>
+                    <p>Engine load kW</p>
                     <div id="loadWattChart" class="chart"></div>
                 </div>
 
                 <div class="SFOC_chart chartDisp" id="SFOC_chart">
-                    <p>SFOC consumption </p>
+                    <p> current SFOC </p>
                     <div id="sfocChart" class="chart"></div>
               </div>
 
@@ -558,7 +558,7 @@ var chart1 = c3.generate({
       },
   min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
   max: torqueMax, // 100 is default
- units: ' kN',
+ units: ' kNm',
   width: 39 // for adjusting arc thickness
   
   },
