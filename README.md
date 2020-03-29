@@ -1,6 +1,21 @@
 # Vessel-Machinery-Configuration and Simulation 
 
 
-This App is part of master's thesis project. The thesis involve developing a web app that will be use <br>
+This web App is part of master's thesis project. The thesis involve developing a web app that will be use <br>
 for simulation of different vessel operation and also propulsion system machinery configuration. <br>
 More information regarding the scope will be provided later.
+
+#                    Major components 
+
+<h2> Ship resistance extimation </h2>
+
+<h2> Engine SFOC extimation and comparison  </h2>
+
+
+<h2> Propulsion power extimation  </h2>
+
+<h2> emission extimation   </h2>
+
+<h2> Different vessel opeartion simulation  </h2>
+
+<h2> Above are subjected to change    </h2>
