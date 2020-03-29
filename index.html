@@ -102,6 +102,48 @@ tr:hover {background-color: #ddd;}
     margin: 15px;
 
     }
+    .hull{
+      width: 100%;
+     /* background-color:rgba(44, 81, 117, 0.7); */
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 55% 45%;
+    grid-auto-flow: column;
+    /* margin: 30px; */
+    margin: 15px;
+    }
+
+    .shipDimension{
+        width: 60%;
+    }
+
+
+    .hullDimension,.resistance {
+        border: solid  #333  2px; ;
+        width: 100%;
+        /* background-color:rgba(44, 81, 117, 0.7); */
+        grid-template-rows: 1fr;
+         grid-template-columns:  auto; 
+        grid-auto-flow: column;
+        margin: 15px;
+        margin-left: 0;
+
+    }
+    .hull > h2{
+        text-align: center;
+        grid-row: 1;
+        grid-column: 1;
+    
+    }
+
+    .resistance {
+    grid-row: 2;
+    grid-column: 2;
+    }
+    .hullDimension {
+    grid-row: 2;
+    grid-column: 1;
+    }
  
     .mainDashboard{
         display: flex;
@@ -204,6 +246,34 @@ tr:hover {background-color: #ddd;}
 
     <div class="main">
         <h1>Ship Machinery Configuration</h1>
+        <div>
+            <h2>Hull dimensions  and resistance display </h2>
+        <div class="hull" id="hull">
+
+            
+            <div class="hullDimension" id="hullDimension">
+               <p>Waterline length Lwl: <input type="range" name="Lwl" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span> 
+               <p>length btw perpendicular:  Lpp: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span></p>
+               <p> Overall length: LoA: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span></p>
+                <p> Breath: Bwl: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span></p>
+                <p>Draught T: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span></p>
+               <p> afterMost: TA <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span> </p>
+               <p>foremost:  Tf: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span> </p>
+            </div>
+            
+            <div class="resistance">
+                <div id="resistanceGraph">
+
+                </div>
+                
+
+            </div>
+
+        </div>
+    </div>
+
+         
+
         <div class="engine column" id="engine" >
             <strong><p>choose engine model</p></strong>
           <select class="engine" onchange="displayEngineType(event)">
@@ -332,36 +402,60 @@ tr:hover {background-color: #ddd;}
     let data, data2, RPM, Power,enginetype,speedRPM, engineStrokes, meanPressure,cylinderBore,pistonStroke,sfoc_cal,
     enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed,
     minLoad, minPower
-//    function getData() {
-//          return Math.random();
-// }
-// Plotly.newPlot( 'plot', [{
 
-//     x: [],
-//     y: [],
-    
+
+ 
+
+
+
+
+
+    function resistnaceDisplay (){
+
+
+var resistance = {
+  type: 'scatter',
+  x: [],
+  y: [],
+}
+
+var resistData = [ resistance ]
+var layout = {
+ 
+  xaxis:
+	{
+        range: [0, 100],
+        showgrid: false,
+        title: 'Ship speed in knots'
+    },
+    yaxis:{
+        showgrid: false,
+        range: [0, 300],
+        title: 'kN'
+
+    },
+    title: 'Resistance curve  ',
    
-    
-//      }], 
-//     { 
-//     margin: { t: 0 } },  );
-//     var layout = {
-//   width: 500,
-//   height: 500,
-//   plot_bgcolor:"#ffdd",
-// };
+//   plot_bgcolor: 'yellow',
+  width:500,
+  height:400,
+//   paper_bgcolor: 'purple'
+  
+}
+Plotly.newPlot('resistanceGraph',resistData,layout);
+var cnt = 0;
 
-//     function getData() {
-// 	      let rand = Math.random();
-//          data= 100* rand
-// 	      data2 = 200*rand
-// }
+// var interval = setInterval(function() {
+//   console.log(sfoc_cal)
+//   Plotly.extendTraces('plot', {
+//     x: [[engine_loadPercent]],
+//     y: [[sfoc_cal]]
+//   }, [0], 10000) 
+//   if(engine_loadPercent > 100) clearInterval(interval);
+// }, 10);
 
-// setInterval(function() {
-// 	getData()
-//   Plotly.extendTraces('plot', { y: [[data2]], x: [[data]] }, [0])
-// 	console.log(data)
-// }, 200);
+}
+resistnaceDisplay ()
 
 
 
@@ -411,7 +505,6 @@ var interval = setInterval(function() {
 }
 
 
-
 var liveSfoc = {
   type: 'scatter',
   x: [],
@@ -444,24 +537,8 @@ var layout = {
 Plotly.newPlot('plot',datas,layout);
 
 
+//Graph resistance 
 
-// let test = 430;
-// var data1 = [
-  
-//   {
-//     domain: { row: 0, column: 0 },
-//     value: test,
-//     title: { text: "torque kN " },
-//     type: "indicator",
-//     mode: "gauge+number",
-   
-//     gauge: { axis: { range: [0, 500] } }
-//   }
-// ];
-
-
-// var layout = { width: 500, height: 400 };
-// Plotly.newPlot('loadWattChart', data1, layout);
 
 
 function powerDisplay (){
@@ -533,7 +610,7 @@ function torqueDisplay (){
     console.log("torque max")
     torqueMax = i+torque
 
-    alert(torqueMax)
+    
 
 var chart1 = c3.generate({
   
@@ -1097,7 +1174,8 @@ else if (EventID==="wartsila 46F") {
 
 
 function getValues(event){
-    let val, k,i, n, c
+    let val, k,i, n, c,t
+    t = 1
    
   const EventID = event.target.id;
 
@@ -1166,10 +1244,15 @@ else if(EventID ==='loadInput'){
 
 else if(EventID ==='power'){
 
+
 }
-
+ 
 else if(EventID === 'powerInput'){
-
+    
+    if(t <= 1){
+ sfocDisplay ()
+}
+t++
     val = parseFloat(document.getElementById(EventID).value)
 
     document.getElementById(EventID).value = ""

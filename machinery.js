@@ -36,7 +36,7 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     console.log("",this.engineStroke)
     console.log("torque",this.Torque)
     console.log("power",this.power)
-    alert(this.power)
+    
    
 },
 
@@ -48,12 +48,15 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     this.EL = this.load/this.enginePower
     this.sfocBase = SFOC // used as the baseline for the engine if not provided 
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
+    this.sfocBase = 170;
+    console.log("new sfoc base", this.sfocBase)
     engine_loadPercent = parseFloat((this.EL*100).toFixed(1))
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
    
 
     if (this.supplier === "wartsila") {
-      this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
+    //   this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
+    this.sfocRelative = 0.455*this.EL *this.EL-0.71*this.EL + 1.28; // general
        console.log(this.sfocRelative)
       this.SFOC_main = (this.sfocRelative*this.sfocBase).toFixed(1)
       sfoc_cal = parseFloat(this.SFOC_main);
@@ -71,6 +74,150 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     console.log(sfoc_cal)
     
 }
+
+
+}
+
+
+function ship(){
+
+    this.hull = function(v){
+        // this.T = T;  // Draght 
+        // this.Ta = Ta  //
+        // this.Tf = Tf  //
+        // this.Lwl = Lwl; // Lenght on waterLine
+        // this.Lpp = Lpp   // Lenght between perpendicular 
+        // this.LoA = LoA  // Overall lenght 
+        // this.BwL = BwL // Breath of waterLine
+        // this.Am = Am // midship section area 
+        this.T =4 ;  // Draght 
+        this.Ta = Ta  //
+        this.Tf = Tf  //
+        this.Lwl = Lwl; // Lenght on waterLine
+        this.Cwp        // waterplane area coefficient 
+        this.Cm  // 
+        this.Cp
+        this.AT     //Immersed of the transverse sectional area of the transomat AP zero speed 
+        this.hB      //
+        this.ABT     // transverse section area of teh bulb at the position where the still water surface intersect the stern
+        
+        this.Lpp = Lpp   // Lenght between perpendicular 
+        this.LoA = LoA  // Overall lenght 
+        this.BwL = BwL // Breath of waterLine
+        this.Am = Am // midship section area 
+        this.weight  // weight of the vessel.
+        this.viscosity
+        this.shipSpeed = v
+        if(!T){
+            this.T = 0.5*(this.Tf + this.Ta)
+        }
+        this.Sa =1.025*((this,volume/this.T)+1.7*this.Lpp*this.T) // Surface weted area 
+        this.volume 
+        this.Rn = (this.shipSpeed*this.Lwl)/this.viscosity
+        this.Cf = (0.075)/(math.log(this.Rn-2)**2)
+
+        
+
+    }
+
+    
+}
+
+function resistance(){
+    this.airResistance = function(){
+
+    }
+    
+    this.waveResistance = function(){
+        
+        this.lcb = 0.5*Lwl
+        // this.iE = 1+89*Math.exp(-(Lwl/B)**0.80856*(1-Cwp)**0.30484*(1-Cp-0.0225*lcb)**0.6367*(this-LR/B)**0.34574*((100*volume)/Lwl**3)**0.16302)    //halfe angle entrance of teh waterline 
+        this.c1 = 2223105*this.c7**3.78613*(T/B)**1.07961*(90-this.iE)**-1.37565
+        this.c2 = Math.exp(-1.89*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
+        this.c3 = (0.56*ABT)**1.5/(B*T(0.31*Math.sqrt(ABT)+Tf-hB))
+        if(Tf/Lwl <= 0.04){
+            this.c4 = Tf/Lwl
+        }
+        else if(Tf/Lwl > 0.4){
+            this.c4 = 0.04
+        }
+        
+        this.c5 = (1-0.8*AT)/(B*T*Cm)
+        this.c6
+        this.m1 = ((0.0140407*Lwl)/T)-((1.75254*volume**(1/3))/Lwl)-((4.79323*BwL)/Lwl)-this.c16
+        this.m2 = c15*Cp**2*Math.exp(0.1*Fn**-2)
+        this.onePlusk1 = this.c13*(0.93+this.c12*(B/this.LR)**0.92497*(0.95-Cp)**-0.521448*(1+Cp+0.022*this.lcb)**0.6906)
+        if(B/L < 0.11){
+        this.c7 = 0.229577*(B/Lwl)**0.33333
+        }
+        else if(B/L >= 0.11 && B/L < 0.25  ){
+            this.c7 = (B/Lwl)
+         }
+         else if(B/L >= 0.25){
+            this.c7 = 0.5- 0.0625*(B/Lwl)
+            }
+        
+        this.c8 = 
+        this.c9 = this.c8
+        this.c12
+        if(stern === "Normal"){
+            this.stern = 0
+            this.c13 = 1+0.003*this.stern
+        }
+       else if(stern === "U and Hogner"){
+            this.stern = 10
+            this.c13 = 1+0.003*this.stern
+        }
+        else if(stern === "v"){
+            this.stern = -10
+            this.c13 = 1+0.003*this.stern
+        }
+        
+        
+        if(T/Lwl > 0.05){
+            this.c12 = (T/Lwl)**0.2228446
+        }
+        else if(T/Lwl > 0.02 && T/Lwl <= 0.05 ){
+            this.c12 = 48.20*((T/Lwl)-0.02)**2.078+0.479948
+        }
+        else if(T/Lwl < 0.02 ){
+            this.c12 = 0.479948
+        }
+
+        if(Lwl**3/volume < 512){
+            this.c15 = -1.69385
+        }
+        else if (Lwl**3/volume > 1727){
+            this.c15 = 0.0
+        }
+        else if (Lwl**3/volume >= 512 &&  Lwl**3/volume <= 1727){
+
+            this.c15 =  -1.69385 + ((Lwl/volume**(1/3)-8.0)/2.36)
+        }
+
+        if(Cp <= 0.80){
+            this.c16 = 8.07981 *Cp -13.8673*Cp**2 + 6.984388*Cp**3
+        }
+        else if(Cp > 0.80){
+            this.c16 = 1.73014 - 0.7067 *Cp 
+        }
+
+
+        
+    
+    }
+    this.frictionalResistance = function(Cf, Sa, shipSpeed,){
+        // this.density = 
+        this.Rf = (this.density*Cf*shipSpeed**2*Sa)/2
+
+        
+    
+    }
+    
+    this.residualResistance = function(){
+    
+    }
+
 
 }
 
