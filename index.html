@@ -252,13 +252,75 @@ tr:hover {background-color: #ddd;}
 
             
             <div class="hullDimension" id="hullDimension">
-               <p>Waterline length Lwl: <input type="range" name="Lwl" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span> 
-               <p>length btw perpendicular:  Lpp: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span></p>
-               <p> Overall length: LoA: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span></p>
-                <p> Breath: Bwl: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span></p>
-                <p>Draught T: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span></p>
-               <p> afterMost: TA <input type="range" name="" class="shipDimension" id="" min="" value="" max=""> <span class="inputValue"id="displayRPM"> </span> </p>
-               <p>foremost:  Tf: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span> </p>
+                <p>Speed : <input type="range" name="" class="shipDimension" id="shipSpeed" min="5" value="10.69" max="30" step="0.1" oninput="shipDimension(event)" ><span class="displayShipSpeed"id="displayShipSpeed"> </span> </p>
+               <p>Waterline length Lwl: <input type="range" name="Lwl" class="shipDimension" id="Lwl" min="10" value="205" max="600" oninput="shipDimension(event)"><span class="displayLwl"id="displayLwl"> </span> 
+               <!-- <p>length btw perpendicular: Lpp: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span></p> -->
+               <!-- <p> Overall length: LoA: <input type="range" name="" class="shipDimension" id="" min="10" value="205" max=""> <span class="inputValue"id="displayRPM"> </span></p> -->
+                <p> Breath: Bwl: <input type="range" name="" class="shipDimension" id="Bwl" min="5" value="32" max="50"oninput="shipDimension(event)" > <span class="displayBwl" id="displayBwl"> </span></p>
+                <p>Draught T: <input type="range" name="" class="shipDimension" id="T" min="5" value="10" max="30"  oninput="shipDimension(event)"> <span class="displayT"id="displayT"> </span></p>
+               <p> afterMost Draught TA <input type="range" name="" class="shipDimension" id="TA" min="5" value="10" max="20"  oninput="shipDimension(event)"> <span class="displayTA"id="displayTA"> </span> </p>
+               <p>foremost Draught  Tf: <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> <br>
+                 
+               <h3>Bulbous bow </h3>
+               <p>ABT <input type="range" name="" class="shipDimension" id="ABT" min=10 value="13.4848" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayABT"id="displayABT" > </span> </p>
+               <p>hB <input type="range" name="" class="shipDimension" id="hB" min="0" value="4" step="0.1" max="20"  oninput="shipDimension(event)"><span class="displayhB"id="displayhB"> </span> </p>
+
+               <p>Transom AT <input type="range" name="" class="shipDimension" id="AT" min="3" value="16" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayAT"id="displayAT"> </span> </p>
+                  
+                 <div class="appendage">
+                  <h3>Appendage</h3>
+                  <p>Rudder behind skeg <input type="range" name="" class="shipDimension" id="rudderBehindSkeg" min="1" value="1.2" step="0.1" max="2.5"><span class="displayRudderBehindSkeg"id="displayRudderBehindSkeg"> </span> </p>
+                  <p>Rudder behind Stern <input type="range" name="" class="shipDimension" id="rudderBehindStern" min="0" value="1.2" step="0.1" max="2"><span class="displayRudderBehindStern"id="displayRudderBehindStern"> </span> </p> 
+                  <p>Bilge Keel <input type="range" name="" class="shipDimension" id="BilgeKeel" min="1.4" value="1.4" step="0.1" max="1.4"><span class="displayBilgeKeel"id="displayBilgeKeel"> </span> </p> 
+                  <p>Dome <input type="range" name="" class="shipDimension" id="Dome" min="2.7" value="2.7" step="0.1" max="2.7"><span class="displayDome"id="displayDome"> </span> </p>
+                  <p>Stabilizer Fins <input type="range" name="" class="shipDimension" id="StabilizerFins" min="2.8" value="2.8" step="0.1" max="2.8"><span class="displayStabilizerFins"id="displayStabilizerFins"> </span> </p>
+                  <p>Shafts <input type="range" name="" class="shipDimension" id="Shafts" min="2" value="2.8" step="0.1" max="4"><span class="displayShafts"id="displayShafts"> </span> </p>
+                  <p>Hull Bossings <input type="range" name="" class="shipDimension" id="HullBossings" min="2.0" value="2.0" step="0.1" max="2.0"><span class="displayHullBossings"id="displayHullBossings"> </span> </p>
+                  <p>Strut Bossings <input type="range" name="" class="shipDimension" id="StrutBossings" min="3" value="3" step="0.1" max="3.0"><span class="displayStrutBossings"id="displayStrutBossings"> </span> </p>
+                  <p>Skeg <input type="range" name="" class="shipDimension" id="Skeg" min="1.5" value="1.5" step="0.1" max="2"><span class="displaySkeg"id="displaySkeg"> </span> </p>
+                  <p>Shaft Bracket <input type="range" name="" class="shipDimension" id="ShaftBracket" min="3" value="3" step="0.1" max="3"><span class="displayShaftBracket"id="displayShaftBracket"> </span> </p>
+                  <p>Twin Screw Balance Rudder <input type="range" name="" class="shipDimension" id="TwinScrewBalaRudder" min="2.8" value="2.8" step="0.1" max="2.8"><span class="displayTwinScrewBalaRudder"id="displayTwinScrewBalaRudder"> </span> </p>
+   
+                  <p> Angle of entrance: iE <input type="range" name="" class="shipDimension" id="iE" min="1" value="12" step="0.1" max="90"><span class="displayiE"id="displayiE"> </span> </p>
+                </div>
+                    <div class="coefficient">
+                        <p>CB: <input type="range" name="" class="shipDimension" id="Cb" min="0" value="0.572" max="1" step="0.01"  oninput="shipDimension(event)"><span class="displayCb"id="displayCb" > </span> </p> 
+                        <p>CP: <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p>
+                        <p>CM <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> <br>
+                    </div>
+
+                  <div class="stern column" id="stern" >
+                    <strong><p>choose Stern Shape</p></strong>
+                  <select class="engine" onchange="hullDimention(event)">
+                   <option value="" selected><strong>Choose engine</strong> </option>
+                   <option value="V"> V</option> 
+                   <option value="Normal"> Normal</option> 
+                   <option value="U&Hogner">U with Hogner</option>
+                   <option value="PramWithGondola">Pram With Gondola</option>
+
+                   </select>
+             
+                </div>
+
+                 <div>
+                 <form action="" onchange="bulbousCheck(event)">
+                    <input type="checkbox" id="bulbous" name="bulbous bow" value="bulbous">
+
+                    <label for="bulbous bow"> Bulbous bow</label><br>
+
+                    <!-- <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
+                    <label for="vehicle2"> I have a car</label><br>
+                    <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+                    <label for="vehicle3"> I have a boat</label><br><br>
+                    <input type="submit" value="Submit"> -->
+                  </form>
+
+                </div>
+                  
+              
+            
+              
+               
             </div>
             
             <div class="resistance">
@@ -401,10 +463,16 @@ tr:hover {background-color: #ddd;}
    
     let data, data2, RPM, Power,enginetype,speedRPM, engineStrokes, meanPressure,cylinderBore,pistonStroke,sfoc_cal,
     enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed,
-    minLoad, minPower
+    minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
+    hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
+    Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B
 
 
- 
+ // all constant
+ viscosity = 0.0000012 // m/s^2
+ g = 9.81  // m/s^2
+ density = 1025 // kg/m^3
+
 
 
 
@@ -424,7 +492,7 @@ var layout = {
  
   xaxis:
 	{
-        range: [0, 100],
+        range: [0, 35],
         showgrid: false,
         title: 'Ship speed in knots'
     },
@@ -503,7 +571,6 @@ var interval = setInterval(function() {
 }, 10);
 
 }
-
 
 var liveSfoc = {
   type: 'scatter',
@@ -827,6 +894,8 @@ setTimeout(function () {
 }
 
 
+
+
 function loadWattDisplay (){
     if(!load){
         load = 0
@@ -958,6 +1027,107 @@ function currentSfocDisplay (){
     
     }
     
+    function bulbousCheck(event){
+         bulbous = event.target.value
+         
+         shipDimension(event)
+     }
+ shipDimension(event)
+ function shipDimension(event){
+
+     
+
+    
+
+    
+
+
+ shipSpeedKnots = document.getElementById('shipSpeed').value
+ document.getElementById('displayShipSpeed').innerHTML= shipSpeedKnots + " knots"
+ shipSpeed = shipSpeedKnots* 0.5144
+ Lwl = document.getElementById('Lwl').value
+ document.getElementById('displayLwl').innerHTML= Lwl + " m"
+ 
+ Bwl = document.getElementById('Bwl').value
+ document.getElementById('displayBwl').innerHTML= Bwl + " m"
+
+ T = document.getElementById('T').value
+ document.getElementById('displayT').innerHTML= T + " m"
+
+ 
+ TA = document.getElementById('TA').value
+ document.getElementById('displayTA').innerHTML= TA + " m"
+
+ Tf = document.getElementById('Tf').value
+ document.getElementById('displayTf').innerHTML= Tf + " m"
+
+ ABT = document.getElementById('ABT').value
+ document.getElementById('displayABT').innerHTML= ABT + " m^2"
+
+ hB = document.getElementById('hB').value
+ document.getElementById('displayhB').innerHTML= hB + " m"
+//Immersed part area of the Transverse transom
+ AT = document.getElementById('AT').value
+ document.getElementById('displayAT').innerHTML= AT + " m^2"
+
+ //Angle of entrance
+ iE = document.getElementById('iE').value
+ document.getElementById('displayiE').innerHTML= iE + " Degree"
+
+ //Angle of entrance
+ Cb = document.getElementById('Cb').value
+ document.getElementById('displayCb').innerHTML= Cb
+ 
+
+ 
+ 
+// different function below 
+
+ shipHull.hull()
+    shipHull.coefficient()
+calResistnace.waveResistance()
+//  updateResistance()
+}
+
+function hullDimention(event){
+    sternId = event.target.value
+    
+}
+
+function updateResistance(){
+let c,k,val,i
+         
+    val = shipSpeedKnots;
+    //  n = 20
+        c = 1
+        i = 0
+      for ( k = 1; k < val;k ++) {    
+        inputData(i); 
+        i++
+        } 
+        
+        function inputData(i) { 
+        setTimeout(function() { 
+        
+            //     if(val -n >c ){
+            //     load = (n/100)*enginePower
+            //     EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+            //     console.log("this is the load 1",load)
+            //  }else{
+            shipSpeed = (c+1)*0.5144
+            console.log("Ship speed ", shipSpeed)
+                // }
+             
+           shipHull.hull()
+           shipHull.coefficient()
+        calResistnace.waveResistance()
+
+        c++
+        }, 1000 * i); 
+        } 
+}
+
+
 
 let lastRPM;
 let i = 1;
