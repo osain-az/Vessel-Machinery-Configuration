@@ -85,46 +85,18 @@ function ship(){
 
     this.coefficient = function(){
         // All different coefficient and areas 
-        
-        console.log(Text)
-         Am         // midship section area 
-         Awl
-        
-         
-         // Cld
-         // Cwl  =  Awl/(Lwl * Bwl)     // waterline plane area coefficient 
-        
-         
-        //  if(inputShipVolume){
-        //      shipVolume = inputShipVolume
-        //      Cb = inputShipVolume/(Lwl * Bwl * T)
-        //  }else{
- 
-        //      if(Fn > 0.15 && Fn < 0.32){
-        //          // using Jensen(1994) recommendation for modern ship
-        //          Cb = -4.22 + 27.8 * Fn**0.5 - 39.1 * Fn + 46.6 * Fn**3
-        //      }else{
-        //          // Ayres formular
-        //          this.c = 1.06
-        //          Cb = this.c - 1.68*Fn
-        //          console.log("cp Ayres", Cb)
-                
-        //      }
-             shipVolume = (Lwl * Bwl * T *Cb )
-             
-        //  }
-         if(Am){
-             
-            Cm = Am/(Bwl * T)
-            Cp = shipVolume/(Am * Lwl)
-        }else{
-            
+         Cb     
+         Cm
+         shipVolume = (Lwl * Bwl * T *Cb )
+        if(!Cm || Cm <= 0){
             Cm = 1.006 -0.0056*(Cb**3.56)// MidShip section coefficient using  Kerlen (1970)
-            Cp = shipVolume/(Cm * Bwl * T * Lwl)  // Prismatic coefficient 
-            console.log("Cp", Cp)
+             
+        }else{
+            Cm 
         }
+        Cp = shipVolume/(Cm * Bwl * T * Lwl)  // Prismatic coefficient 
         Cwp  =  Cb/(0.471 + 0.55*Cb)     // waterline plane area coefficient using " Parson (2003)"
- 
+        Cf = 0.075/(Math.log10(Rn)-2)**2 
      }
 
     this.hull = function(){
@@ -138,8 +110,9 @@ function ship(){
         LOA // Overall lenght 
         Bwl  // Breath of waterLine
         Fn = shipSpeed/(g*Lwl)**0.5 // froude number
-        console.log("FN", Fn)
-        console.log("speed", shipSpeed)
+        Rn = (shipSpeed*Lwl)/viscosity
+        Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)*(0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp) + 2.38*(ABT/Cb) // Surface weted area 
+
         // if(fn >= 0.14 && Fn <= 0.32){
             ////Schneekluth formular
 
@@ -155,94 +128,48 @@ function ship(){
             T = 0.5*(Tf + TA)
         }
         // this.Sa =1.025*((shipVolume/this.T)+1.7*this.Lpp*this.T) // Surface weted area 
-        this.Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)*(0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp) + 2.38*(ABT/Cb) // Surface weted area 
-        
-        Rn = (this.shipSpeed*this.Lwl)/viscosity
-        
-        // Cf = (0.075)/(math.log(this.Rn-2)**2)
 
     }
-
-    
 }
 
 function resistance(){
 
-    this.airResistance = function(){
 
-    }
-    
-    this.waveResistance = function(){
-        Lwl = parseFloat(Lwl)
-        Bwl = parseFloat(Bwl)
-        T = parseFloat(T)
-        TA = parseFloat(TA)
-        Tf = parseFloat(Tf)
-        this.LR =3.2*(Bwl * T /Cb)
-        this.d = -0.9
-        // this.lcb = 0.5*Lwl
-         this.lcb = -0.75
-        if(!iE){
-            // iE = 1+89*Math.exp((-1*(Lwl/Bwl)**0.80856)*(1-Cwp)**0.30484*(1-Cp-0.0225*this.lcb)**0.6367*(this.LR/Bwl)**0.34574*((100*shipVolume)/Lwl**3)**0.16302)  (original equation)  //halfe angle entrance of teh waterline 
+    this.formFactor = function(){
+        this.LR =Lwl*(1-Cp+0.06*Cp*lcb)/(4*Cp-1)
 
-         console.log("ci",iE*1)
-         this.test = (-1*(-1*(1-Cp-0.0225*this.lcb))**0.6367)
+    //     if(stern === "Normal"){
+    //         this.stern = 0
+    //         this.c13 = 1+0.003*this.stern
+    //     }
+    //    else if(stern === "U&Hogner"){
+    //         this.stern = 10
+    //         this.c13 = 1+0.003*this.stern
+    //     }
+    //     else if(stern === "V"){
+    //         this.stern = -10
+    //         this.c13 = 1+0.0011*this.stern
+    //     }
+    //     else if(stern === "PramWithGondola"){
+    //         this.stern = -25
+    //         this.c13 = 1+0.003*this.stern
+    //     }
 
-        }else{
-            iE 
-        }
-        
-
-         if(Bwl/Lwl < 0.11){
-            this.c7 = 0.229577*(Bwl/Lwl)**0.33333
-        }
-         else if(Bwl/Lwl >= 0.11 && Bwl/Lwl < 0.25  ){
-             this.c7 = (Bwl/Lwl)
-             console.log("second", this.c7 )
-             
-         }
-         else if(Bwl/Lwl >= 0.25){
-             this.c7 = 0.5- 0.0625*(Bwl/Lwl)
-             console.log("last", this.c7 )
-            }
-            
-        this.c1 = 2223105*this.c7**3.78613*(T/Bwl)**1.07961*(90-iE)**-1.37565
-       
-        if(!bulbous){
-            // if no bulbus c2 = 1
-            this.c2 = 1
-        }else{
-            
-            this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
-            console.log("new c",this.c3)
-            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
-        }
-        
-        if(Tf/Lwl <= 0.04){
-            this.c4 = Tf/Lwl
-        }
-        else if(Tf/Lwl > 0.4){
-            this.c4 = 0.04
-        }
-        
-        this.c5 = 1-0.8*AT/(Bwl*T*Cm)
-          console.log("at c5", AT, Bwl, T, Cm)
-        // this.c6
-        
-        this.onePlusk1 = this.c13*(0.93+this.c12*(Bwl/this.LR)**0.92497*(0.95-Cp)**-0.521448*(1+Cp+0.022*this.lcb)**0.6906)
-        // this.c8 = 
-        // this.c9 = this.c8
         if(stern === "Normal"){
             this.stern = 0
-            this.c13 = 1+0.003*this.stern
+            this.c14 = 1+0.003*this.stern
         }
        else if(stern === "U&Hogner"){
             this.stern = 10
-            this.c13 = 1+0.003*stern
+            this.c14 = 1+0.003*this.stern
         }
         else if(stern === "V"){
             this.stern = -10
-            this.c13 = 1+0.003*stern
+            this.c14 = 1+0.0011*this.stern
+        }
+        else if(stern === "PramWithGondola"){
+            this.stern = -25
+            this.c14 = 1+0.003*this.stern
         }
         
         
@@ -255,6 +182,121 @@ function resistance(){
         else if(T/Lwl < 0.02 ){
             this.c12 = 0.479948
         }
+
+        //Rform = this.c13*(0.93+this.c12*(Bwl/this.LR)**0.92497*(0.95-Cp)**-0.521448*(1+Cp+0.022*lcb)**0.6906)
+         Rform = 0.93+0.487118*this.c14*(Bwl/Lwl)**1.06806*(T/Lwl)**0.46106*(Lwl/this.LR)**0.121563*(Lwl**3/shipVolume)**0.36486*(1-Cp)**-0.604247
+
+       console.log("form",Rform)
+    
+    }
+    this.appendageResistance = function(dt,K2,Sapp){
+        this.K2 = K2
+        this.dt = dt
+      if(thruster){
+        //if thruster are fitted in the vessels, they are put into consideration 
+        
+        this.Ctbo = 0.003
+        Rbt = Math.PI*density*shipSpeed**2*this.dt**2*this.Ctbo
+        console.log("dt new",this.dt,)
+    }else(
+        Rbt = 0
+    )
+    console.log(Rn)
+     Rapp= (0.5*density*Cf*Sapp*shipSpeed**2*this.K2) + Rbt
+    //    console.log("Rapp", Rapp/1000)
+       
+    //    console.log("cf,",Cf)
+    //    console.log("speed", shipSpeed)
+    //    console.log("vis", viscosity)
+    //    console.log("rbt", Rbt)
+    //    console.log("lwl", Lwl)
+    //    console.log("Sapp", Sapp, K2)
+
+    }
+
+    this.correctionResistance = function(){
+
+       if(Tf/Lwl <=0.04){
+           this.c4 = Tf/Lwl
+       }else if(Tf/Lwl > 0.04){
+
+           this.c4 = 0.04
+       }
+       this.Ca = 0.006*(Lwl + 100)**-0.16-0.00205 + 0.003*Math.sqrt(Lwl/7.5)*Cb**4 * this.c2*(0.04 -this.c4)
+        RA =   0.5*density*shipSpeed**2*Sa*this.Ca
+        console.log(RA)
+    }
+
+    this.PressureResistance = function(){
+        //Additional pressure resistance due to immerse transom
+        this.Fnt = shipSpeed/Math.sqrt(2*g*AT/(Bwl + Bwl * Cwp))
+        if(this.Fnt <5){
+            this.c6 = 0.2*(1-0.2*this.Fnt)
+
+        }else if(this.Fnt >= 5){
+            this.c6 = 0
+        }
+        
+        Rtr = 0.5*density*shipSpeed**2*AT*this.c6
+        // console.log("Rtr",Rtr)
+        // console.log("fnt",this.Fnt)
+        // console.log("c6",this.c6)
+        // console.log("cwp",Cwp)
+
+
+    }
+
+    this.bulbousResistance = function(){
+        this.Pb = 0.56*Math.sqrt(ABT/(Tf-1.5*hB))
+        this.Fni = shipSpeed/Math.sqrt(g*(Tf-hB-0.25*Math.sqrt(ABT))+0.15*shipSpeed**2)
+        Rb =0.11*Math.exp((-13)*this.Pb**-2)*this.Fni**3*ABT**1.5*g*density/(1+this.Fni**2)
+    }
+    
+    this.waveResistance = function(){
+        Lwl = parseFloat(Lwl)
+        Bwl = parseFloat(Bwl)
+        T = parseFloat(T)
+        TA = parseFloat(TA)
+        Tf = parseFloat(Tf)
+        // this.lcb = 0.0101*Lwl
+        this.LR =Lwl*(1-Cp+0.06*Cp*lcb)/(4*Cp-1)
+        this.d = -0.9
+         iE = 1+89*Math.exp((-1*(Lwl/Bwl)**0.80856)*(1-Cwp)**0.30484*(1-Cp-0.0225*(lcb))**0.6367*(this.LR/Bwl)**0.34574*((100*shipVolume)/Lwl**3)**0.16302) // (original equation)  //halfe angle entrance of teh waterline 
+         if(Bwl/Lwl < 0.11){
+            this.c7 = 0.229577*(Bwl/Lwl)**0.33333
+        }
+         else if(Bwl/Lwl >= 0.11 && Bwl/Lwl < 0.25  ){
+             this.c7 = (Bwl/Lwl)
+             
+         }
+         else if(Bwl/Lwl >= 0.25){
+             this.c7 = 0.5- 0.0625*(Bwl/Lwl)
+            }
+            
+        this.c1 = 2223105*this.c7**3.78613*(T/Bwl)**1.07961*(90-iE)**-1.37565
+       
+        if(!bulbous){
+            // if no bulbus c2 = 1
+            this.c2 = 1
+        }else{
+            
+            this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
+            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
+        }
+        
+        if(Tf/Lwl <= 0.04){
+            this.c4 = Tf/Lwl
+        }
+        else if(Tf/Lwl > 0.4){
+            this.c4 = 0.04
+        }
+        
+        this.c5 = 1-0.8*AT/(Bwl*T*Cm)
+        // this.c6
+        
+        // this.c8 = 
+        // this.c9 = this.c8
+
 
         if(Lwl**3/shipVolume < 512){
             this.c15 = -1.69385
@@ -290,40 +332,47 @@ function resistance(){
 
         Rw = this.c1*this.c2*this.c5*density*shipVolume*g*Math.exp(this.m1*Fn**this.d+this.m2*Math.cos(this.phi* Fn**-2))
         
-        console.log("c2",this.c2)
-        console.log("m2",this.m2)
-        console.log("m1",this.m1)
-        console.log("c1",this.c1)
-        console.log("c5",this.c5)
-        console.log("c7",this.c7)
-        console.log("c3",this.c3)
-        console.log("c16",this.c16)
-        console.log("iE", iE)
-        console.log("ABT", ABT)
-        console.log("cp", Cp)
-        console.log("cb", Cb)
-        console.log("cm", Cm)
-        console.log("cwp", Cwp)
-        console.log("volume", shipVolume)
-        console.log("phi", this.phi)
-        console.log("fn", Fn)
+        // console.log("c2",this.c2)
+        // console.log("m2",this.m2)
+        // console.log("m1",this.m1)
+        // console.log("c1",this.c1)
+        // console.log("c5",this.c5)
+        // console.log("c7",this.c7)
+        // console.log("c3",this.c3)
+        // console.log("c16",this.c16)
+        // console.log("LR",this.LR)
+        // console.log("lcb",this.lcb)
+        
+        // console.log("iE", iE)
+        // console.log("ABT", ABT)
+        // console.log("cp", Cp)
+        // console.log("cb", Cb)
+        // console.log("cm", Cm)
+        // console.log("cwp", Cwp)
+        // console.log("volume", shipVolume)
+        // console.log("phi", this.phi)
+        // console.log("fn", Fn)
         
 
-        console.log("Resistance",Rw/1000000)
+        console.log("Resistance",Rw/1000)
     }
      this.RwHighSped = function(){
-         if(stern = "V"){
-            this.stern
+         if(stern = "Normal"){
+            this.stern = 0
             this.c14 = 1 + 0.011*this.stern
 
          }
          else if(stern = "V"){
-             this.stern
+             this.stern = -10
             this.c14 = 1 + 0.011*this.stern
 
          }
-         else if(stern = "V"){
-            this.stern
+         else if(stern = "U&Hogner"){
+            this.stern = 10
+            this.c14 = 1 + 0.011*this.stern
+         }
+         else if(stern = "PramWithGondola"){
+            this.stern = -25
             this.c14 = 1 + 0.011*this.stern
          }
          this.lcb
@@ -332,6 +381,7 @@ function resistance(){
         this.onePlusk1 = 0.93+0.487118*this.c14*(Bwl/Lwl)**1.06806*(T/Lwl)**0.46106*(Lwl/this.LR)**0.121563*(Lwl**3/shipVolume)**0.36486*(1-Cp)**-0.604247 
         this.c17 = 6919.3*Cm**-1.3346*(shipVolume/Lwl**3)**2.00977*(Lwl/Bwl-2)**1.40692
         this.m3 = -7.2035*(Bwl/Lwl)**0.326869*(T/Bwl)**0.605375
+        this.c5 = 1-0.8*AT/(Bwl*T*Cm)
         
 
         if(Lwl**3/shipVolume < 512){
@@ -349,23 +399,40 @@ function resistance(){
         if(hB > 0.6*Tf){
             hB = 0.6*Tf
         }
+        if(Lwl/Bwl < 12){
+            this.phi = 1.446 * Cp - 0.03*(Lwl/Bwl)
 
+        }else{
+            this.phi = 1.446 * Cp - 0.036
+        }
+
+        if(!bulbous){
+            // if no bulbus c2 = 1
+            this.c2 = 1
+        }else{
+            
+            this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
+            console.log("new c",this.c3)
+            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
+        }
+
+        Rw_B = this.c17*this.c2*this.c5*shipVolume*density*g*Math.exp(m3Fn**d+m4*Math.cos(this.phi*Fn**-2))
 
 
 
      }
 
-    this.frictionalResistance = function(Cf, Sa, shipSpeed,){
+
+    this.frictionalResistance = function(){
         // this.density = 
-        this.Rf = (this.density*Cf*shipSpeed**2*Sa)/2
+        Rf = (density*Cf*shipSpeed**2*Sa)/2
+        
 
         
-    
+
     }
     
-    this.residualResistance = function(){
     
-    }
 
 
 }

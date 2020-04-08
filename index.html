@@ -102,7 +102,7 @@ tr:hover {background-color: #ddd;}
     margin: 15px;
 
     }
-    .hull{
+    .hull,.appendage{
       width: 100%;
      /* background-color:rgba(44, 81, 117, 0.7); */
     display: grid;
@@ -116,10 +116,11 @@ tr:hover {background-color: #ddd;}
     .shipDimension{
         width: 60%;
     }
+    
 
 
-    .hullDimension,.resistance {
-        border: solid  #333  2px; ;
+    .hullDimension,.resistance ,.appendage {
+        border: solid  #333  2px; 
         width: 100%;
         /* background-color:rgba(44, 81, 117, 0.7); */
         grid-template-rows: 1fr;
@@ -144,6 +145,107 @@ tr:hover {background-color: #ddd;}
     grid-row: 2;
     grid-column: 1;
     }
+
+    .appendage{
+      width: 100%;
+     /* background-color:rgba(44, 81, 117, 0.7); */
+    
+    grid-template-rows: 1fr;
+    /* grid-template-columns: 55% 45%; */
+    grid-auto-flow: column;
+    /* margin: 30px; */
+    margin: 15px;
+    }
+    .inputArea{
+        width: 50%;
+    }
+     .area {
+    
+        /* border:  solid plum 2px; */
+        grid-row: 1;
+      grid-column: 1;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    } 
+    .area1 {
+    /* display: grid; */
+    grid-row: 2;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+      /* padding-left: 10px;; */
+    }
+    .area2 {
+    /* display: grid; */
+    grid-row: 3;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area3 {
+    /* display: grid; */
+    grid-row: 4;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area4 {
+    /* display: grid; */
+    grid-row: 5;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area5{
+    /* display: grid; */
+    grid-row: 6;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area6{
+    /* display: grid; */
+    grid-row: 7;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area7{
+    /* display: grid; */
+    grid-row: 8;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area8{
+    /* display: grid; */
+    grid-row: 9;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area9{
+    /* display: grid; */
+    grid-row: 10;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area10{
+    /* display: grid; */
+    grid-row: 11;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .area11{
+    /* display: grid; */
+    grid-row: 11;
+    grid-column: 1;
+    margin-top: 10px;
+      margin-bottom: 10px;
+    }
+  
  
     .mainDashboard{
         display: flex;
@@ -262,31 +364,139 @@ tr:hover {background-color: #ddd;}
                <p>foremost Draught  Tf: <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> <br>
                  
                <h3>Bulbous bow </h3>
+               <div>
                <p>ABT <input type="range" name="" class="shipDimension" id="ABT" min=10 value="13.4848" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayABT"id="displayABT" > </span> </p>
                <p>hB <input type="range" name="" class="shipDimension" id="hB" min="0" value="4" step="0.1" max="20"  oninput="shipDimension(event)"><span class="displayhB"id="displayhB"> </span> </p>
-
+          
                <p>Transom AT <input type="range" name="" class="shipDimension" id="AT" min="3" value="16" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayAT"id="displayAT"> </span> </p>
-                  
+              
+               <form action="" onchange="bulbousCheck(event)" class="">
+
+               <h3>Appendage</h3>
                  <div class="appendage">
-                  <h3>Appendage</h3>
-                  <p>Rudder behind skeg <input type="range" name="" class="shipDimension" id="rudderBehindSkeg" min="1" value="1.2" step="0.1" max="2.5"><span class="displayRudderBehindSkeg"id="displayRudderBehindSkeg"> </span> </p>
-                  <p>Rudder behind Stern <input type="range" name="" class="shipDimension" id="rudderBehindStern" min="0" value="1.2" step="0.1" max="2"><span class="displayRudderBehindStern"id="displayRudderBehindStern"> </span> </p> 
-                  <p>Bilge Keel <input type="range" name="" class="shipDimension" id="BilgeKeel" min="1.4" value="1.4" step="0.1" max="1.4"><span class="displayBilgeKeel"id="displayBilgeKeel"> </span> </p> 
-                  <p>Dome <input type="range" name="" class="shipDimension" id="Dome" min="2.7" value="2.7" step="0.1" max="2.7"><span class="displayDome"id="displayDome"> </span> </p>
-                  <p>Stabilizer Fins <input type="range" name="" class="shipDimension" id="StabilizerFins" min="2.8" value="2.8" step="0.1" max="2.8"><span class="displayStabilizerFins"id="displayStabilizerFins"> </span> </p>
-                  <p>Shafts <input type="range" name="" class="shipDimension" id="Shafts" min="2" value="2.8" step="0.1" max="4"><span class="displayShafts"id="displayShafts"> </span> </p>
-                  <p>Hull Bossings <input type="range" name="" class="shipDimension" id="HullBossings" min="2.0" value="2.0" step="0.1" max="2.0"><span class="displayHullBossings"id="displayHullBossings"> </span> </p>
-                  <p>Strut Bossings <input type="range" name="" class="shipDimension" id="StrutBossings" min="3" value="3" step="0.1" max="3.0"><span class="displayStrutBossings"id="displayStrutBossings"> </span> </p>
-                  <p>Skeg <input type="range" name="" class="shipDimension" id="Skeg" min="1.5" value="1.5" step="0.1" max="2"><span class="displaySkeg"id="displaySkeg"> </span> </p>
-                  <p>Shaft Bracket <input type="range" name="" class="shipDimension" id="ShaftBracket" min="3" value="3" step="0.1" max="3"><span class="displayShaftBracket"id="displayShaftBracket"> </span> </p>
-                  <p>Twin Screw Balance Rudder <input type="range" name="" class="shipDimension" id="TwinScrewBalaRudder" min="2.8" value="2.8" step="0.1" max="2.8"><span class="displayTwinScrewBalaRudder"id="displayTwinScrewBalaRudder"> </span> </p>
-   
-                  <p> Angle of entrance: iE <input type="range" name="" class="shipDimension" id="iE" min="1" value="12" step="0.1" max="90"><span class="displayiE"id="displayiE"> </span> </p>
+                 
+                 <div class="area">
+                   <input type="checkbox" id="rudderBehindSkegCheck" name="Bilge Keel" value="">
+                        <label for="Rudder behind skeg">  Rudder behind skeg </label>
+                    <input type="range" name="" class="inputArea" id="rudderBehindSkeg" min="1.5" value="1.5" step="0.1" max="2"><span class="displayRudderBehindSkeg"id="displayRudderBehindSkeg"> </span> <br>
+                  Area : <input type="range" name="" class="inputArea" id="ArearudderBehindSkeg" min="0" value="0" step="0.1" max="60"><span class="RudderBehindSkeg"id="RudderBehindSkegArea"> </span> 
                 </div>
+                
+                    
+                <div class="area1">
+                    <input type="checkbox" id="rudderBehindSternCheck" name="Bilge Keel" value="">
+                        <label for="Rudder behind Stern">  Rudder behind Stern </label>
+                    <input type="range" name="" class="inputArea" id="rudderBehindStern" min="1.3" value="1.3" step="0.1" max="1.5"><span class="displayRudderBehindStern"id="displayRudderBehindStern"> </span> <br>
+                  Area <input type="range" name="" class="inputArea" id="rudderBehindStern" min="0" value="0" step="0.1" max="60"><span class="displayRudderBehindStern"id="AreaRudderBehindStern"> </span> 
+                
+                </div>
+                   
+                 <div class="area2">
+                    <input type="checkbox" id="SkegCheck" name="Skeg" value="">
+                        <label for="Skeg">   Skeg  </label>
+                  <input type="range" name="" class="inputArea" id="Skeg" min="1.5" value="1.5" step="0.1" max="2"><span class="displaySkeg"id="displaySkeg"> </span> <br>
+                  Area <input type="range" name="" class="inputArea" id="SkegArea" min="0" value="0" step="0.1" max="60"><span class="displaySkeg"id="displaySkegArea"> </span> 
+                    
+                </div>
+
+                <div class="area3">
+                    <input type="checkbox" id="ShaftsCheck" name="Shafts" value="">
+                       <label for="Shafts">   Shafts  </label>
+                      <input type="range" name="" class="shipDimension" id="Shafts" min="2" value="2" step="0.1" max="4"><span class="displayShafts"id="displayShafts"> </span> </p>
+                    Area <input type="range" name="" class="inputArea" id="ShaftsArea" min="0" value="0" step="0.1" max="60"><span class="displayShafts"id="displayShaftsArea"> </span> 
+                   </div>
+            </form>
+
+                <!-- <div class="area3" >
+                    <p>
+                    Twin Screw Rudder: <input type="range" name="" class="inputArea" id="TwinScrewBalaRudder" min="0" value="2.8" step="0.1" max="2.8"><span class="displayTwinScrewBalaRudder"id="displayTwinScrewBalaRudder"> </span> <br>
+                    Area: <input type="range" name="" class="inputArea" id="TwinScrewBalaRudder" min="0" value="2.8" step="0.1" max="2.8"><span class="displayTwinScrewBalaRudder"id="displayTwinScrewBalaRudder"> </span> 
+                   <p></p>
+                </div > -->
+
+
+                <!-- <div class="area4" >
+                    
+                   Stabilizer Fins  <span></span><!--  <input type="range" name="" class="shipDimension" id="StabilizerFins" min="2.8" value="2.8" step="0.1" max="2.8"><span class="displayStabilizerFins"id="displayStabilizerFins"> </span> </p> -->
+                  <!-- Area <input type="range" name="" class="inputArea" id="StabilizerFins" min="2.8" value="2.8" step="0.1" max="2.8"><span class="displayStabilizerFins"id="displayStabilizerFins"> </span>  -->
+                <!-- </div> --> 
+                
+                  <!-- <div class="area5">
+                  Shafts  <span id="Shafts"></span><input type="range" name="" class="shipDimension" id="Shafts" min="2" value="2.8" step="0.1" max="4"><span class="displayShafts"id="displayShafts"> </span> </p>
+                  Area <input type="range" name="" class="inputArea" id="ShaftsArea" min="2" value="2.8" step="0.1" max="4"><span class="displayShafts"id="displayShafts"> </span> 
+                 </div>  -->
+                 
+                <!-- <div class="area6">
+                   Hull Bossings <span id="HullBossings"></span> < <input type="range" name="" class="shipDimension" id="HullBossings" min="2.0" value="2.0" step="0.1" max="2.0"><span class="displayHullBossings"id="displayHullBossings"> </span> </p> -->
+                  <!-- Area<input type="range" name="" class="inputArea" id="HullBossingsArea" min="2.0" value="2.0" step="0.1" max="2.0"><span class="displayHullBossings"id="displayHullBossings"> </span> -->
+                <!-- </div> --> 
+<!-- 
+                <div class="area7">
+                  Strut Bossings <span id="StrutBossings"></span>: < <input type="range" name="" class="shipDimension" id="StrutBossings" min="3" value="3" step="0.1" max="3.0"><span class="displayStrutBossings"id="displayStrutBossings"> </span> </p> -->
+                  <!-- Area <input type="range" name="" class="inputArea" id="StrutBossingsArea" min="3" value="3" step="0.1" max="3.0"><span class="displayStrutBossings"id="displayStrutBossings"> </span> -->
+                <!-- </div> --> 
+
+                <!-- <div class="area8" >
+                  Shaft Bracket  <span id="ShaftBracket"></span><!-<input type="range" name="" class="shipDimension" id="ShaftBracket" min="3" value="3" step="0.1" max="3"><span class="displayShaftBracket"id="displayShaftBracket"> </span> </p> -->
+                  <!-- Area <input type="range" name="" class="inputArea" id="ShaftBracketArea" min="3" value="3" step="0.1" max="3"><span class="displayShaftBracket"id="displayShaftBracket"> </span>  -->
+                <!-- </div > --> 
+
+                <!-- <div class="area9">
+                    Dome  <span id="Dome"></span><!- <input type="range" name="" class="shipDimension" id="Dome" min="2.7" value="2.7" step="0.1" max="2.7"><span class="displayDome"id="displayDome"> </span> </p> -->
+                   <!-- Area <input type="range" name="" class="inputArea" id="DomeArea" min="2.7" value="2.7" step="0.1" max="2.7"><span class="displayDome"id="displayDome"> </span> -->
+                 <!-- </div> --> 
+                 
+                
+
+                <!-- <div class="area10" >
+                   Bilge Keel <span id="BilgeKeel"></span> <!- <input type="range" name="" class="shipDimension" id="BilgeKeel" min="1.4" value="1.4" step="0.1" max="1.4"><span class="displayBilgeKeel"id="displayBilgeKeel"> </span> </p>  -->
+                  <!-- Area <input type="range" name="" class="inputArea" id="BilgeKeelArea" min="1.4" value="1.4" step="0.1" max="1.4"><span class="displayBilgeKeel"id="displayBilgeKeel"> </span> </p>  -->
+                <!-- </div > --> 
+                  
+                <form action="" onchange="bulbousCheck(event)" class="area11">
+                    <input type="checkbox" id="BilgeKeelAreaCheck" name="Bilge Keel" value="">
+                    <label for="Bilge Keel"> Bilge Keel  Area: </label>
+                    <input type="range" name="" class="inputArea" id="BilgeKeelArea" min="0" value="0" step="0.1" max="50"><span class="displayBilgeKeel"id="displayBilgeKeel"> </span> <br>
+
+                    <input type="checkbox" id="DomeAreaCheck" name="bulbous bow" value="">
+                    <label for="Dome Area"> Dome  Area: </label>
+                     <input type="range" name="" class="inputArea" id="DomeArea" min="0" value="0" step="0.1" max="50"><span class="displayDome"id="displayDome"> </span> <br>                 
+                 
+                     <input type="checkbox" id="ShaftBracketAreaCheck" name="bulbous bow" value="">
+                    <label for="Shafts Area"> Shafts Bracket  Area: </label>
+                   <input type="range" name="" class="inputArea" id="ShaftBracketArea" min="0" value="0" step="0.1" max="50"><span class="displayShaftBracket"id="displayShaftBracket"> </span> <br>
+                 
+                   <input type="checkbox" id="StrutBossingsAreaCheck" name="bulbous bow" value="">
+                    <label for="Strut Bossings Area"> Strut Bossings  Area: </label>
+                 <input type="range" name="" class="inputArea" id="StrutBossingsArea" min="0" value="0" step="0.1" max="50"><span class="displayStrutBossings"id="displayStrutBossings"> </span> <br>
+
+                 <!-- <input type="checkbox" id="ShaftsAreaCheck" name="bulbous bow" value="">
+                    <label for="Shafts Area"> Shafts  Area: </label>
+                <input type="range" name="" class="inputArea" id="ShaftsArea" min="0" value="0" step="0.1" max="50"><span class="displayShafts"id="displayShafts"> </span> <br> -->
+                
+                <input type="checkbox" id="StabilizerFinsCheck" name="bulbous bow" value="">
+                    <label for="Stabilizer Fins Area"> Stabilizer Fins  Area: </label>
+                 <input type="range" name="" class="inputArea" id="StabilizerFins" min="0" value="0" step="0.1" max="50"><span class="displayStabilizerFins"id="displayStabilizerFins"> </span> <br>
+
+                <input type="checkbox" id="hullbossingCheck" name="Hull Bossings" value="">
+                <label for="Hull Bossings"> Hull Bossings </label>
+                <input type="range" name="" class="inputArea" id="hullBossings" min="0" value="0" step="0.1" max="50"><span class="displayHullBossings"id="displayHullBossings"> </span> <br>
+
+                <input type="checkbox" id="thrustercheck" name="thruster" value="thruster">
+                <label for="Thruster"> Thruster </label>
+                diameter : <input type="range" name="" class="inputArea" id="thrusterDiameter" min="0" value="0" step="0.1" max="15"><span class="displaythrusterDiameter"id="displaythrusterDiameter"> </span> <br>
+                numbers of thruster : <input type="range" name="" class="inputArea" id="thrusterNO" min="1" value="2" step="" max="10"><span class="displayHullBossings"id="displaythrusterNO"> </span> <br>
+
+
+                  </form>
+
+                </div>
+                
                     <div class="coefficient">
                         <p>CB: <input type="range" name="" class="shipDimension" id="Cb" min="0" value="0.572" max="1" step="0.01"  oninput="shipDimension(event)"><span class="displayCb"id="displayCb" > </span> </p> 
-                        <p>CP: <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p>
-                        <p>CM <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> <br>
+                        <!-- <p>CP: <input type="range" name="" class="shipDimension" id="CP" min="0" value="" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> -->
+                        <p>CM: <input type="range" name="" class="shipDimension" id="CM" min="0" value="0.98" max="1"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> 
+                        <p>LCB (%): <input type="range" name="" class="shipDimension" id="LCB" min="0" value="1.53" step="0.1" max="6"  oninput="shipDimension(event)"><span class="displayLCB"id="displayLCB" > </span> </p> 
                     </div>
 
                   <div class="stern column" id="stern" >
@@ -303,14 +513,12 @@ tr:hover {background-color: #ddd;}
                 </div>
 
                  <div>
-                 <form action="" onchange="bulbousCheck(event)">
+                 <form action=""onchange="bulbousCheck(event)">
                     <input type="checkbox" id="bulbous" name="bulbous bow" value="bulbous">
-
                     <label for="bulbous bow"> Bulbous bow</label><br>
 
-                    <!-- <input type="checkbox" id="vehicle2" name="vehicle2" value="Car">
-                    <label for="vehicle2"> I have a car</label><br>
-                    <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
+
+                    <!-- <input type="checkbox" id="vehicle3" name="vehicle3" value="Boat">
                     <label for="vehicle3"> I have a boat</label><br><br>
                     <input type="submit" value="Submit"> -->
                   </form>
@@ -465,7 +673,8 @@ tr:hover {background-color: #ddd;}
     enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed,
     minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
-    Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B
+    Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,
+    Rform
 
 
  // all constant
@@ -1028,19 +1237,179 @@ function currentSfocDisplay (){
     }
     
     function bulbousCheck(event){
-         bulbous = event.target.value
+        
+    
+         let BKA,SkegCheck, RBSCheck,RBSkegCheck,hullBossings,thrustersCheck,thrustersNO,thrusterD, bulbousCkeck,
+         StaFinsVal, bKeelVal,domeCheckVal, sBracketVal,sBossingsVal,shaftsCheckVal,RBS,RBStern,
+       Skeg,RBSArea,RBSternArea,SkegArea,shafts,hullBossingsVal,K2,dt,
+        s1, s2, s3, s4, s5, s6, s7, s8, s9, s10,Sapp,k2_1,k2_2,k2_3,k2_4,k2_5,k2_6,k2_7,k2_8,k2_9, k2_10
          
-         shipDimension(event)
+         bulbousCkeck = document.getElementById("bulbous").checked
+
+         RBSkegCheck = document.getElementById("rudderBehindSkegCheck").checked
+         RBSCheck = document.getElementById("rudderBehindSternCheck").checked
+         SkegCheck = document.getElementById("SkegCheck").checked
+         domeCheck = document.getElementById("DomeAreaCheck").checked
+         StaFins = document.getElementById("StabilizerFinsCheck").checked
+         shaftsCheck = document.getElementById("ShaftsCheck").checked
+         sBossings = document.getElementById("StrutBossingsAreaCheck").checked
+         sBracket = document.getElementById("ShaftBracketAreaCheck").checked
+         bKeel = document.getElementById("BilgeKeelAreaCheck").checked
+         hullBossings = document.getElementById("hullbossingCheck").checked
+         thrustersCheck = document.getElementById("thrustercheck").checked
+       
+         RBSArea= document.getElementById('ArearudderBehindSkeg').value
+         RBSternArea= document.getElementById('rudderBehindStern').value
+         SkegArea= document.getElementById('SkegArea').value
+         domeCheckVal = document.getElementById('DomeArea').value
+         StaFinsVal = document.getElementById('StabilizerFins').value
+         shaftsCheckVal = document.getElementById('ShaftsArea').value
+         bKeelVal = document.getElementById('BilgeKeelArea').value
+         sBracketVal = document.getElementById('ShaftBracketArea').value
+         hullBossingsVal = document.getElementById('hullBossings').value
+         sBossingsVal = document.getElementById('StrutBossingsArea').value
+
+    //    StaFinsVal = document.getElementById('StabilizerFins').value
+    //    document.getElementById('displayStabilizerFins').innerHTML= StaFinsVal + " m^2"
+ 
+    //    bKeelVal = document.getElementById('BilgeKeelArea').value
+    //    document.getElementById('displayBilgeKeel').innerHTML= bKeelVal + " m^2"
+        
+    //    domeCheckVal = document.getElementById('DomeArea').value
+    //    document.getElementById('displayDome').innerHTML= domeCheckVal + " m^2"
+        
+    //    sBracketVal = document.getElementById('ShaftBracketArea').value
+    //    document.getElementById('displayShaftBracket').innerHTML= sBracketVal + " m^2"
+       
+    //    sBossingsVal = document.getElementById('StrutBossingsArea').value
+    //    document.getElementById('displayStrutBossings').innerHTML= sBossingsVal + " m^2"
+       
+    //    shaftsCheckVal = document.getElementById('ShaftsArea').value
+    //    document.getElementById('displayShafts').innerHTML= shaftsCheckVal + " m^2"
+        //  let s1, s2, s3, s4, s5, s6, s7, s8, s9, s10,Sapp
+        //  s1 to to s10 represent the weted area of the individual appenadge 
+        //  Sappp  is the total wtted of all the appendages 
+
+        if(RBSkegCheck=== true && RBSArea > 0){
+         RBS= document.getElementById('rudderBehindSkeg').value
+         k2_1 = (RBSArea * RBS)/RBSArea 
+         s1 = RBSArea 
+        }else{
+            k2_1  = 0
+            s1 = 0
+        }
+        if(RBSCheck=== true && RBSternArea > 0){
+            RBStern= document.getElementById('rudderBehindStern').value
+            k2_2 = (RBSternArea * RBStern)/RBSternArea
+            s2 = RBSternArea
+        }else{
+            k2_2 =0
+            s2 = 0
+        }
+
+        if(SkegCheck===true && SkegArea > 0){
+          Skeg= document.getElementById('Skeg').value
+            k2_3 = (SkegArea * Skeg)/SkegArea
+            s3 = SkegArea
+        }else{
+            k2_3 =0
+            s3 = 0
+        }
+        if(domeCheck===true && domeCheckVal > 0){
+            //Dome
+            k2_4 = (2.7* domeCheckVal)/domeCheckVal
+            s4 = domeCheckVal
+        }else{
+            k2_4 = 0 
+            s4 =0 
+        }
+        if(StaFins === true && StaFinsVal > 0){
+            k2_5 = (2.8 * StaFinsVal)/StaFinsVal
+            s5 = StaFinsVal
+        }else{
+            k2_5 = 0
+            s5 = 0
+        }
+        if(shaftsCheck === true && shaftsCheckVal > 0 ){
+            shafts = document.getElementById('Shafts').value
+            k2_6 = (shafts * shaftsCheckVal)/shaftsCheckVal
+            s6 = shaftsCheckVal
+        }else{
+            k2_6 = 0
+            s6 = 0
+        }
+        if(bKeel === true && bKeelVal > 0){
+            k2_7 = (1.4* bKeelVal)/bKeelVal
+            s7 = bKeelVal
+        }else{
+            k2_7 = 0 
+            s7 = 0
+        }
+        if(sBossings === true && sBossingsVal > 0){
+            k2_8 = (3 * sBossingsVal)/sBossingsVal
+            s8 =  sBossingsVal
+        }else{
+            k2_8 = 0 
+            s8 = 0
+        }
+        if(sBracket === true && sBracketVal > 0){
+            k2_9 = (3* sBracketVal)/sBracketVal
+            s9 =  sBracketVal
+        }else{
+            k2_9 = 0 
+            s9 = 0
+        }
+        if(hullbossingCheck === true && hullBossingsVal > 0){    
+            k2_10 = (2* hullBossingsVal )/hullBossingsVal
+            s10 = hullBossingsVal
+        }else{
+            k2_10 = 0 
+            s10 = 0
+        }
+        Sapp = (s1+s2+s3+s4+s5+s6+s7+s8+s9+s10)*1
+          
+        if(Sapp <= 0){
+        
+          Sapp = 1
+        }
+      
+       K2 =  k2_1+k2_2+k2_3+k2_4+k2_5+k2_6+k2_7+k2_8+k2_9+ k2_10
+       console.log(k2_1,k2_2,k2_3,k2_4,k2_5,k2_6,k2_7,k2_8,k2_9, k2_10)
+       console.log("k2",K2 )
+      //Check if thrusters are fitted on the vessel 
+      if(thrustersCheck=== true){
+        // dt means thruster diamter
+        thruster = thrustersCheck
+        thrusterD = document.getElementById('thrusterDiameter').value
+        thrustersNO = document.getElementById('thrusterNO').value
+
+         dt = thrusterD * thrustersNO
+        console.log("testing dt",dt)
+
+      }else{
+        dt = 0
+      }
+
+      //Check if bulbous bow is fitted on the vessel 
+      if(bulbousCkeck===true){
+        
+         bulbous = bulbousCkeck
+      }
+      shipHull.hull()
+      shipHull.coefficient()
+      // calResistnace.appendageResistance(dt,K2,Sapp)
+      // calResistnace.PressureResistance()
+
+      // calResistnace.bulbousResistance()
+      // calResistnace.frictionalResistance()
+      calResistnace.correctionResistance()
+      calResistnace.formFactor()
+
+         
+    shipDimension(event)
      }
  shipDimension(event)
  function shipDimension(event){
-
-     
-
-    
-
-    
-
 
  shipSpeedKnots = document.getElementById('shipSpeed').value
  document.getElementById('displayShipSpeed').innerHTML= shipSpeedKnots + " knots"
@@ -1071,16 +1440,72 @@ function currentSfocDisplay (){
  document.getElementById('displayAT').innerHTML= AT + " m^2"
 
  //Angle of entrance
- iE = document.getElementById('iE').value
- document.getElementById('displayiE').innerHTML= iE + " Degree"
+//  iE = document.getElementById('iE').value
+//  document.getElementById('displayiE').innerHTML= iE + " Degree"
 
- //Angle of entrance
+ //
  Cb = document.getElementById('Cb').value
  document.getElementById('displayCb').innerHTML= Cb
  
+ //
+ lcb = document.getElementById('LCB').value
+ document.getElementById('displayLCB').innerHTML= lcb
+ 
+ let appendages,RBS, RBSArea,RBStern, RBSternArea,Skeg, SkegArea,
+ StaFinsVal, bKeelVal,domeCheckVal, sBracketVal,sBossingsVal,shaftsCheckVal,shafts,hullBossings,thrustersNO,thrustersD
 
+  RBS= document.getElementById('rudderBehindSkeg').value
+ document.getElementById('displayRudderBehindSkeg').innerHTML=RBS +" "
+ RBSArea= document.getElementById('ArearudderBehindSkeg').value
+ document.getElementById('RudderBehindSkegArea').innerHTML= RBSArea + " m^2"
+
+ RBStern= document.getElementById('rudderBehindStern').value
+ document.getElementById('displayRudderBehindStern').innerHTML= RBStern +" "
+ RBSternArea= document.getElementById('rudderBehindStern').value
+ document.getElementById('AreaRudderBehindStern').innerHTML= RBSArea 
+
+ Skeg= document.getElementById('Skeg').value
+ document.getElementById('displaySkeg').innerHTML= Skeg +" "
+ SkegArea= document.getElementById('SkegArea').value
+ document.getElementById('displaySkegArea').innerHTML= SkegArea 
+
+ shaftsCheckVal = document.getElementById('ShaftsArea').value
+ document.getElementById('displayShaftsArea').innerHTML= shaftsCheckVal 
+ shafts = document.getElementById('Shafts').value
+ document.getElementById('displayShafts').innerHTML= shafts 
+
+
+ StaFinsVal = document.getElementById('StabilizerFins').value
+document.getElementById('displayStabilizerFins').innerHTML= StaFinsVal 
  
+
+bKeelVal = document.getElementById('BilgeKeelArea').value
+document.getElementById('displayBilgeKeel').innerHTML= bKeelVal 
+
+domeCheckVal = document.getElementById('DomeArea').value
+ document.getElementById('displayDome').innerHTML= domeCheckVal 
  
+ sBracketVal = document.getElementById('ShaftBracketArea').value
+document.getElementById('displayShaftBracket').innerHTML= sBracketVal
+  
+sBossingsVal = document.getElementById('StrutBossingsArea').value
+ document.getElementById('displayStrutBossings').innerHTML= sBossingsVal
+
+   shaftsCheckVal = document.getElementById('ShaftsArea').value
+  document.getElementById('displayShafts').innerHTML= shaftsCheckVal 
+ 
+  hullBossings = document.getElementById('hullBossings').value
+  document.getElementById('displayHullBossings').innerHTML= hullBossings 
+ 
+  hullBossings = document.getElementById('hullBossings').value
+  document.getElementById('displayHullBossings').innerHTML= hullBossings 
+ 
+  thrusterD = document.getElementById('thrusterDiameter').value
+  document.getElementById('displaythrusterDiameter').innerHTML= thrusterD + " m"
+ thrustersNO = document.getElementById('thrusterNO').value
+ document.getElementById('displaythrusterNO').innerHTML= thrustersNO
+
+
 // different function below 
 
  shipHull.hull()
@@ -1091,6 +1516,7 @@ calResistnace.waveResistance()
 
 function hullDimention(event){
     sternId = event.target.value
+    stern = sternId
     
 }
 
