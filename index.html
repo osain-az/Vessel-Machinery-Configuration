@@ -263,6 +263,12 @@ tr:hover {background-color: #ddd;}
       margin-bottom: 10px;
     }
 
+    /* //Propeller */
+
+    .propeller{
+      margin: 15px;
+    }
+
 
     .mainDashboard{
         display: flex;
@@ -308,6 +314,9 @@ tr:hover {background-color: #ddd;}
 
     .hide {
     display: none;
+    }
+    .center{
+      text-align: center;
     }
 
     .power{
@@ -466,8 +475,6 @@ tr:hover {background-color: #ddd;}
                 <label for="Thruster"> Thruster </label>
                 diameter : <input type="range" name="" class="inputArea" id="thrusterDiameter" min="0" value="0" step="0.1" max="15"><span class="displaythrusterDiameter spanNew"id="displaythrusterDiameter"> </span> <br> <br>
                 numbers of thruster : <input type="range" name="" class="inputArea" id="thrusterNO" min="1" value="2" step="" max="10"><span class="displayHullBossings spanNew"id="displaythrusterNO"> </span> <br>
-
-
                   </form>
 
                 </div>
@@ -477,7 +484,7 @@ tr:hover {background-color: #ddd;}
 
                   <div class="stern "  >
                     <strong>choose Stern Shape</strong>
-                  <select class="" onchange="hullDimention(event)" id="stern">
+                  <select class="" onchange= "shipDimension(event)" id="stern">
                     <option value="U&Hogner" selected>U with Hogner</option>
 
                    <!-- <option value="" ><strong>Choose engine</strong> </option> -->
@@ -552,18 +559,70 @@ tr:hover {background-color: #ddd;}
                 <td>Mid-ship Correlation</td>
                 <td><span id="RA">0</span></td>
               </tr>
-
               <tr>
                 <td>Total resistance</td>
                 <td><span id="RT">0</span></td>
               </tr>
-
-
             </table>
 
             <div class="propeller">
-              <h3>Propeller dimension</h3>
+              <h2>Propeller dimension and parameters</h2>
+              <h2></h2>
+              Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.1" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
+              N0 of blades Z : <input type="range" name="inputArea" class="" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
+              Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.50" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
+              P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.8" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
+              Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0.1" value="0.3" step="0.1" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
+            </div>
 
+            <div class="propellerTable">
+              <table id="propellerTable" class="Table">
+                <thead>
+  
+                  <th colspan="12">Propeller parameters using  Wageningen B-Screw Series  </th>
+  
+                </thead>
+                <thead>
+  
+                  <th colspan="">Parameters</th>
+                  <th colspan=""> </th>
+                </thead>
+                <tr>
+                  <td>Wake </td>
+                  <td><span id="wake">0</span></td>
+                </tr>
+                <tr>
+                  <td>KT</td>
+                  <td><span id="KT">0</span></td>
+                </tr>
+                <tr>
+                  <td>KQ</td>
+                  <td><span id="KQ">0</span></td>
+                </tr>
+                <tr>
+                  <td>Thrust</td>
+                  <td><span id="thrust">0</span></td>
+                </tr>
+                <tr>
+                  <td>Thrust Power</td>
+                  <td><span id="thrustP">0</span></td>
+                </tr>
+                <!-- <tr>
+                  <td>pressure at Transom</td>
+                  <td><span id="Rtr">0</span></td>
+                </tr> -->
+                <!-- <tr>
+                  <td>Mid-ship Correlation</td>
+                  <td><span id="RA">0</span></td>
+                </tr> -->
+  
+                <!-- <tr>
+                  <td>Total resistance</td>
+                  <td><span id="RT">0</span></td>
+                </tr> -->
+  
+  
+              </table>
             </div>
 
     </div>
@@ -576,7 +635,7 @@ tr:hover {background-color: #ddd;}
 
 
         <div class="engine column" id="engine" >
-            <strong><p>choose engine model</p></strong>
+            <strong><p class="center">choose engine model</p></strong>
           <select class="engine" onchange="displayEngineType(event)">
            <option value="" selected><strong>Choose engine</strong> </option>
            <!-- <option value="kongsberg">Kongsberg</option> -->
@@ -704,7 +763,7 @@ tr:hover {background-color: #ddd;}
     minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
     Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
-    Rform,intervalResis
+    formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,
 
 
  // all constant
@@ -717,7 +776,7 @@ tr:hover {background-color: #ddd;}
 
 
 
-    function resistnaceDisplay (){
+    function resistanceDisplay (){
 
 
 var resistance = {
@@ -761,10 +820,10 @@ const  interval = setInterval(function() {
   }, [0], 10000)
   
   if( intervalResis > 1){clearInterval(interval)};
-}, 10);
+}, 50);
 
 }
- resistnaceDisplay ()
+ resistanceDisplay ()
  intervalResis
 
 
@@ -1173,32 +1232,33 @@ var chart3 = c3.generate({
   },
 
   color: {
-      pattern: ['#FF0000'], // the three color levels for the percentage values.
+      pattern: ['#F97600','#F97600', '#F97600' ,'#F97600'], // the three color levels for the percentage values.
       threshold: {
 //            unit: 'value', // percentage is default
           // max: 200, // 100 is default g
-          values: [200]
+          values: [load*0.25, load*0.5, load*0.8, load*0.9]
       }
   },
   size: {
       height: 150
   }
 });
+var interval = setInterval(function() {
+
+chart3.load({
+  columns: [['engine load',load*0.1 ]]
+});
+
+// if( > 10) clearInterval(interval);
+}, 100);
 
 setTimeout(function () {
   chart3.load({
       columns: [['engine load', load]]
   });
-}, 1000);
+}, 1000)
 
-var interval = setInterval(function() {
 
-      chart3.load({
-        columns: [['engine load',load ]]
-    });
-
-      // if( > 10) clearInterval(interval);
-    }, 100);
 
 
 }
@@ -1456,40 +1516,40 @@ function currentSfocDisplay (){
       }else{
         dt = 0
       }
-      if(!stern){
-        stern = document.getElementById('stern').value
-      }
-
+      
+      sternType(event)
       //Check if bulbous bow is fitted on the vessel
       if(bulbousCkeck===true){
          bulbous = bulbousCkeck
          i = 1
       }
 
-      //  shipHull.hull()
+       shipHull.hull()
       //  shipHull.coefficient()
   //      calResistnace.appendageResistance()
   //      calResistnace.PressureResistance()
 
   // calResistnace.bulbousResistance()
       // calResistnace.frictionalResistance()
-      // calResistnace.correctionResistance()
+      // calResistnace.correlationResistance()
       // calResistnace.formFactor()
       // calResistnace.RwHighSped()
 //  calResistnace.waveResistance()
 
-    shipDimension(event)
     if(i >0 || x<2){
       updateResistance()
       // calResistnace.totalResistance()
       // calResistnace.finalWaveResistance()
     }
     x = 2
+    shipDimension(event)
      }
 
 
- shipDimension(event)
+
+     shipDimension(event)
  bulbousCheck(event)
+
 
 
  function shipDimension(event){
@@ -1548,11 +1608,30 @@ function currentSfocDisplay (){
  document.getElementById('displayLCB').innerHTML= lcb
 
 updateResistance()
+
+// propellers()
+
 }
 
-function hullDimention(event){
-    sternId = event.target.value
-    stern = sternId
+function sternType(event){
+   sternId = document.getElementById('stern').value
+     
+    if(sternId === "Normal"){
+            stern = 0
+            this.c14 = 1 + 0.011*stern
+
+         }
+         else if(sternId === "V"){
+             stern = -10
+         }
+         else if(sternId === "U&Hogner"){
+            stern = 10
+         }
+         else if(sternId === "PramWithGondola"){
+            stern = -25
+         }
+        //  alert(stern)
+    
 
 }
 
@@ -1566,6 +1645,40 @@ function displayResistance(){
   document.getElementById('RT').innerHTML=  RT+ " "
 }
 
+
+function propellers(){
+  D = document.getElementById('D').value
+  PD = document.getElementById('PD').value
+
+  Z = document.getElementById('Z').value
+  J = document.getElementById('J').value
+  AeAo = document.getElementById('AeAo').value
+
+  document.getElementById('displayD').innerHTML=  D + " "
+  document.getElementById('displayZ').innerHTML=  Z+ " "
+  document.getElementById('displayJ').innerHTML=  J+ " "
+  document.getElementById('displayAeAo').innerHTML=  AeAo+ " "
+  document.getElementById('displayPD').innerHTML=  PD + " "
+  // shipHull.hull()
+  // shipHull.coefficient()
+  // calResistnace.formFactor()
+
+  propeller.wake()
+
+  if(!KT){
+    KT = 0
+    KQ = 0
+    // W = 0
+  }
+
+   document.getElementById('wake').innerHTML=  W + " "
+   document.getElementById('KT').innerHTML=  KT+ " "
+   document.getElementById('KQ').innerHTML=  KQ+ " "
+
+
+}
+
+
 function updateResistance(){
 let c,k,val,i,s
       intervalResis = 0
@@ -1578,7 +1691,7 @@ let c,k,val,i,s
       for ( k = 1; k < val;k ++) {
         inputData(i);
         if(i===1){
-          resistnaceDisplay ()
+          resistanceDisplay ()
         }
         i++
         }
@@ -1594,15 +1707,23 @@ let c,k,val,i,s
                 calResistnace.totalResistance()
                 if(RT){
                   displayResistance()     
-                 intervalResis = 2   
+                 intervalResis = 2
+                 propellers()
+
                 }
               }
           calResistnace.totalResistance()
         c++
         }, 100 * i);
         }
-  resistnaceDisplay ()
+  resistanceDisplay ()
 }
+
+// propellerDetails()
+// function propellerDetails(){
+//   propellerDetails.wake()
+
+// }
 
 
 
@@ -1719,10 +1840,6 @@ if (EventID==="wartsila 32"){
  ratedPower = engineDetail.power
 
        // updating sliders
-
-
-//  const regex = /[+-]?\d+(\.\d+)?/g;
-// match(/\d+/)*1
 
 
  engineStrokes =wartsila32.Strokes
