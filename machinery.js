@@ -27,16 +27,6 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
 
     // this.power = ((this.Torque*1000*2*3.143*this.speedRPM)/60)/1000
     // load = this.power
-    console.log("mean", this.mean_p)
-    torque = (this.Torque).toFixed(1)
-    torque = parseFloat(torque)
-    console.log("Piston ",this.pistonStroke)
-    console.log("speedt",this.speedRPM)
-    console.log("cranshit",this.cranshaftRev)
-    console.log("",this.engineStroke)
-    console.log("torque",this.Torque)
-    console.log("power",this.power)
-    console.log("testing g" , g)
     
    
 },

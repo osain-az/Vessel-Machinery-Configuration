@@ -53,11 +53,7 @@ thead{
   text-align: center;
   text-transform: uppercase;
   text-decoration-color: #f2f2f2;
-
-
 }
-
-
 tr:nth-child(even){background-color: #f2f2f2;}
 tr:hover {background-color: #ddd;}
 /*  */
@@ -310,6 +306,7 @@ tr:hover {background-color: #ddd;}
     }
     .engineInput{
         color: aqua;
+        margin-left: 20px;
     }
 
     .hide {
@@ -718,7 +715,8 @@ tr:hover {background-color: #ddd;}
 
             <!-- parameters control and configuration  -->
             <div class="engineInput">
-              <!-- <h2>Engine configuration and darshboard </h2> -->
+              <h2> Test engine performance </h2> 
+              <h3 class="center">using below paramters</h3>
 
               <form  id="simple_form" class="form">
 
@@ -829,58 +827,18 @@ var cnt = 0;
 
 
 function sfocDisplay (){
-
-
-// var liveSfoc = {
-//   type: 'scatter',
-//   x: [engine_loadPercent],
-//   y: [sfoc_cal],
-// }
-
-// var datas = [ liveSfoc ]
-// var layout = {
-
-//   xaxis:
-// 	{
-//         range: [0, 100],
-//         showgrid: false,
-//         title: 'engine load in %'
-//     },
-//     yaxis:{
-//         showgrid: false,
-//         range: [0, 300],
-//         title: 'SFOC'
-
-//     },
-
-// //   plot_bgcolor: 'yellow',
-//   width:600,
-//   height:400,
-// //   paper_bgcolor: 'purple'
-
-// }
-// Plotly.newPlot('plot',datas,layout);
-var cnt = 0;
-
-var interval = setInterval(function() {
-  console.log(sfoc_cal)
-  Plotly.extendTraces('plot', {
-    x: [[engine_loadPercent]],
-    y: [[sfoc_cal]]
-  }, [0], 10000)
-  if(engine_loadPercent > 100) clearInterval(interval);
-}, 10);
-
-}
-
-var liveSfoc = {
+  const liveSfoc = {
   type: 'scatter',
   x: [],
   y: [],
 }
 
-var datas = [ liveSfoc ]
-var layout = {
+// //   plot_bgcolor: 'yellow',
+//   width:600,
+//   height:400,
+// //   paper_bgcolor: 'purple'
+const datas = [ liveSfoc ]
+const layout = {
 
   xaxis:
 	{
@@ -901,8 +859,13 @@ var layout = {
   height:600,
 //   paper_bgcolor: 'purple'
 
+  }
+
+  Plotly.newPlot('plot',datas,layout);
+
 }
-Plotly.newPlot('plot',datas,layout);
+
+
 
 
 //Graph resistance
@@ -1046,7 +1009,7 @@ setTimeout(function () {
 
 function rpmDisplay(){
     if(!speedRPM){
-        speedRPM = ratedPower
+        speedRPM = ratedSpeed
     }
 
     var chart2 = c3.generate({
@@ -1209,7 +1172,7 @@ var chart3 = c3.generate({
 
   data: {
       columns: [
-          ['engine load', load]
+          ['engine load', ratedPower*1]
       ],
 
       type: 'gauge',
@@ -1225,7 +1188,7 @@ var chart3 = c3.generate({
           show: true // to turn off the min/max labels.
       },
   min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-  max: ratedPower, // 100 is default
+  max: ratedPower*1, // 100 is default
  units: '  kW',
   width: 39 // for adjusting arc thickness
 
@@ -1246,7 +1209,7 @@ var chart3 = c3.generate({
 var interval = setInterval(function() {
 
 chart3.load({
-  columns: [['engine load',load*0.1 ]]
+  columns: [['engine load',load]]
 });
 
 // if( > 10) clearInterval(interval);
@@ -1256,10 +1219,7 @@ setTimeout(function () {
   chart3.load({
       columns: [['engine load', load]]
   });
-}, 1000)
-
-
-
+}, 2000)
 
 }
 
@@ -1268,8 +1228,6 @@ function currentSfocDisplay (){
     if(!sfoc_cal){
         sfoc_cal = ratedSfoc
     }
-
-
     var chart4 = c3.generate({
 
       bindto: '#sfocChart',
@@ -1299,11 +1257,11 @@ function currentSfocDisplay (){
       },
 
       color: {
-          pattern: ['#FF0000'], // the three color levels for the percentage values.
+          pattern: ['#FF0000','#F97600','#60B044'], // the three color levels for the percentage values.
           threshold: {
     //            unit: 'value', // percentage is default
               // max: 200, // 100 is default g
-              values: [sfoc_cal]
+              values: [160, 179,184]
           }
       },
       size: {
@@ -1724,32 +1682,31 @@ let i = 1;
 function loadSfoc(val){
     // this is for the percentage Range slider
  document.getElementById('loadDisplay').innerHTML= val + " engine load %"
- load = (val/100)*enginePower
- engine_loadPercent = val
-EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+//  load = (val/100)*enginePower
+//  engine_loadPercent = val
+// // EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
 
-if(i <= 1){
- sfocDisplay ()
-}
-i++
+// if(i <= 1){
+//  sfocDisplay ()
+// }
+// i++
 
 }
 
 function powerSfoc(val){
     //this is for the power range
- document.getElementById('powerDisplay').innerHTML= val + " engine load %"
- load = val
-EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+ document.getElementById('powerDisplay').innerHTML= val + " engine load kW"
+//  load = val
+// EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
 
-if(i <= 1){
- sfocDisplay ()
-}
-i++
+// if(i <= 1){
+//  sfocDisplay ()
+// }
+// i++
 }
 
 
 function myFunction(val) {
-
 
 // document.getElementById("demo").innerHTML = val;
 // console.log(val)
@@ -1758,22 +1715,13 @@ function myFunction(val) {
 // document.getElementById('displayRPM').innerHTML= val + " rpm"
 // speedRPM = val
 alert("Estimation using the RPM is still under improvemnt !, use other methods")
-// EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
-// EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-
-// if(i <= 1){
-// //  sfocDisplay ()
-// currentSfocDisplay()
-
-// }
-// i++
 
 
 }
 
 function showEngineDashbaord (){
-    document.getElementById("mainDashboard").classList.remove("hide");
-    document.getElementById("engineDashboard").classList.remove("hide");
+  document.getElementById("mainDashboard").classList.remove("hide");
+  document.getElementById("engineDashboard").classList.remove("hide");
   document.getElementById("engineDashboard").classList.add("grides");
   document.getElementById("power").classList.add("power");
   document.getElementById("load").classList.add("load");
@@ -1811,7 +1759,6 @@ function showEngineDashbaord (){
 
 // }
 
-
 function displayEngineType(event) {
   document.getElementById("engineTable").classList.remove("hide");
   document.getElementById("mainDashboard").classList.remove("hide");
@@ -1829,11 +1776,8 @@ if (EventID==="wartsila 32"){
 }
 
  engineDetail = wartsila32
- ratedPower = engineDetail.power
-
-       // updating sliders
-
-
+ ratedPower = parseFloat(engineDetail.power) 
+ 
  engineStrokes =wartsila32.Strokes
  meanPressure = parseFloat(wartsila32.mean_Presure)
  cylinderBore = parseFloat(wartsila32.cylinderBore)
@@ -1846,7 +1790,26 @@ if (EventID==="wartsila 32"){
 
 //  speedRPM  = 432
 
- EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
+ 
+}
+
+else if (EventID==="wartsila 46F") {
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+}
+engineStrokes =wartsila32.Strokes
+ meanPressure = parseFloat(wartsila46.mean_Presure)
+ cylinderBore = parseFloat(wartsila46.cylinderBore)
+ cylinders = parseFloat(wartsila46.cylinders)
+ pistonStroke = parseFloat(wartsila46.pistonStroke)
+ enginePower = parseFloat(wartsila46.power)
+ ratedSfoc = parseFloat(wartsila46.SFOC)
+ supplier = wartsila46.supplier
+ ratedSpeed = parseFloat(wartsila46.Engine_speed)
+ engineDetail = wartsila46
+}
+
+EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
  torqueDisplay ()
  powerDisplay()
@@ -1871,11 +1834,7 @@ if (EventID==="wartsila 32"){
    rpm_min = 1400
    rpm_max = parseFloat(engineDetail.Engine_speed)
  }
-//  else if (load){
-//      if(){
 
-//      }
-//  }
 
     document.getElementById('displayRPM').innerHTML= rpm_min + " minimun rpm"
     document.getElementById('RPM').value = rpm_min
@@ -1893,22 +1852,6 @@ if (EventID==="wartsila 32"){
     document.getElementById('power').value = minPower
     document.getElementById('powerDisplay').innerHTML= minPower+ " minimun desired power "
 
-}
-
-//  else if(engineDetail.speed_type=== "slow-Speed"){
-//     document.getElementById('RPM').max =
-//  }
-//  else if(engineDetail.speed_type=== "fast-Speed"){
-//     document.getElementById('RPM').max =
-//  }
-
-
-else if (EventID==="wartsila 46F") {
-  while (table.hasChildNodes()) {
-  table.removeChild(table.firstChild);
-}
- engineDetail = wartsila46
-}
 
   for (let [key, value] of Object.entries(engineDetail)) {
     console.log(`${key}: ${value}`);
@@ -1932,7 +1875,7 @@ else if (EventID==="wartsila 46F") {
 function getValues(event){
     let val, k,i, n, c,t
     t = 1
-
+    
   const EventID = event.target.id;
 
  if (EventID ==='RPM' || EventID === 'RPMInput') {
@@ -1943,35 +1886,24 @@ function getValues(event){
 
     }
 
-
-//  }
 }
 
-else if(EventID ==='load'){
-
- val  = event.target.value
- load = (val/100)*enginePower
- engine_loadPercent = val
-EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-
- document.getElementById("loadDisplay").innerHTML= val + "% engine power"
-
-
-}
-
-
-else if(EventID ==='loadInput'){
-
-    val = document.getElementById(EventID).value
-
-    document.getElementById(EventID).value = ""
-
-    document.getElementById("loadDisplay").innerHTML= val + "% engine power"
+else if(EventID ==='loadInput'|| EventID ==='load'){
+    if( EventID ==='loadInput'){
+      val = document.getElementById(EventID).value
+      document.getElementById(EventID).value = ""
+      document.getElementById("loadDisplay").innerHTML= val + "% engine power"
+    }else{
+      val  = event.target.value
+      document.getElementById("loadDisplay").innerHTML= val + "% engine power"
+    }
+  
+    sfocDisplay ()
      c= (10/100)*val;
-     n = 20
+     n = 10
      if(val >=20 && val <= 100){
         i = 0
-      for ( k = 20; k < val;k +=c) {
+      for ( k = 10; k < val;k +=c) {
 
         inputData(i);
         i++
@@ -1990,35 +1922,37 @@ else if(EventID ==='loadInput'){
             EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
             console.log("this is the load last",load)
                 }
+                Plotly.extendTraces('plot', {
+                x: [[engine_loadPercent]],
+                y: [[sfoc_cal]]
+              }, [0], 10000)
               n+=c
 
-        }, 2000 * i);
+        }, 1000 * i);
         }
 }
 }
 
+else if(EventID === 'powerInput' || EventID ==='power'){
 
-else if(EventID ==='power'){
+  if(EventID === 'powerInput'){
 
-
-}
-
-else if(EventID === 'powerInput'){
-
-    if(t <= 1){
- sfocDisplay ()
-}
-t++
     val = parseFloat(document.getElementById(EventID).value)
 
     document.getElementById(EventID).value = ""
 
-    document.getElementById("powerDisplay").innerHTML= val + "engine load kW"
+    document.getElementById("powerDisplay").innerHTML= val + " engine load kW"
 
+  }else{
+    val = parseFloat(document.getElementById(EventID).value)
+
+  }
+    sfocDisplay ()
     c= (10/100)*val;
      if(val >=minPower && val <= enginePower){
         i = 0
         n= minPower;
+        
       for ( k = minPower; k < val;k +=c) {
 
         inputData(i);
@@ -2028,9 +1962,6 @@ t++
         function inputData(i) {
         setTimeout(function() {
 
-            console.log("K", n);
-            console.log("Val",val);
-            console.log(i);
                 if(val -n >c ){
                     console.log("testing")
                 load = n
@@ -2041,9 +1972,13 @@ t++
             EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
             console.log("this is the load last",load)
                 }
+                Plotly.extendTraces('plot', {
+                x: [[engine_loadPercent]],
+                y: [[sfoc_cal]]
+              }, [0], 10000)
               n+=c
 
-        }, 2000 * i);
+        }, 1000 * i);
         }
 }
 
