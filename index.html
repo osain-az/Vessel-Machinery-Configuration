@@ -569,7 +569,7 @@ tr:hover {background-color: #ddd;}
               <h2>Propeller dimension and parameters</h2>
               <h2></h2>
               Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.1" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
-              N0 of blades Z : <input type="range" name="inputArea" class="" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
+              N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
               Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.50" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
               P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.8" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
               Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0.1" value="0.3" step="0.1" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
@@ -585,7 +585,7 @@ tr:hover {background-color: #ddd;}
                 <thead>
   
                   <th colspan="">Parameters</th>
-                  <th colspan=""> </th>
+                  <th colspan=""> Values</th>
                 </thead>
                 <tr>
                   <td>Wake </td>
@@ -607,10 +607,10 @@ tr:hover {background-color: #ddd;}
                   <td>Thrust Power</td>
                   <td><span id="thrustP">0</span></td>
                 </tr>
-                <!-- <tr>
-                  <td>pressure at Transom</td>
-                  <td><span id="Rtr">0</span></td>
-                </tr> -->
+                <tr>
+                  <td>Hull efficiency </td>
+                  <td><span id="NH">0</span></td>
+                </tr>
                 <!-- <tr>
                   <td>Mid-ship Correlation</td>
                   <td><span id="RA">0</span></td>
@@ -774,7 +774,7 @@ tr:hover {background-color: #ddd;}
 
 
 
-
+ resistanceDisplay ()
 
     function resistanceDisplay (){
 
@@ -812,15 +812,15 @@ Plotly.newPlot('resistanceGraph',resistData,layout);
 var cnt = 0;
  
 
-const  interval = setInterval(function() {
+// const  interval = setInterval(function() {
   
-  Plotly.extendTraces('resistanceGraph', {
-    x: [[shipSpeedKnots]],
-    y: [[RT]]
-  }, [0], 10000)
-  
-  if( intervalResis > 1){clearInterval(interval)};
-}, 50);
+//   Plotly.extendTraces('resistanceGraph', {
+//     x: [[shipSpeedKnots]],
+//     y: [[RT]]
+//   }, [0], 10000)
+//   console.log("testing")
+//   if( intervalResis > 1){clearInterval(interval)};
+// }, 100);
 
 }
  resistanceDisplay ()
@@ -1524,7 +1524,7 @@ function currentSfocDisplay (){
          i = 1
       }
 
-       shipHull.hull()
+      //  shipHull.hull()
       //  shipHull.coefficient()
   //      calResistnace.appendageResistance()
   //      calResistnace.PressureResistance()
@@ -1535,20 +1535,20 @@ function currentSfocDisplay (){
       // calResistnace.formFactor()
       // calResistnace.RwHighSped()
 //  calResistnace.waveResistance()
-
-    if(i >0 || x<2){
+    x++
+    if(i >0 || x>=2){
       updateResistance()
       // calResistnace.totalResistance()
       // calResistnace.finalWaveResistance()
     }
-    x = 2
-    shipDimension(event)
+   
+    // shipDimension(event)
      }
 
 
-
-     shipDimension(event)
  bulbousCheck(event)
+ shipDimension(event)
+ 
 
 
 
@@ -1607,7 +1607,7 @@ function currentSfocDisplay (){
  lcb = lcb*1
  document.getElementById('displayLCB').innerHTML= lcb
 
-updateResistance()
+ updateResistance()
 
 // propellers()
 
@@ -1684,47 +1684,39 @@ let c,k,val,i,s
       intervalResis = 0
      s = shipSpeedKnots*0.5144
     val = shipSpeedKnots;
+    resistanceDisplay ()
 
     //  n = 20
         c = 1
         i = 0
       for ( k = 1; k < val;k ++) {
-        inputData(i);
-        if(i===1){
-          resistanceDisplay ()
-        }
-        i++
-        }
-
-        function inputData(i) {
-        setTimeout(function() {
-               if(val-c > 1 ){
-                shipSpeed = (c+1)*0.5144
-                shipSpeedKnots = c+1   
-              }else if(val-c <= 1){
+       
+        if(val-k > 1 ){
+             shipSpeed = k*0.5144
+             shipSpeedKnots = k  
+              }
+              else if(val-k <= 1){
                 shipSpeed = s
                 shipSpeedKnots = val
-                calResistnace.totalResistance()
+                 calResistnace.totalResistance()
                 if(RT){
                   displayResistance()     
                  intervalResis = 2
                  propellers()
-
+                //  resistanceDisplay ()
                 }
               }
           calResistnace.totalResistance()
-        c++
-        }, 100 * i);
-        }
-  resistanceDisplay ()
+          console.log("new speed", shipSpeed)
+ 
+          Plotly.extendTraces('resistanceGraph', {
+            x: [[shipSpeedKnots]],
+            y: [[RT]]
+          }, [0], 100)
+          
+        }       
+  
 }
-
-// propellerDetails()
-// function propellerDetails(){
-//   propellerDetails.wake()
-
-// }
-
 
 
 let lastRPM;

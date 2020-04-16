@@ -443,6 +443,7 @@ function resistance(){
          RT = Rf*formFactor+Rapp+Rw+RA+Rtr+Rbt
          RT = (RT.toFixed(3))*1
         console.log("RT",RT)
+        console.log("speed",shipSpeed)
       
     }
 
@@ -500,6 +501,7 @@ function propellerProperties (){
     }
 
     this.KTandKQ = function(){
+        this.RN
         KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.logRN-0.301)**2*AeAo*J**2+0.0000643192*(Math.logRN-0.301)*PD**6*J**2
         - 0.0000110636*(Math.logRN-0.301)**2*PD**6*J**2- 0.0000276305**(Math.logRN-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.logRN-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.logRN-0.301)*Z**2*AeAo*PD**3*J
         
