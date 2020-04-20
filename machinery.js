@@ -446,9 +446,7 @@ function propellerProperties (){
     }
 
     this.wake = function(){
-        // this.Rf = Rf*1000
-        // this.Rapp = Rapp*1000
-        // this.RA = RA*1000
+      
 
         // Cv = (formFactor*this.Rf+ this.Rapp + this.RA)/0.5*density*shipSpeed**2*(Sa+Sapp)
         Cv = formFactor*Cf+Ca
@@ -490,24 +488,20 @@ function propellerProperties (){
         // W = (Cv*Lwl*this.c9/TA)*((0.0661875)+(1.21756*this.c11*(Cv/(1-this.Cpi))))+0.24558*Math.sqrt(Bwl/(Lwl*(1-this.Cpi)))-(0.09726/(0.95-Cp))+(0.11434/(0.95-Cb))+0.75*stern*Cv+0.002*stern
         if(screw ==="singleScrew"){
              W = this.c9*this.c20*Cv*(Lwl/TA)*(0.050776 + 0.93405*(this.c11*Cv/(1-this.Cpi))) + 0.27915*this.c20*Math.sqrt(Bwl/(Lwl*(1-this.Cpi))) + this.c19*this.c20
-             NR = 0.9922 - 0.05908*AeAo + 0.07424*(Cp - 0.0225*lcb) 
-              
+             NR = 0.9922 - 0.05908*AeAo + 0.07424*(Cp - 0.0225*lcb)       
         }
         else if(screw ==="TwinScrew"){
            W = 0.3095*Cb + 10*Cv*Cb - 0.23*D/Math.sqrt(Bwl*T)
            NR =  0.9737 +0.111*(Cp - 0.0225*lcb) - 0.06325*PD
-
         }
         Va = shipSpeed*(1-W)
         Cth = thrust/(density*Va**2*D**2*(Math.PI/8))
-
         W = W.toFixed(3)
         Cth = Cth.toFixed(3)
         NR = NR.toFixed(3)
     }
 
     this.KTandKQ = function(){ 
-
         this.Co7r = 2.073*AeAo *D/Z
         this.Rno = (this.Co7r*Math.sqrt(Va**2 + (0.75*Math.PI*n*D)**2))/viscosity
         if(n && this.Rno > 2*10**6){
@@ -541,15 +535,13 @@ function propellerProperties (){
         }
 
         NH = (1- TFactor)/(1-W) // Hull efficiency 
-        //relative rotative efficiency
-       
         No = (KT*J)/(KQ*2*3.14)
         NB = No * NR
         NT = 0.97  // (Assumed value
-        NH = NH.toFixed(3)
-        No = No.toFixed(3)
-        KT = KT.toFixed(3)
-        KQ = KQ.toFixed(3)
+        NH = NH.toFixed(2)
+        No = No.toFixed(2)
+        KT = KT.toFixed(2)
+        KQ = KQ.toFixed(2)
     }
  
    this.power = function(){
@@ -559,9 +551,9 @@ function propellerProperties (){
        Pd = Pt/NB   //deliver power to the propeller 
        ND = Pe/Pd
        Ps = Pd/NT
-       Pe = Pe.toFixed(3)
-       Pt = Pt.toFixed(3)
-       Pd = Pd.toFixed(3)
+       Pe = Pe.toFixed(2)
+       Pt = Pt.toFixed(2)
+       Pd = Pd.toFixed(2)
        
    }
     

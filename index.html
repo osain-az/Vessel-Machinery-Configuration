@@ -655,6 +655,10 @@ tr:hover {background-color: #ddd;}
                   <td><span id="thrustFactor">0</span></td>
                 </tr>
                 <tr>
+                  <td>advance propeller speed </td>
+                  <td><span id="Va">0</span></td>
+                </tr>
+                <tr>
                   <td>Thrust loading Cth</td>
                   <td><span id="Cth">0</span></td>
                 </tr>
@@ -668,7 +672,7 @@ tr:hover {background-color: #ddd;}
                 </tr>
 
               <tr>
-                  <td>Power to propeller  </td>
+                  <td> Power delivered to propeller </td>
                   <td><span id="Pd">0</span></td>
                 </tr>
                <tr>
@@ -1708,6 +1712,7 @@ function propellers(event){
    document.getElementById('thrustFactor').innerHTML=  TFactor + " "
    document.getElementById('Cth').innerHTML=  Cth + " "
 
+   document.getElementById('Va').innerHTML=  Va + " m/s"
 
 
 }
