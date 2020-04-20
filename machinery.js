@@ -535,7 +535,8 @@ function propellerProperties (){
         }
 
         NH = (1- TFactor)/(1-W) // Hull efficiency 
-        No = (KT*J)/(KQ*2*3.14)
+         No = (KT*J)/(KQ*2*3.14)
+       
         NB = No * NR
         NT = 0.97  // (Assumed value
         NH = NH.toFixed(2)
@@ -554,6 +555,8 @@ function propellerProperties (){
        Pe = Pe.toFixed(2)
        Pt = Pt.toFixed(2)
        Pd = Pd.toFixed(2)
+    //    No = Pt/Pd
+    //    No = No.toFixed(2)
        
    }
     
