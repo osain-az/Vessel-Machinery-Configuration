@@ -258,14 +258,28 @@ tr:hover {background-color: #ddd;}
     margin-top: 10px;
       margin-bottom: 10px;
     }
+    .AirArea{
+      margin: 15px;
+      border: solid peachpuff 2px;
+    }
+    .airArea{
+      width: 70%;
+    }
 
     /* //Propeller */
 
     .propeller{
       margin: 15px;
     }
-
-
+    .propellChoice{
+      display: flex;
+      flex-wrap: nowrap;
+      margin-bottom: 20px;
+    }
+    .screw,.shaft {
+      margin-left: 15px;
+    }
+  
     .mainDashboard{
         display: flex;
         flex-wrap: nowrap;
@@ -398,10 +412,10 @@ tr:hover {background-color: #ddd;}
                 <p>CB: <input type="range" name="" class="shipDimension" id="Cb" min="0" value="0.572" max="1" step="0.01"  oninput="shipDimension(event)"><span class="displayCb spanNew"id="displayCb" > </span> </p>
                 <!-- <p>CP: <input type="range" name="" class="shipDimension" id="CP" min="0" value="" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> -->
                 <p>CM: <input type="range" name="" class="shipDimension" id="Cm" min="0" value="0.98" step="0.01" max="1"  oninput="shipDimension(event)"><span class="displayCm spanNew"id="displayCm" > </span> </p>
-                <p>LCB (%): <input type="range" name="" class="shipDimension" id="LCB" min="0" value="1.53" step="0.1" max="6"  oninput="shipDimension(event)"><span class="displayLCB spanNew"id="displayLCB" > </span> </p>
+                <p>LCB at Lwl (%): <input type="range" name="" class="shipDimension" id="LCB" min="-5" value="1.53" step="0.1" max="6"  oninput="shipDimension(event)"><span class="displayLCB spanNew"id="displayLCB" > </span> </p>
                 </div>
 
-               <form action="" onchange="bulbousCheck(event)" class="">
+               <form action="" onchange="appendageCal(event)" class="">
 
                <h3>Appendage</h3>
                  <div class="appendage">
@@ -439,7 +453,7 @@ tr:hover {background-color: #ddd;}
             </form>
 
 
-                <form action="" onchange="bulbousCheck(event)" class="area11">
+                <form action="" onchange="appendageCal(event)" class="area11">
                     <input type="checkbox" id="BilgeKeelAreaCheck" name="Bilge Keel" value="">
                     <label for="Bilge Keel"> Bilge Keel  Area: </label>
                     <input type="range" name="" class="inputArea" id="BilgeKeelArea" min="0" value="0" step="0.1" max="50"><span class="displayBilgeKeel spanNew"id="displayBilgeKeel"> </span> <br><br>
@@ -476,12 +490,11 @@ tr:hover {background-color: #ddd;}
 
                 </div>
 
-
                 <div class="SternBulbous">
 
                   <div class="stern "  >
                     <strong>choose Stern Shape</strong>
-                  <select class="" onchange= "shipDimension(event)" id="stern">
+                  <select class="" onchange= "sternType(event)" id="stern">
                     <option value="U&Hogner" selected>U with Hogner</option>
 
                    <!-- <option value="" ><strong>Choose engine</strong> </option> -->
@@ -494,23 +507,30 @@ tr:hover {background-color: #ddd;}
                 </div>
 
                  <div>
-                 <form action=""onchange="bulbousCheck(event)">
+                 <form action=""onchange="appendageCal(event)">
                     <input type="checkbox" id="bulbous" name="bulbous bow" value="bulbous">
                     <label for="bulbous bow"> Bulbous bow</label><br>
 
                   </form>
-
                 </div>
+
               </div>
 
+              <div>
+                <form action=""onchange="appendageCal(event)">
+                   <input type="checkbox" id="Roughness" name="Roughness" value="Roughness">
+                   <label for="Roughness"> Roughness above 150 μm</label><br>
+                 </form>
 
+               </div>
 
+               <div class="AirArea">
+                 <h3>The area projection of the hull and the supper structure</h3>
+                Area : <input type="range" name="" class="airArea" id="AirArea" min="0" value="0" step="0.1" max="30" oninput="shipDimension(event)"><span class="displayAirArea spanNew"id="displayAirArea"> </span> <br> <br>
 
+               </div>
 
             </div>
-
-
-
         </div>
         <div class="resistance">
           <div id="resistanceGraph">
@@ -544,10 +564,10 @@ tr:hover {background-color: #ddd;}
                 <td>thruster resistance</td>
                 <td><span id="Rtb">0</span></td>
               </tr>
-              <!-- <tr>
+              <tr>
                 <td>pressure bulbous bow</td>
                 <td><span id="Rb">0</span></td>
-              </tr> -->
+              </tr>
               <tr>
                 <td>pressure at Transom</td>
                 <td><span id="Rtr">0</span></td>
@@ -557,19 +577,44 @@ tr:hover {background-color: #ddd;}
                 <td><span id="RA">0</span></td>
               </tr>
               <tr>
+                <td>Air resistance</td>
+                <td><span id="RAA">0</span></td>
+              </tr>
+              <tr>
                 <td>Total resistance</td>
                 <td><span id="RT">0</span></td>
               </tr>
             </table>
 
-            <div class="propeller">
+            <div class="propeller" onchange="propellers(event)">
               <h2>Propeller dimension and parameters</h2>
               <h2></h2>
-              Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.1" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
+              <form action="" >
+              Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
               N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
-              Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.50" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
-              P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.8" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
-              Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0.1" value="0.3" step="0.1" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
+              Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.55" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
+              P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
+              Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.2" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
+            </form>
+           </div>
+              
+            <div class="propellChoice">
+              <!-- <div class="shaft">
+                <strong>Choose number of shaft</strong>
+                <select class="" onchange="Shaft(event)" id="shaft">
+                  <option value="single" selected id="singleSaft">Single shaft</option>
+                <option value="double"> Double shaft</option>
+                </select>
+              </div> -->
+                    
+              <div class="screw">
+                <strong>Choose Screw type</strong>
+                <select class="" onchange="Shaft(event)" id="screw">
+                  <option value="singleScrew" selected id="">Single Screw</option>
+                <option value="TwinScrew"> Twin Screw</option>
+                </select>
+              </div>
+
             </div>
 
             <div class="propellerTable">
@@ -584,6 +629,7 @@ tr:hover {background-color: #ddd;}
                   <th colspan="">Parameters</th>
                   <th colspan=""> Values</th>
                 </thead>
+
                 <tr>
                   <td>Wake </td>
                   <td><span id="wake">0</span></td>
@@ -597,35 +643,49 @@ tr:hover {background-color: #ddd;}
                   <td><span id="KQ">0</span></td>
                 </tr>
                 <tr>
-                  <td>Thrust</td>
+                  <td>Hull efficiency </td>
+                  <td><span id="NH">0</span></td>
+                </tr>
+                <tr>
+                  <td>Open water efficiency  </td>
+                  <td><span id="No">0</span></td>
+                </tr>
+                <tr>
+                  <td>Thrust factor</td>
+                  <td><span id="thrustFactor">0</span></td>
+                </tr>
+                <tr>
+                  <td>Thrust loading Cth</td>
+                  <td><span id="Cth">0</span></td>
+                </tr>
+                <tr>
+                  <td>Thrust T</td>
                   <td><span id="thrust">0</span></td>
                 </tr>
                 <tr>
                   <td>Thrust Power</td>
                   <td><span id="thrustP">0</span></td>
                 </tr>
-                <tr>
-                  <td>Hull efficiency </td>
-                  <td><span id="NH">0</span></td>
+
+              <tr>
+                  <td>Power to propeller  </td>
+                  <td><span id="Pd">0</span></td>
                 </tr>
-                <!-- <tr>
-                  <td>Mid-ship Correlation</td>
-                  <td><span id="RA">0</span></td>
-                </tr> -->
-  
+               <tr>
+                  <td>Effective power </td>
+                  <td><span id="Pe">0</span></td>
+                </tr>
+
+               
                 <!-- <tr>
                   <td>Total resistance</td>
                   <td><span id="RT">0</span></td>
                 </tr> -->
-  
-  
+
               </table>
             </div>
 
     </div>
-
-
-
       </div>
     </div>
 
@@ -761,13 +821,14 @@ tr:hover {background-color: #ddd;}
     minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
     Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
-    formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,
+    formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw
 
 
  // all constant
  viscosity = 0.0000012 // m/s^2
  g = 9.81  // m/s^2
  density = 1025 // kg/m^3
+ density_air = 1.225
 
 
 
@@ -864,13 +925,6 @@ const layout = {
   Plotly.newPlot('plot',datas,layout);
 
 }
-
-
-
-
-//Graph resistance
-
-
 
 function powerDisplay (){
 var chart = c3.generate({
@@ -1038,7 +1092,6 @@ function rpmDisplay(){
   width: 39 // for adjusting arc thickness
 
   },
-
 
     color: {
         pattern: ['#FF0000', '#F97600', '#F6C600', '#60B044'], // the three color levels for the percentage values.
@@ -1288,8 +1341,7 @@ function currentSfocDisplay (){
     }
     let x = 0
 
-    function bulbousCheck(event){
-
+    function appendageCal(event){
          let BKA,SkegCheck, RBSCheck,RBSkegCheck,hullBossings,thrustersCheck,thrustersNO,thrusterD, bulbousCkeck,
          StaFinsVal, bKeelVal,domeCheckVal, sBracketVal,sBossingsVal,shaftsCheckVal,RBS,RBStern,
        Skeg,RBSArea,RBSternArea,SkegArea,shafts,hullBossingsVal,
@@ -1297,6 +1349,7 @@ function currentSfocDisplay (){
         i = 0
 
          bulbousCkeck = document.getElementById("bulbous").checked
+         roughness = document.getElementById("Roughness").checked
 
          RBSkegCheck = document.getElementById("rudderBehindSkegCheck").checked
          RBSCheck = document.getElementById("rudderBehindSternCheck").checked
@@ -1475,40 +1528,29 @@ function currentSfocDisplay (){
         dt = 0
       }
       
-      sternType(event)
       //Check if bulbous bow is fitted on the vessel
       if(bulbousCkeck===true){
          bulbous = bulbousCkeck
          i = 1
+      }else{
+        bulbous = bulbousCkeck
+        i = 1
       }
 
-      //  shipHull.hull()
-      //  shipHull.coefficient()
-  //      calResistnace.appendageResistance()
-  //      calResistnace.PressureResistance()
-
-  // calResistnace.bulbousResistance()
-      // calResistnace.frictionalResistance()
-      // calResistnace.correlationResistance()
-      // calResistnace.formFactor()
-      // calResistnace.RwHighSped()
-//  calResistnace.waveResistance()
+    
     x++
     if(i >0 || x>=2){
       updateResistance()
-      // calResistnace.totalResistance()
-      // calResistnace.finalWaveResistance()
+      
     }
    
-    // shipDimension(event)
+    
      }
 
-
- bulbousCheck(event)
+   sternType()
+ appendageCal(event)
  shipDimension(event)
  
-
-
 
  function shipDimension(event){
 
@@ -1551,7 +1593,6 @@ function currentSfocDisplay (){
 //  iE = document.getElementById('iE').value
 //  document.getElementById('displayiE').innerHTML= iE + " Degree"
 
- //
  Cb = document.getElementById('Cb').value
  Cb = Cb*1
  document.getElementById('displayCb').innerHTML= Cb
@@ -1559,38 +1600,38 @@ function currentSfocDisplay (){
  Cm = document.getElementById('Cm').value
  Cm = Cm*1
  document.getElementById('displayCm').innerHTML= Cm
-
  //
  lcb = document.getElementById('LCB').value
  lcb = lcb*1
  document.getElementById('displayLCB').innerHTML= lcb
 
+ Av = document.getElementById('AirArea').value
+ Av = Av*1
+ 
+ document.getElementById('displayAirArea').innerHTML= Av + " m^2"
+
+
  updateResistance()
-
-// propellers()
-
 }
 
+
 function sternType(event){
-   sternId = document.getElementById('stern').value
-     
+
+  sternId = document.getElementById('stern').value
+  screw = document.getElementById('screw').value
     if(sternId === "Normal"){
-            stern = 0
-            this.c14 = 1 + 0.011*stern
-
-         }
-         else if(sternId === "V"){
+            stern = 0 
+      }
+     else if(sternId === "V"){
              stern = -10
-         }
-         else if(sternId === "U&Hogner"){
+      }
+     else if(sternId === "U&Hogner"){
             stern = 10
-         }
-         else if(sternId === "PramWithGondola"){
+     }
+     else if(sternId === "PramWithGondola"){
             stern = -25
-         }
-        //  alert(stern)
-    
-
+      }
+         updateResistance()
 }
 
 function displayResistance(){
@@ -1600,28 +1641,54 @@ function displayResistance(){
   document.getElementById('Rtb').innerHTML=  Rbt+ " "
   document.getElementById('Rtr').innerHTML=  Rbt+ " "
   document.getElementById('RA').innerHTML=  RA+ " "
+  document.getElementById('RAA').innerHTML=  RAA+ " "
+  document.getElementById('Rb').innerHTML=  Rb+ " "
+
   document.getElementById('RT').innerHTML=  RT+ " "
+
 }
 
+function Shaft(event){
+  const EventID  = event.target.id
+  const EventVal  = event.target.value 
+  if(EventVal ==="single"){
+    nShafts = EventVal
+  }
+  else if(EventVal ==="double"){
+    nShafts = EventVal
+  }
 
-function propellers(){
+}
+function propellers(event){
+ 
+// const EventID  = event.target.id
+// const EventVal  = event.target.value
+
   D = document.getElementById('D').value
   PD = document.getElementById('PD').value
 
   Z = document.getElementById('Z').value
   J = document.getElementById('J').value
   AeAo = document.getElementById('AeAo').value
+  // if(!nShafts){
+  //   nShafts= document.getElementById('singleSaft').value
+  // }
 
   document.getElementById('displayD').innerHTML=  D + " "
   document.getElementById('displayZ').innerHTML=  Z+ " "
   document.getElementById('displayJ').innerHTML=  J+ " "
   document.getElementById('displayAeAo').innerHTML=  AeAo+ " "
   document.getElementById('displayPD').innerHTML=  PD + " "
-  // shipHull.hull()
-  // shipHull.coefficient()
-  // calResistnace.formFactor()
-
+    
+    // if(EventID ===)
+ propeller.Thrust()
+ 
   propeller.wake()
+  propeller.KTandKQ()
+  
+  // propeller.efficiencies()
+  propeller.power()
+  
 
   if(!KT){
     KT = 0
@@ -1632,6 +1699,15 @@ function propellers(){
    document.getElementById('wake').innerHTML=  W + " "
    document.getElementById('KT').innerHTML=  KT+ " "
    document.getElementById('KQ').innerHTML=  KQ+ " "
+   document.getElementById('Pe').innerHTML=  Pe + " kW"
+   document.getElementById('Pd').innerHTML=  Pd + " kW"
+   document.getElementById('thrustP').innerHTML=  Pt + " kW"
+   document.getElementById('thrust').innerHTML=  thrust + " "
+   document.getElementById('No').innerHTML=  No + " "
+   document.getElementById('NH').innerHTML=  NH + " "
+   document.getElementById('thrustFactor').innerHTML=  TFactor + " "
+   document.getElementById('Cth').innerHTML=  Cth + " "
+
 
 
 }
@@ -1676,7 +1752,6 @@ let c,k,val,i,s
   
 }
 
-
 let lastRPM;
 let i = 1;
 function loadSfoc(val){
@@ -1696,15 +1771,7 @@ function loadSfoc(val){
 function powerSfoc(val){
     //this is for the power range
  document.getElementById('powerDisplay').innerHTML= val + " engine load kW"
-//  load = val
-// EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-
-// if(i <= 1){
-//  sfocDisplay ()
-// }
-// i++
 }
-
 
 function myFunction(val) {
 
@@ -1732,32 +1799,6 @@ function showEngineDashbaord (){
 
 }
 
-// function updatSlider(){
-//    console.log(engineDetail)
-//  if(engineDetail.speed_type=== "Medium-Speed"){
-//    rpm_min = 400
-//     rpm_max = engineDetail.Engine_speed
-//  }
-
-//  else if(engineDetail.speed_type=== "Slow-Speed"){
-//    rpm_min = 10
-//     rpm_max = engineDetail.Engine_speed
-//  }
-
-//  else if(engineDetail.speed_type=== "Fast-Speed"){
-//    rpm_min = 1400
-//     rpm_max = engineDetail.Engine_speed
-//  }
-
-
-    // document.getElementById('displayRPM').innerHTML= rpm_min + " minimun rpm"
-    // document.getElementById('RPM').max = rpm_max
-    // document.getElementById('RPM').min = rpm_min
-    // document.getElementById('RPM').value = rpm_min
-
-
-
-// }
 
 function displayEngineType(event) {
   document.getElementById("engineTable").classList.remove("hide");
@@ -1984,8 +2025,6 @@ else if(EventID === 'powerInput' || EventID ==='power'){
 
 }
 }
-
- //update the sliddre
 
 
     </script>

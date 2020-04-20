@@ -84,10 +84,12 @@ function ship(){
         Cwp  =  Cb/(0.471 + 0.55*Cb)     // waterline plane area coefficient using " Parson (2003)"
         Cf = 0.075/(Math.log10(Rn)-2)**2 
        
-        console.log("VAL",T,Bwl,Lwl,Cm,Cb,Cwp,ABT,T)
-        Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)*(0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp) + 2.38*(ABT/Cb) // Surface weted area 
-        console.log("S",Sa)
-        
+        // Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)*(0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp) + 2.38*(ABT/Cb) // Surface weted area 
+        this.c23 = (0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp)
+        Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)* (0.615989*this.c23 + 0.111439*Cm**3 +0.000571111*stern + 
+        0.245357*(this.c23/Cm)) + 3.45538*AT + (ABT/Cb)*(1.4660538 + 0.5839497/Cm) // Surface weted area 
+
+        console.log(Sa)
 
      }
 
@@ -127,21 +129,6 @@ function resistance(){
     this.formFactor = function(){
         this.LR =Lwl*(1-Cp+0.06*Cp*lcb)/(4*Cp-1)
 
-    //     if(stern === "Normal"){
-    //         this.stern = 0
-    //         this.c13 = 1+0.003*this.stern
-    //     }
-    //    else if(stern === "U&Hogner"){
-    //         this.stern = 10
-    //         this.c13 = 1+0.003*this.stern
-    //     }
-    //     else if(stern === "V"){
-    //         this.stern = -10
-    //         this.c13 = 1+0.0011*this.stern
-    //     }
-    //     else if(stern === "PramWithGondola"){
-    //         this.stern = -25
-    //         this.c13 = 1+0.003*this.stern
     //     }
       if(T/Lwl > 0.05){
             this.c12 = (T/Lwl)**0.2228446
@@ -153,28 +140,11 @@ function resistance(){
             this.c12 = 0.479948
         }
 
-
-    //     if(sternId === "Normal"){
-    //         stern = 0
-    //         this.c14 = 1+0.003*stern
-    //     }
-    //    else if(sternId === "U&Hogner"){
-    //         stern = 10
-    //         this.c14 = 1+0.003*stern
-    //     }
-    //     else if(sternId === "V"){
-    //         stern = -10
-    //         this.c14 = 1+0.0011*stern
-    //     }
-    //     else if(sternId === "PramWithGondola"){
-    //         stern = -25
-    //         this.c14 = 1+0.003*stern
-    //     }
         this.c14 = 1 + 0.011*stern
 
-        //formFactor = this.c13*(0.93+this.c12*(Bwl/this.LR)**0.92497*(0.95-Cp)**-0.521448*(1+Cp+0.022*lcb)**0.6906)
+        //formFactor = this.c13*(0.93+this.c12*(Bwl/this.LR)**0.92497*(0.95-Cp)**-0.521448*(1+Cp+0.022*lcb)**0.6906)        
          formFactor = 0.93+0.487118*this.c14*(Bwl/Lwl)**1.06806*(T/Lwl)**0.46106*(Lwl/this.LR)**0.121563*(Lwl**3/shipVolume)**0.36486*(1-Cp)**-0.604247
-          formFactor = (formFactor.toFixed(3))*1
+        formFactor = (formFactor.toFixed(3))*1
          console.log("rform",formFactor)
          console.log("stern", stern)
        
@@ -222,7 +192,13 @@ function resistance(){
            this.c4 = 0.04
        }
        Ca = 0.006*(Lwl + 100)**-0.16-0.00205 + 0.003*Math.sqrt(Lwl/7.5)*Cb**4 * this.c2*(0.04 -this.c4)
-        RA =   0.5*density*shipSpeed**2*Sa*Ca
+       if(roughness === true){
+           this.ks = 0.00015
+           this.Ca = (0.105*this.ks**(1/3)-0.005579)/Lwl**(1/3)
+       }else{
+           this.Ca = 0
+       }
+        RA =   0.5*density*shipSpeed**2*Sa*(Ca+this.Ca)
         RA =  RA/1000
         RA = (RA.toFixed(3))*1
         console.log("ca",Ca)
@@ -247,11 +223,33 @@ function resistance(){
     }
 
     this.bulbousResistance = function(){
-        this.Pb = 0.56*Math.sqrt(ABT/(Tf-1.5*hB))
-        this.Fni = shipSpeed/Math.sqrt(g*(Tf-hB-0.25*Math.sqrt(ABT))+0.15*shipSpeed**2)
-        Rb =0.11*Math.exp((-13)*this.Pb**-2)*this.Fni**3*ABT**1.5*g*density/(1+this.Fni**2)
+        // this.Pb = 0.56*Math.sqrt(ABT/(Tf-1.5*hB))
+         // this.Fni = shipSpeed/Math.sqrt(g*(Tf-hB-0.25*Math.sqrt(ABT))+0.15*shipSpeed**2)
+
+        this.hf = Cp*Cm*(Bwl*T/Lwl)*(136-316*Fn)*Fn**3
+        if(this.hf < -0.01*Lwl){
+            this.hf = -0.01*Lwl
+        }
+        this.hw = iE*shipSpeed**2/400
+        if(this.hw > 0.01*Lwl){
+            this.hw = 0.01*Lwl
+        }
+
+        this.Pb = 0.56*Math.sqrt(ABT)/(Tf-1.5*hB+this.hf)
+        
+        this.Fni = shipSpeed/Math.sqrt(g*(Tf-hB-0.25*Math.sqrt(ABT))+this.hf+this.hw)
+
+
+        // Rb =0.11*Math.exp((-13)*this.Pb**-2)*this.Fni**3*ABT**1.5*g*density/(1+this.Fni**2)
+        Rb = 0.11*density*g*(Math.sqrt(ABT))**3*((this.Fni**3)/(1+this.Fni**2))*Math.exp(-3.0*this.Pb**-2)
         Rb = Rb/1000
         Rb = (Rb.toFixed(3))*1
+    }
+
+    this.AirResistace = function(){
+        this.Cda = 0.8
+        RAA = 0.5*density_air * shipSpeed*this.Cda*Av
+         RAA = RAA/1000
     }
     
     this.waveResistance = function(){
@@ -273,9 +271,10 @@ function resistance(){
             
         this.c1 = 2223105*this.c7**3.78613*(T/Bwl)**1.07961*(90-iE)**-1.37565
        
-        if(!bulbous){
+        if(bulbous===false){
             // if no bulbus c2 = 1
             this.c2 = 1
+            
         }else{
             
             this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
@@ -331,24 +330,7 @@ function resistance(){
 
      this.RwHighSped = function(){
          this.d = -0.9
-        //  if(sternId = "Normal"){
-        //     stern = 0
-        //     this.c14 = 1 + 0.011*stern
-
-        //  }
-        //  else if(sternId = "V"){
-        //      stern = -10
-        //     this.c14 = 1 + 0.011*stern
-
-        //  }
-        //  else if(sternId = "U&Hogner"){
-        //     stern = 10
-        //     this.c14 = 1 + 0.011*stern
-        //  }
-        //  else if(sternId = "PramWithGondola"){
-        //     stern = -25
-        //     this.c14 = 1 + 0.011*stern
-        //  }
+        
          this.c14 = 1 + 0.011*stern
          this.lcb
          this.LR = Lwl*(1-Cp + 0.06*Cp*this.lcb/(4*Cp-1))
@@ -358,7 +340,6 @@ function resistance(){
         this.m3 = -7.2035*(Bwl/Lwl)**0.326869*(T/Bwl)**0.605375
         this.c5 = 1-0.8*AT/(Bwl*T*Cm)
         
-
         if(Lwl**3/shipVolume < 512){
             this.c15 = -1.69385
         }
@@ -385,7 +366,6 @@ function resistance(){
             // if no bulbus c2 = 1
             this.c2 = 1
         }else{
-            
             this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
             console.log("new c",this.c3)
             this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
@@ -419,10 +399,12 @@ function resistance(){
 
     this.totalResistance = function(){
         shipHull.hull()
-      shipHull.coefficient()
+       shipHull.coefficient()
        calResistnace.appendageResistance()
        calResistnace.PressureResistance()
-    //    calResistnace.bulbousResistance()
+       calResistnace.bulbousResistance()
+       calResistnace.AirResistace()
+
        calResistnace.frictionalResistance()
        calResistnace.correlationResistance()
        calResistnace.formFactor()
@@ -430,10 +412,10 @@ function resistance(){
       //Rbt is the resistance due to thrusters opening
 
         // RT = Rf*formFactor+Rapp+Rw+Rb+RA+Rtr+Rbt
-         RT = Rf*formFactor+Rapp+Rw+RA+Rtr+Rbt
+         RT = Rf*formFactor+Rapp+Rw+RA+Rtr+Rbt+Rb + RAA
          RT = (RT.toFixed(3))*1
         console.log("RT",RT)
-        console.log("speed",shipSpeed)
+ 
       
     }
 
@@ -443,6 +425,7 @@ function resistance(){
 
 function propellerProperties (){
     this.Thrust =function(){
+        //cth = thrust loading cofficient
         this.Cpi = 1.45*Cp - 0.315-0.0225*lcb
         if(Lwl/Bwl < 5.2){
             this.c10 = 0.25-0.003328402/(Bwl*Lwl - 0.134615385)
@@ -450,12 +433,24 @@ function propellerProperties (){
         else if(Lwl/Bwl >= 5.2){
             this.c10 = Bwl/Lwl
         }
-        TFactor = 0.01979*Lwl/(Bwl-Bwl*this.Cpi)+1.0585*this.c10-0.00524-0.1418*D**2/(Bwl*T) + 0.0015*stern
+        if(screw ==="singleScrew"){
+           TFactor = (0.25*(Bwl/Lwl)**0.28956*(Math.sqrt(T*Bwl)/D)**0.2624)/(1-Cp+0.0225*lcb)**0.01762 + 0.0015*stern
+        }
+        if(screw ==="TwinScrew"){
+            TFactor = 0.325*Cb-0.1885*D/Math.sqrt(Bwl*T)
+        }
+        // TFactor = 0.01979*Lwl/(Bwl-Bwl*this.Cpi)+1.0585*this.c10-0.00524-0.1418*D**2/(Bwl*T) + 0.0015*stern
         thrust = RT/(1-TFactor)
+        thrust = thrust.toFixed(3)
+        TFactor = TFactor.toFixed(3)
     }
 
     this.wake = function(){
+        // this.Rf = Rf*1000
+        // this.Rapp = Rapp*1000
+        // this.RA = RA*1000
 
+        // Cv = (formFactor*this.Rf+ this.Rapp + this.RA)/0.5*density*shipSpeed**2*(Sa+Sapp)
         Cv = formFactor*Cf+Ca
         
         // Single screw ship
@@ -480,26 +475,83 @@ function propellerProperties (){
             this.c11 = 0.0833333*(TA/D)**3+1.33333
 
         }
+
+        if(Cp <= 0.7){
+            this.c19 = (0.12997/(0.95-Cb))-((0.11056)/(0.95-Cp))
+        }
+        else if(Cp > 0.7){
+            this.c19 = 0.18567/(1.3571-Cm)-0.71276 + 0.38648*Cp
+        }
+        this.c20 = 1 + 0.015*stern
+
         this.Cpi = 1.45*Cp - 0.315-0.0225*lcb
         Cv
-        console.log("Sa", Sa)
-        console.log( D,this.c9,TA, this.c11,stern,this.Cpi,Cv,formFactor,Ca)
-        console.log("stern", stern)
-        W = (Cv*Lwl*this.c9/TA)*((0.0661875)+(1.21756*this.c11*(Cv/(1-this.Cpi))))//+0.24558*Math.sqrt(Bwl/(Lwl*(1-this.Cpi)))-(0.09726/(0.95-Cp))+(0.11434/(0.95-Cb))+0.75*stern*Cv+0.002*stern
-        console.log("W", W)
         
+        // W = (Cv*Lwl*this.c9/TA)*((0.0661875)+(1.21756*this.c11*(Cv/(1-this.Cpi))))+0.24558*Math.sqrt(Bwl/(Lwl*(1-this.Cpi)))-(0.09726/(0.95-Cp))+(0.11434/(0.95-Cb))+0.75*stern*Cv+0.002*stern
+        if(screw ==="singleScrew"){
+             W = this.c9*this.c20*Cv*(Lwl/TA)*(0.050776 + 0.93405*(this.c11*Cv/(1-this.Cpi))) + 0.27915*this.c20*Math.sqrt(Bwl/(Lwl*(1-this.Cpi))) + this.c19*this.c20
+             NR = 0.9922 - 0.05908*AeAo + 0.07424*(Cp - 0.0225*lcb) 
+              
+        }
+        else if(screw ==="TwinScrew"){
+           W = 0.3095*Cb + 10*Cv*Cb - 0.23*D/Math.sqrt(Bwl*T)
+           NR =  0.9737 +0.111*(Cp - 0.0225*lcb) - 0.06325*PD
+
+        }
+        Va = shipSpeed*(1-W)
+        Cth = thrust/(density*Va**2*D**2*(Math.PI/8))
+
+        W = W.toFixed(3)
+        Cth = Cth.toFixed(3)
+        NR = NR.toFixed(3)
     }
 
-    this.KTandKQ = function(){
-        this.RN
-        KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.logRN-0.301)**2*AeAo*J**2+0.0000643192*(Math.logRN-0.301)*PD**6*J**2
-        - 0.0000110636*(Math.logRN-0.301)**2*PD**6*J**2- 0.0000276305**(Math.logRN-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.logRN-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.logRN-0.301)*Z**2*AeAo*PD**3*J
-        
-        KQ = -0.000591412+0.00696898*PD-0.0000666654*Z*PD**6+0.0160818*AeAo**2-0.000938091*(Math.logRN-0.301)*PD-0.00059593*(Math.logRN-0.301)*PD**2+0.0000782099*(Math.logRN-0.301)**2*PD**2
-        +0.0000052199*(Math.logRN-0.301)*Z*AeAo*J**2-0.00000088528*(Math.logRN-0.301)**2*Z*AeAo*PD*J+0.0000230171*(Math.logRN-0.301)*Z*PD**6-0.00000184341*(Math.logRN-0.301)**2*Z*PD**6-0.00400252*(Math.logRN-0.301)*AeAo**2
-        +0.000220915*(Math.logRN-0.301)**2*AeAo**2
-    }
+    this.KTandKQ = function(){ 
 
+        this.Co7r = 2.073*AeAo *D/Z
+        this.Rno = (this.Co7r*Math.sqrt(Va**2 + (0.75*Math.PI*n*D)**2))/viscosity
+        if(n && this.Rno > 2*10**6){
+ 
+        KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.log(this.Rno)-0.301)**2*AeAo*J**2+0.0000643192*(Math.log(this.Rno)-0.301)*PD**6*J**2
+        - 0.0000110636*(Math.log(this.Rno)-0.301)**2*PD**6*J**2- 0.0000276305**(Math.log(this.Rno)-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.log(this.Rno)-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.log(this.Rno)-0.301)*Z**2*AeAo*PD**3*J
+        
+        KQ = -0.000591412+0.00696898*PD-0.0000666654*Z*PD**6+0.0160818*AeAo**2-0.000938091*(Math.log(this.Rno)-0.301)*PD-0.00059593*(Math.log(this.Rno)-0.301)*PD**2+0.0000782099*(Math.log(this.Rno)-0.301)**2*PD**2
+        +0.0000052199*(Math.log(this.Rno)-0.301)*Z*AeAo*J**2-0.00000088528*(Math.log(this.Rno)-0.301)**2*Z*AeAo*PD*J+0.0000230171*(Math.log(this.Rno)-0.301)*Z*PD**6-0.00000184341*(Math.log(this.Rno)-0.301)**2*Z*PD**6-0.00400252*(Math.log(this.Rno)-0.301)*AeAo**2
+        +0.000220915*(Math.log(this.Rno)-0.301)**2*AeAo**2
+        }
+        else{
+        
+            KT = 0.00880496*J**0*PD**0*AeAo**0*Z**0-0.204554*J**1*PD**0*AeAo**0*Z**0 + 0.166351*J**0*PD**1*AeAo**0*Z**0 + 0.158114*J**0*PD**2*AeAo**0*Z**0 - 0.147581*J**2*PD**0*AeAo**1*Z**0 - 0.481497*J**1*PD**1*AeAo**1*Z**0 +
+             0.415437*J**0*PD**2*AeAo**1*Z**0 + 0.0144043*J**0*PD**0*AeAo**0*Z**1 - 0.0530054*J**2*PD**0*AeAo**0*Z**1 + 0.0143481*J**0*PD**1*AeAo**0*Z**1 + 0.0606826*J**1*PD**1*AeAo**0*Z**1 - 0.0125894*J**0*PD**0*AeAo**1*Z**1 +
+             0.0109689*J**1*PD**0*AeAo**1*Z**1 - 0.133698*J**0*PD**3*AeAo**0*Z**0 + 0.00638407*J**0*PD**6*AeAo**0*Z**0 - 0.00132718*J**2*PD**6*AeAo**0*Z**0 + 0.168496*J**3*PD**0*AeAo**1*Z**0 - 0.0507214*J**0*PD**0*AeAo**2*Z**0 +
+             0.0854559*J**2*PD**0*AeAo**2*Z**0 - 0.0504475*J**3*PD**0*AeAo**2*Z**0 + 0.010465*J**1*PD**6*AeAo**2*Z**0 - 0.00648272*J**2*PD**6*AeAo**2*Z**0 - 0.00841728*J**0*PD**3*AeAo**0*Z**1 + 0.0168424*J**1*PD**3*AeAo**0*Z**1 -
+             0.00102296*J**3*PD**3*AeAo**0*Z**1 - 0.0317791*J**0*PD**3*AeAo**1*Z**1 + 0.018604*J**1*PD**0*AeAo**2*Z**1  - 0.00410798*J**0*PD**2*AeAo**2*Z**1 - 0.000606848*J**0*PD**0*AeAo**0*Z**2 - 0.0049819*J**1*PD**0*AeAo**0*Z**2 +
+             0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 + 
+             0.00421749*J**0*PD**3*AeAo**1*Z**2 + 0.0000565229*J**3*PD**6*AeAo**1*Z**2 - 0.00146564*J**0*PD**3*AeAo**2*Z**2
+
+             KQ = 0.00379368*J**0*PD**0*AeAo**0*Z**0 + 0.00886523*J**2*PD**0*AeAo**0*Z**0 - 0.032241*J**1*PD**1*AeAo**0*Z**0 - 0.00344778*J**0*PD**2*AeAo**0*Z**0 - 0.0408811*J**0*PD**1*AeAo**1*Z**0 - 0.108009*J**1*PD**1*AeAo**1*Z**0 -
+             0.0885381*J**2*PD**1*AeAo**1*Z**0 + 0.188561*J**0*PD**2*AeAo**1*Z**0 - 0.00370871*J**1*PD**0*AeAo**0*Z**1 + 0.00513696*J**0*PD**1*AeAo**0*Z**1 + 0.0209449*J**1*PD**1*AeAo**0*Z**1 + 0.00474319*J**2*PD**1*AeAo**0*Z**1 -
+             0.00723408*J**2*PD**0*AeAo**1*Z**1 + 0.00438388*J**1*PD**1*AeAo**1*Z**1 - 0.0269403*J**0*PD**2*AeAo**1*Z**1 + 0.0558082*J**3*PD**0*AeAo**1*Z**0 + 0.0161886*J**0*PD**3*AeAo**1*Z**0 + 0.00318086*J**1*PD**3*AeAo**1*Z**0 +
+             0.015896*J**0*PD**0*AeAo**2*Z**0 + 0.0471729*J**1*PD**0*AeAo**2*Z**0 + 0.0196283*J**3*PD**0*AeAo**2*Z**0 - 0.0502782*J**0*PD**1*AeAo**2*Z**0 - 0.030055*J**3*PD**1*AeAo**2*Z**0 + 0.0417122*J**2*PD**2*AeAo**2*Z**0 -
+             0.0397722*J**0*PD**3*AeAo**2*Z**0 - 0.00350024*J**0*PD**6*AeAo**2*Z**0 - 0.0106854*J**3*PD**0*AeAo**0*Z**1  + 0.00110903*J**3*PD**3*AeAo**0*Z**1 - 0.000313912*J**0*PD**6*AeAo**0*Z**1 + 0.0035985*J**3*PD**0*AeAo**1*Z**1 -
+             0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 + 
+
+             0.000112451*J**3*PD**2*AeAo**0*Z**2 - 0.0000297228*J**3*PD**6*AeAo**0*Z**2 + 0.000269551*J**1*PD**0*AeAo**1*Z**2 + 0.00083265*J**2*PD**0*AeAo**1*Z**2 + 0.00155334*J**0*PD**2*AeAo**1*Z**2 + 0.000302683*J**0*PD**6*AeAo**1*Z**2 -
+             0.0001843*J**0*PD**0*AeAo**2*Z**2 - 0.000425399*J**0*PD**3*AeAo**2*Z**2 + 0.0000869243*J**3*PD**3*AeAo**2*Z**2 - 0.0004659*J**0*PD**6*AeAo**2*Z**2 + 0.0000554194*J**1*PD**6*AeAo**2*Z**2
+        }
+
+        NH = (1- TFactor)/(1-W) // Hull efficiency 
+        //relative rotative efficiency
+       
+        No = (KT*J)/(KQ*2*3.14)
+        NB = No * NR
+        NT = 0.97  // (Assumed value
+        NH = NH.toFixed(3)
+        No = No.toFixed(3)
+        KT = KT.toFixed(3)
+        KQ = KQ.toFixed(3)
+    }
+ 
    this.power = function(){
 
        Pe = RT*shipSpeed // effective power
@@ -507,24 +559,10 @@ function propellerProperties (){
        Pd = Pt/NB   //deliver power to the propeller 
        ND = Pe/Pd
        Ps = Pd/NT
+       Pe = Pe.toFixed(3)
+       Pt = Pt.toFixed(3)
+       Pd = Pd.toFixed(3)
        
-
-   }
-   this.efficiencies = function(){
-
-       NH = (1- TFactor)/(1-W) // Hull efficiency 
-       //relative rotative efficiency
-       if(nShafts === 1 ){
-        NR = 0.9922 - 0.05908*AeAo + 0.07424*(Cp - 0.0225*lcb) 
-       }
-       else if(nShafts === 2){
-        NR =  0.9737 +0.111*(Cp - 0.0225*lcb) - 0.06325*PD
-       }
-       
-       No = (KT*J)/(KQ*2*3.14)
-       NB = No * NR
-       NT = 0.97  // (Assumed value
-           
    }
     
 }
