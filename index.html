@@ -172,6 +172,12 @@ tr:hover {background-color: #ddd;}
     .inputArea{
         width: 50%;
     }
+    .addedResistance{
+      margin-left: 15px;
+    }
+    .waveResis{
+      
+    }
 
      .area {
         /* border:  solid plum 2px; */
@@ -516,6 +522,7 @@ tr:hover {background-color: #ddd;}
 
               </div>
 
+
               <div>
                 <form action=""onchange="appendageCal(event)">
                    <input type="checkbox" id="Roughness" name="Roughness" value="Roughness">
@@ -529,6 +536,15 @@ tr:hover {background-color: #ddd;}
                 Area : <input type="range" name="" class="airArea" id="AirArea" min="0" value="0" step="0.1" max="30" oninput="shipDimension(event)"><span class="displayAirArea spanNew"id="displayAirArea"> </span> <br> <br>
 
                </div>
+
+               <div class="addedResistance">
+                <h3>Added Resistance </h3>
+                 <div class="waveResis">
+                   <h3>Wave Resistance</h3>
+                  wave significant height : <input type="range" name="" class="inputArea" id="H" min="0" value="0" step="0.01" max="15" oninput="shipDimension(event)"><span class="displayH spanNew"id="displayH"> </span> <br> <br>
+                 </div>
+
+              </div>
 
             </div>
         </div>
@@ -581,9 +597,23 @@ tr:hover {background-color: #ddd;}
                 <td><span id="RAA">0</span></td>
               </tr>
               <tr>
-                <td>Total resistance</td>
-                <td><span id="RT">0</span></td>
+                <td>Fouling Resistance </td>
+                <td><span id="Rfouling">0</span></td>
               </tr>
+              <tr>
+                <td>Wave resistance  </td>
+                <td><span id="Rwave">0</span></td>
+              <!-- </tr>
+              <td>Wave m </td>
+              <td><span id="Rwave">0</span></td>
+            </tr> -->
+              <tr>
+                <td>Total Calm water resistance</td>
+                <td><span id="RT_calm">0</span></td>
+              </tr>
+              <td>Total Resistance </td>
+              <td><span id="RT">0</span></td>
+            </tr>
             </table>
 
             <div class="propeller" onchange="propellers(event)">
@@ -592,9 +622,9 @@ tr:hover {background-color: #ddd;}
               <form action="" >
               Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
               N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
-              Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.55" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
+              Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.70" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
               P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
-              Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.2" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
+              Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
             </form>
            </div>
               
@@ -825,7 +855,7 @@ tr:hover {background-color: #ddd;}
     minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
     Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
-    formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw
+    formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw, Rwave,H,Rfoul,RT_calm,SM
 
 
  // all constant
@@ -1614,6 +1644,11 @@ function currentSfocDisplay (){
  
  document.getElementById('displayAirArea').innerHTML= Av + " m^2"
 
+ H = document.getElementById('H').value
+ document.getElementById('displayH').innerHTML= H + " "
+
+
+
 
  updateResistance()
 }
@@ -1643,13 +1678,17 @@ function displayResistance(){
   document.getElementById('Rw').innerHTML=  Rw+ " "
   document.getElementById('Rapp').innerHTML=  Rapp+ " "
   document.getElementById('Rtb').innerHTML=  Rbt+ " "
-  document.getElementById('Rtr').innerHTML=  Rbt+ " "
+  document.getElementById('Rtr').innerHTML=  Rtr+ " "
   document.getElementById('RA').innerHTML=  RA+ " "
   document.getElementById('RAA').innerHTML=  RAA+ " "
-  document.getElementById('Rb').innerHTML=  Rb+ " "
+  document.getElementById('Rb').innerHTML=  Rb + " "
+  document.getElementById('Rwave').innerHTML=  Rwave + " "
+  document.getElementById('Rfouling').innerHTML=  Rfoul + " "
+ 
+  document.getElementById('RT_calm').innerHTML=  RT_calm + " "
 
   document.getElementById('RT').innerHTML=  RT+ " "
-
+  
 }
 
 function Shaft(event){
@@ -1706,7 +1745,7 @@ function propellers(event){
    document.getElementById('Pe').innerHTML=  Pe + " kW"
    document.getElementById('Pd').innerHTML=  Pd + " kW"
    document.getElementById('thrustP').innerHTML=  Pt + " kW"
-   document.getElementById('thrust').innerHTML=  thrust + " "
+   document.getElementById('thrust').innerHTML=  thrust + " kN"
    document.getElementById('No').innerHTML=  No + " "
    document.getElementById('NH').innerHTML=  NH + " "
    document.getElementById('thrustFactor').innerHTML=  TFactor + " "

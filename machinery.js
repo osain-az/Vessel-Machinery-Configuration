@@ -396,6 +396,18 @@ function resistance(){
         
         }
     }
+    this.additionalResistance = function (){
+        // Wave  resistance 
+        this.Lbw = 0.95*Bwl  // confirm this 
+
+        Rwave =  (1/6)*density_air*g*H**2*Bwl*Math.sqrt(Bwl/this.Lbw)
+        Rwave = ((Rwave/1000).toFixed(2))*1
+
+        // Fouling resistance 
+        Rfoul = 10*RT_calm 
+        Rfoul = ((Rfoul/1000).toFixed(2))*1
+        
+    }
 
     this.totalResistance = function(){
         shipHull.hull()
@@ -412,16 +424,19 @@ function resistance(){
       //Rbt is the resistance due to thrusters opening
 
         // RT = Rf*formFactor+Rapp+Rw+Rb+RA+Rtr+Rbt
-         RT = Rf*formFactor+Rapp+Rw+RA+Rtr+Rbt+Rb + RAA
-         RT = (RT.toFixed(3))*1
-        console.log("RT",RT)
- 
-      
+         RT_calm = Rf*formFactor+Rapp+Rw+RA+Rtr+Rbt+Rb + RAA
+         RT_calm = (RT_calm.toFixed(3))*1
+         calResistnace.additionalResistance()
+           //Total resistnace 
+        RT = RT_calm +  Rfoul + Rwave
+        calResistnace.seaMargine()
     }
+    this.seaMargine = function(){
 
-
+        SM = (RT*shipSpeed/RT_calm*shipSpeed)-1
+        
+    }
 }
-
 
 function propellerProperties (){
     this.Thrust =function(){
@@ -447,7 +462,6 @@ function propellerProperties (){
 
     this.wake = function(){
       
-
         // Cv = (formFactor*this.Rf+ this.Rapp + this.RA)/0.5*density*shipSpeed**2*(Sa+Sapp)
         Cv = formFactor*Cf+Ca
         
@@ -495,6 +509,7 @@ function propellerProperties (){
            NR =  0.9737 +0.111*(Cp - 0.0225*lcb) - 0.06325*PD
         }
         Va = shipSpeed*(1-W)
+        Va = Va.toFixed(2)
         Cth = thrust/(density*Va**2*D**2*(Math.PI/8))
         W = W.toFixed(3)
         Cth = Cth.toFixed(3)
@@ -539,10 +554,10 @@ function propellerProperties (){
        
         NB = No * NR
         NT = 0.97  // (Assumed value
-        NH = NH.toFixed(2)
-        No = No.toFixed(2)
-        KT = KT.toFixed(2)
-        KQ = KQ.toFixed(2)
+        NH = NH.toFixed(3)
+        No = No.toFixed(3)
+        KT = KT.toFixed(3)
+        KQ = KQ.toFixed(3)
     }
  
    this.power = function(){
