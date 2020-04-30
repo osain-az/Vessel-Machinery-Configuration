@@ -368,6 +368,9 @@ tr:hover {background-color: #ddd;}
      #loadWattChart{
 
      }
+     .powerOn{
+       border: solid rgb(76, 35, 143) 5px;
+     }
      .addedMachinery{
          background-color: rgb(205, 210, 206);
          width: 90%;
@@ -629,13 +632,11 @@ tr:hover {background-color: #ddd;}
            </div>
               
             <div class="propellChoice">
-              <!-- <div class="shaft">
-                <strong>Choose number of shaft</strong>
-                <select class="" onchange="Shaft(event)" id="shaft">
-                  <option value="single" selected id="singleSaft">Single shaft</option>
-                <option value="double"> Double shaft</option>
-                </select>
-              </div> -->
+              <div class="reductionGear">
+            
+                <input type="checkbox" id="gear" name="Reduction Gear" value="thruster" onchange="propellers(event)">
+                <label for="Reduction Gear">Reduction Gear </label>
+              </div>
                     
               <div class="screw">
                 <strong>Choose Screw type</strong>
@@ -688,10 +689,10 @@ tr:hover {background-color: #ddd;}
                   <td>advance propeller speed </td>
                   <td><span id="Va">0</span></td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td>Thrust loading Cth</td>
                   <td><span id="Cth">0</span></td>
-                </tr>
+                </tr> -->
                 <tr>
                   <td>Thrust T</td>
                   <td><span id="thrust">0</span></td>
@@ -708,6 +709,10 @@ tr:hover {background-color: #ddd;}
                <tr>
                   <td>Effective power </td>
                   <td><span id="Pe">0</span></td>
+                </tr>
+                <tr>
+                  <td>Break  Power </td>
+                  <td><span id="pb">0</span></td>
                 </tr>
 
                
@@ -758,9 +763,6 @@ tr:hover {background-color: #ddd;}
                     </table>
 
             </div>
-
-
-
 
         <div id="mainDashboard" class="mainDashboard hide">
 
@@ -820,12 +822,16 @@ tr:hover {background-color: #ddd;}
                <p class="P_range">Load %: <input type="range" max="98" min="10"id="load" class="range" step="2" onchange="getValues(event)"oninput="loadSfoc(this.value)" > or
              <input type="text" placeholder="input engine load %.." onchange="getValues(event)"  id="loadInput"><span  class="inputValue" id="loadDisplay"> </span><br> </p>
 
-          <p class="P_range" >Desired Power kW: <input type="range" step="2" id="power" class="range" onchange="getValues(event)" oninput="powerSfoc(this.value)" > or
+              <p class="P_range" >Desired Power kW: <input type="range" step="2" id="power" class="range" onchange="getValues(event)" oninput="powerSfoc(this.value)" > or
                <input type="text" placeholder="input Power.."onchange="getValues(event)"  id="powerInput">
               <span  class="powerDisplay" id="powerDisplay"> </span> </p>
 
-                  </form>
-    </div>
+              </form>
+              <div >
+                <button onclick="powerOn()" class="powerOn"><strong>Power On Engine </strong></button>
+              </div>
+              
+          </div>
 
           </div>
 
@@ -833,12 +839,10 @@ tr:hover {background-color: #ddd;}
 
 
 
-
-
                        <!-- grapph ploting here -->
                        <div class="SFOC" id="SFOC">
                         <div id="plot" class="plot"></div>
-                  </div>
+          </div>
 
 
     </div>
@@ -855,7 +859,8 @@ tr:hover {background-color: #ddd;}
     minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
     Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
-    formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw, Rwave,H,Rfoul,RT_calm,SM
+    formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw, Rwave,H,Rfoul,RT_calm,SM,
+    Ns,Pb,RPM_pro,SMCR,Ptotal
 
 
  // all constant
@@ -905,19 +910,20 @@ Plotly.newPlot('resistanceGraph',resistData,layout);
 var cnt = 0;
  
 
-// const  interval = setInterval(function() {
+const  interval = setInterval(function() {
   
-//   Plotly.extendTraces('resistanceGraph', {
-//     x: [[shipSpeedKnots]],
-//     y: [[RT]]
-//   }, [0], 10000)
-//   console.log("testing")
-//   if( intervalResis > 1){clearInterval(interval)};
-// }, 100);
+  Plotly.extendTraces('resistanceGraph', {
+    x: [[shipSpeedKnots]],
+    y: [[RT]]
+  }, [0], 10000)
+  console.log("testing")
+  if( intervalResis > 1){clearInterval(interval)};
+}, 100);
 
 }
- resistanceDisplay ()
- intervalResis
+
+
+ 
 
 
 
@@ -1700,7 +1706,7 @@ function Shaft(event){
   else if(EventVal ==="double"){
     nShafts = EventVal
   }
-
+  propellers(event)
 }
 function propellers(event){
  
@@ -1713,6 +1719,13 @@ function propellers(event){
   Z = document.getElementById('Z').value
   J = document.getElementById('J').value
   AeAo = document.getElementById('AeAo').value
+  let reducionGear
+  reducionGear = document.getElementById("gear").checked
+  if(reducionGear ===true){
+    Ns = 0.95
+  }else{
+    Ns = 0.98
+  }
   // if(!nShafts){
   //   nShafts= document.getElementById('singleSaft').value
   // }
@@ -1749,7 +1762,8 @@ function propellers(event){
    document.getElementById('No').innerHTML=  No + " "
    document.getElementById('NH').innerHTML=  NH + " "
    document.getElementById('thrustFactor').innerHTML=  TFactor + " "
-   document.getElementById('Cth').innerHTML=  Cth + " "
+  //  document.getElementById('Cth').innerHTML=  Cth + " "
+  document.getElementById('pb').innerHTML=  Pb + " kW"
 
    document.getElementById('Va').innerHTML=  Va + " m/s"
 
@@ -1793,7 +1807,6 @@ let c,k,val,i,s
           }, [0], 100)
           
         }       
-  
 }
 
 let lastRPM;
@@ -1811,6 +1824,7 @@ function loadSfoc(val){
 // i++
 
 }
+
 
 function powerSfoc(val){
     //this is for the power range
@@ -1896,6 +1910,7 @@ engineStrokes =wartsila32.Strokes
 
 EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
+engine.Margin()
  torqueDisplay ()
  powerDisplay()
  rpmDisplay()
@@ -1903,6 +1918,7 @@ EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pist
  loadWattDisplay ()
  currentSfocDisplay()
     // updating sliders
+   
 
   if(engineDetail.speed_type=== "Medium-Speed"){
    rpm_min = 400
@@ -1956,34 +1972,26 @@ EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pist
 
 }
 
-
-function getValues(event){
-    let val, k,i, n, c,t
-    t = 1
-    
-  const EventID = event.target.id;
-
- if (EventID ==='RPM' || EventID === 'RPMInput') {
-      RPM  = event.target.value
-
-    if (EventID ==='RPMInput') {
-     document.getElementById(EventID).value = ""
-
-    }
+function powerOn(){
+  const EventID = "power"
+ 
+  engineDashboard(EventID ,Ptotal)
 
 }
 
-else if(EventID ==='loadInput'|| EventID ==='load'){
-    if( EventID ==='loadInput'){
-      val = document.getElementById(EventID).value
-      document.getElementById(EventID).value = ""
-      document.getElementById("loadDisplay").innerHTML= val + "% engine power"
-    }else{
-      val  = event.target.value
-      document.getElementById("loadDisplay").innerHTML= val + "% engine power"
-    }
+function engineDashboard(EventID ,val ){
+  // let  k,i, n, c,t, eventID //val,
   
+  //const EventID  
+    t = 1
+    // alert(val)
+    // alert(EventID )
+    
+  if(EventID ==='loadInput'|| EventID ==='load'){
+    alert(EventID)
+
     sfocDisplay ()
+    alert(val)
      c= (10/100)*val;
      n = 10
      if(val >=20 && val <= 100){
@@ -2015,26 +2023,16 @@ else if(EventID ==='loadInput'|| EventID ==='load'){
 
         }, 1000 * i);
         }
-}
-}
-
-else if(EventID === 'powerInput' || EventID ==='power'){
-
-  if(EventID === 'powerInput'){
-
-    val = parseFloat(document.getElementById(EventID).value)
-
-    document.getElementById(EventID).value = ""
-
-    document.getElementById("powerDisplay").innerHTML= val + " engine load kW"
-
-  }else{
-    val = parseFloat(document.getElementById(EventID).value)
 
   }
+}
+ 
+  else if(EventID === 'powerInput' || EventID ==='power'){
     sfocDisplay ()
+    alert(val)
     c= (10/100)*val;
      if(val >=minPower && val <= enginePower){
+      alert(val)
         i = 0
         n= minPower;
         
@@ -2066,6 +2064,121 @@ else if(EventID === 'powerInput' || EventID ==='power'){
         }, 1000 * i);
         }
 }
+
+  }
+}
+
+
+function getValues(event){
+    let val, k,i, n, c,t
+    t = 1
+    
+  const EventID = event.target.id;
+
+ if (EventID ==='RPM' || EventID === 'RPMInput') {
+      RPM  = event.target.value
+
+    if (EventID ==='RPMInput') {
+     document.getElementById(EventID).value = ""
+
+    }
+
+}
+
+else if(EventID ==='loadInput'|| EventID ==='load'){
+    if( EventID ==='loadInput'){
+      val = document.getElementById(EventID).value
+      document.getElementById(EventID).value = ""
+      document.getElementById("loadDisplay").innerHTML= val + "% engine power"
+    }else{
+      val  = event.target.value
+      document.getElementById("loadDisplay").innerHTML= val + "% engine power"
+    }
+    engineDashboard(EventID,val)
+    // sfocDisplay ()
+    //  c= (10/100)*val;
+    //  n = 10
+    //  if(val >=20 && val <= 100){
+    //     i = 0
+    //   for ( k = 10; k < val;k +=c) {
+
+    //     inputData(i);
+    //     i++
+    //     }
+
+    //     function inputData(i) {
+    //     setTimeout(function() {
+
+    //         console.log(i);
+    //             if(val -n >c ){
+    //             load = (n/100)*enginePower
+    //             EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+    //             console.log("this is the load 1",load)
+    //          }else{
+    //         load = (val/100)*enginePower
+    //         EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+    //         console.log("this is the load last",load)
+    //             }
+    //             Plotly.extendTraces('plot', {
+    //             x: [[engine_loadPercent]],
+    //             y: [[sfoc_cal]]
+    //           }, [0], 10000)
+    //           n+=c
+
+    //     }, 1000 * i);
+    //     }
+}
+// }
+
+else if(EventID === 'powerInput' || EventID ==='power'){
+
+  if(EventID === 'powerInput'){
+
+    val = parseFloat(document.getElementById(EventID).value)
+
+    document.getElementById(EventID).value = ""
+
+    document.getElementById("powerDisplay").innerHTML= val + " engine load kW"
+
+  }else{
+    val = parseFloat(document.getElementById(EventID).value)
+
+  }
+  engineDashboard(EventID,val )
+    // sfocDisplay ()
+    // c= (10/100)*val;
+    //  if(val >=minPower && val <= enginePower){
+    //     i = 0
+    //     n= minPower;
+        
+    //   for ( k = minPower; k < val;k +=c) {
+
+    //     inputData(i);
+    //     i++
+    //     }
+
+    //     function inputData(i) {
+    //     setTimeout(function() {
+
+    //             if(val -n >c ){
+    //                 console.log("testing")
+    //             load = n
+    //             EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+    //             console.log("this is the load 1",load)
+    //          }else{
+    //         load = val
+    //         EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+    //         console.log("this is the load last",load)
+    //             }
+    //             Plotly.extendTraces('plot', {
+    //             x: [[engine_loadPercent]],
+    //             y: [[sfoc_cal]]
+    //           }, [0], 10000)
+    //           n+=c
+
+    //     }, 1000 * i);
+    //     }
+//}
 
 }
 }

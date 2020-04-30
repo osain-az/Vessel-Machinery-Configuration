@@ -406,6 +406,7 @@ function resistance(){
         // Fouling resistance 
         Rfoul = 10*RT_calm 
         Rfoul = ((Rfoul/1000).toFixed(2))*1
+
         
     }
 
@@ -429,13 +430,11 @@ function resistance(){
          calResistnace.additionalResistance()
            //Total resistnace 
         RT = RT_calm +  Rfoul + Rwave
-        calResistnace.seaMargine()
-    }
-    this.seaMargine = function(){
 
-        SM = (RT*shipSpeed/RT_calm*shipSpeed)-1
-        
+        // SM = ((RT*shipSpeed/RT_calm*shipSpeed)-1)
+        // alert(SM)
     }
+  
 }
 
 function propellerProperties (){
@@ -552,6 +551,9 @@ function propellerProperties (){
         NH = (1- TFactor)/(1-W) // Hull efficiency 
          No = (KT*J)/(KQ*2*3.14)
        
+
+          RPM_pro = 60*(1-W)*shipSpeed/D*J
+
         NB = No * NR
         NT = 0.97  // (Assumed value
         NH = NH.toFixed(3)
@@ -562,20 +564,40 @@ function propellerProperties (){
  
    this.power = function(){
 
-       Pe = RT*shipSpeed // effective power
-       Pt  = RT*shipSpeed*((1-W)/(1-TFactor))
+       Pe = RT_calm*shipSpeed // effective power
+       Pt  = RT_calm*shipSpeed*((1-W)/(1-TFactor))
        Pd = Pt/NB   //deliver power to the propeller 
        ND = Pe/Pd
        Ps = Pd/NT
-       Pe = Pe.toFixed(2)
-       Pt = Pt.toFixed(2)
-       Pd = Pd.toFixed(2)
-    //    No = Pt/Pd
-    //    No = No.toFixed(2)
+       Pe = (Pe.toFixed(2))*1
+       Pt = (Pt.toFixed(2))*1
+       Pd = (Pd.toFixed(2))*1
+       Pb = ((Pd/Ns).toFixed(2))*1
        
    }
     
 }
+
+
+ function engineSellection(){
+  
+    this.Margin = function(){
+        this.sm = (Rfoul+Rwave)*shipSpeed
+        if(this.sm /Pd < 0.15){
+            SM = 15  //%
+
+            Ptotal = (((Pb*(SM/100))+Pb).toFixed(2))*1
+  
+        }else{
+            SM = this.sm*100
+            Ptotal = (((Pb*(SM/100))+Pb).toFixed(2))*1
+        }
+        this.EM = 20//*ratedPower  assumed value      
+        SMCR = Pd*1+ ((100+SM)/100)/((100-this.EM)/100)
+        
+    }
+
+ }
 
 let engineData ={
     wartsila2:{
@@ -630,7 +652,9 @@ let wartsila46 = engineData.wartsila3
 let shipHull = new ship()
 let calResistnace = new resistance()
 let EngineCal = new engineAnalysis()
- let propeller = new propellerProperties()
+let propeller = new propellerProperties()
+let engine = new engineSellection()
 
-console.log(propeller)
+
+console.log()
 
