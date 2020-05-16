@@ -9,12 +9,12 @@ More information regarding the scope will be provided later.
 
 <h2> Ship resistance extimation </h2>
 
-<h2> Engine SFOC extimation and comparison  </h2>
+<h2> Engine SFOC estimation and comparison  </h2>
 
 
-<h2> Propulsion power extimation  </h2>
+<h2> Propulsion power estimation  </h2>
 
-<h2> emission extimation   </h2>
+<h2> emission estimation   </h2>
 
 <h2> Different vessel opeartion simulation  </h2>
 
