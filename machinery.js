@@ -599,6 +599,96 @@ function propellerProperties (){
 
  }
 
+ 
+ let batterySystem = {
+   supplier:{
+      corvus1:{
+        supplier: "corvus",
+         model: "Orca Power",
+         batteryType:"Lithoum-ion",
+         c_Rate: `15 C`,
+         lifeCycle:800, // number of complete charge/dischage before it goes belwo 80%
+         DOD: "80 %", // Depth of dischargeis 80%
+         voltage:"", // range 100 to 1200v
+         chargeState:"",
+        // example
+        capacity: `39 kwh`,
+        norminalVoltage: `890 VDC`,
+        weight: `680 kg`,
+        heigh: `2200 mm`,
+        width:   `645  mm`,
+        depth: `705  mm`,
+
+      },
+      corvus3:{
+        supplier: "corvus",
+         model: "Corvus Blue Whale",
+         batteryType:"Lithoum-ion",
+         c_Rate: `0.5 C`,
+          c_Rate_peak : "1 C", // peak
+         SOC:  "",   // state of charge
+        DOD:  "",
+        // example
+        capacity: `2400 kWh`,
+        norminalVoltage: "1075 VDC",
+        voltage: " 1142 VDC",
+        weight: "23300 kg",
+        heigh: `2000 mm`,
+        width:   `1200  mm`,
+        length: `8600  mm`,
+
+
+      },
+
+      corvus2:{
+        supplier: "corvus",
+         model: "Orca Energy",
+         batteryType:"Lithoum-ion",
+         c_Rate_peak : `6 C`, // peak
+          c_Rate_continous: `3 C`,
+         lifeCycle: 800, // number of complete charge/dischage before it goes belwo 80%
+         DOD: "80 %", // Depth of dischargeis 80%
+         voltage:"1100 VDC ", // range 100 to 1200v
+         SOC: "",  // state of charge
+        // example
+        capacity: "125 kwh",
+        norminalVoltage: "980 VDC",
+        source:`https://corvusenergy.com/products/corvus-orca-energy/`,
+        weight: "1620 kg",
+        heigh: "2200 mm",
+        width: "645 mm",
+        depth: "705 mm",
+
+      }
+
+    //   PBES:{
+    //     supplier: "PBES",
+    //      model: "PB1",
+    //      batteryType:"Lithoum-ion",
+    //      c_RateRMS: "3 C",
+    //      c_RateDischarge: "6 C",
+    //      c_RateCharge: 3, //peak
+    //      chargeState: "",
+    //      lifeCycle1 : "7000 cycles; @ 100 %",
+    //       DOD1: "100 %",
+    //      lifeCycle2 : "15000 cycles;  @ 80 %",
+    //       DOD2: "80 %",
+
+    //      voltage:"", // range 100 to 1200v
+    //     // example
+    //     capacity: "65 kwh",
+    //     norminalVoltage: "888 VDC",
+    //     weight: "1190 kg", //kg
+    //     height: "2560 mm",
+    //     lenght: "895 mm", //mm
+    //     width: "630 mm",//mm
+    //   },
+
+    }
+
+  }
+
+
 let engineData ={
     wartsila2:{
         supplier: "wartsila",

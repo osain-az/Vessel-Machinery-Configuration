@@ -69,14 +69,19 @@ tr:hover {background-color: #ddd;}
       h2,h1{
           text-align: center;
       }
-      .engine{
+      .engine, .battery{
           display: block;
           margin-left: auto;
           margin-right: auto;
           border: solid plum 2px;
       }
-      .engineInput{
-
+      .powerSource{
+        display: grid;
+        grid-template-columns: 48% 48% ;
+        grid-template-rows: 1fr;
+        grid-auto-flow: column;
+        margin: 20px;
+         border: solid plum 2px;
       }
 
     .range{
@@ -394,7 +399,7 @@ tr:hover {background-color: #ddd;}
     <p id="demo"></p> -->
 
     <div class="main">
-        <h1>Ship Machinery Configuration</h1>
+        <h1>Ship Machinery Configuration and Simulation</h1>
         <div>
             <h2>Hull dimensions  and resistance display </h2>
         <div class="hull" id="hull">
@@ -730,7 +735,10 @@ tr:hover {background-color: #ddd;}
 
 
 
-        <div class="engine column" id="engine" >
+        <div class="powerSource column" id="powerSource" >
+          <!-- <h2>Power Source suppliers  </h2> -->
+        <div class="engine_source">
+          
             <strong><p class="center">choose engine model</p></strong>
           <select class="engine" onchange="displayEngineType(event)">
            <option value="" selected><strong>Choose engine</strong> </option>
@@ -740,6 +748,20 @@ tr:hover {background-color: #ddd;}
            <!-- <option value=""></option>
            <option value=""></option> -->
            </select>
+          </div>
+
+         <div class="battery_source" >
+           <strong><p class="center">Battery model still in developemnt </p></strong>
+           <select class="battery" onchange="displayEngineType(event)">
+
+            <option value="" selected><strong> choose Battery pack </strong> </option>
+            <!-- <option value="kongsberg">Kongsberg</option> -->
+            <option value="Orca Power">corvus Orca Power </option>
+            <option value="Corvus Blue Whale">Corvus Blue Whale</option>
+            <!-- <option value=""></option>
+            <option value=""></option> -->
+            </select>
+          </div>
 
         </div>
 
