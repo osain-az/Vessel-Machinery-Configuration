@@ -57,7 +57,7 @@ thead{
 tr:nth-child(even){background-color: #f2f2f2;}
 tr:hover {background-color: #ddd;}
 /*  */
-#Table,#resisTable{
+#Table,#resisTable,#bat_Table, #genset_Table{
   font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
   /* border-collapse: collapse; */
   border-spacing: 1px;
@@ -69,7 +69,7 @@ tr:hover {background-color: #ddd;}
       h2,h1{
           text-align: center;
       }
-      .engine, .battery{
+      .engine, .battery, .genset{
           display: block;
           margin-left: auto;
           margin-right: auto;
@@ -77,7 +77,7 @@ tr:hover {background-color: #ddd;}
       }
       .powerSource{
         display: grid;
-        grid-template-columns: 48% 48% ;
+        grid-template-columns: 33% 33% 33% ;
         grid-template-rows: 1fr;
         grid-auto-flow: column;
         margin: 20px;
@@ -167,12 +167,10 @@ tr:hover {background-color: #ddd;}
 
     .appendage{
       width: 100%;
-     /* background-color:rgba(44, 81, 117, 0.7); */
     grid-template-rows: 1fr;
-    /* grid-template-columns: 55% 45%; */
+    
     grid-auto-flow: column;
-    /* margin: 30px; */
-    /* margin: 15px; */
+   
     }
     .inputArea{
         width: 50%;
@@ -180,9 +178,7 @@ tr:hover {background-color: #ddd;}
     .addedResistance{
       margin-left: 15px;
     }
-    .waveResis{
-      
-    }
+   
 
      .area {
         /* border:  solid plum 2px; */
@@ -290,6 +286,16 @@ tr:hover {background-color: #ddd;}
     .screw,.shaft {
       margin-left: 15px;
     }
+  
+    .propulsion_type input{
+      margin-right: 5%;
+    }.propulsion_type input:last-child{
+      margin-right: 1%;
+    }
+    .propulsion_type span:first-child{
+      margin-left: 4%;
+    }
+    
   
     .mainDashboard{
         display: flex;
@@ -734,9 +740,19 @@ tr:hover {background-color: #ddd;}
     </div>
 
 
-
+    <div class="prop_system">
+    <div class= >
+       <h2> Propulsion System </h2>
+      <form class="propulsion_type" onchange="dispProSystem(event)">
+       <span>mechanical Propulsion</span> <input type="radio" name="Propulsion" id="ME_pro" value="ME"> 
+        <span>Diesel Electric Propulsion</span> <input type="radio" name="Propulsion"id="DE_pro" value="DE"> 
+       <span>Hybrid DE and ME</span><input type="radio" name="Propulsion" id="DE_ME_pro" value="DE_ME">
+        <span>Hybrid: DE and battery</span><input type="radio" name="Propulsion" id="DE_Bat_pro" value="DE_Battery" >  
+        <span>Battery Electric </span><input type="radio" name="Propulsion" id="battery_E" value="battery_E" > 
+      </form>
+   </div>  
         <div class="powerSource column" id="powerSource" >
-          <!-- <h2>Power Source suppliers  </h2> -->
+        
         <div class="engine_source">
           
             <strong><p class="center">choose engine model</p></strong>
@@ -751,19 +767,33 @@ tr:hover {background-color: #ddd;}
           </div>
 
          <div class="battery_source" >
-           <strong><p class="center">Battery model still in developemnt </p></strong>
-           <select class="battery" onchange="displayEngineType(event)">
+           <strong><p class="center">Choose Battery model </p></strong>
+           <select class="battery" onchange="displayBatteryType(event)">
 
             <option value="" selected><strong> choose Battery pack </strong> </option>
             <!-- <option value="kongsberg">Kongsberg</option> -->
-            <option value="Orca Power">corvus Orca Power </option>
-            <option value="Corvus Blue Whale">Corvus Blue Whale</option>
+            <option value="Orca_Energy">corvus Orca Engergy </option>
+            <option value="Blue_Whale">Corvus Blue Whale</option>
             <!-- <option value=""></option>
             <option value=""></option> -->
             </select>
           </div>
 
+          <div class="GenSet_source" >
+            <strong><p class="center">Choose Generator set </p></strong>
+            <select class="genset" onchange="displayGenSetType(event)">
+ 
+             <option value="" selected><strong> Choose Genset  </strong> </option>
+             <!-- <option value="kongsberg">Kongsberg</option> -->
+             <option value="Wärtsilä_34DF">Wärtsilä 34DF  </option>
+             <option value="Wärtsilä_31DF">Wärtsilä 31DF</option>
+            
+             </select>
+           </div>
+
+
         </div>
+       </div>
 
                 <div  id="engineTable" class=" hide">
                     <table id="Table" class="Table">
@@ -785,6 +815,48 @@ tr:hover {background-color: #ddd;}
                     </table>
 
             </div>
+
+
+            <div  id="batteryTable" class=" hide">
+              <table id="bat_Table" class="bat_Table">
+                <thead>
+
+                  <th colspan="12"></th>
+
+                </thead>
+                <tr>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+
+                  <td></td>
+                  <td></td>
+                </tr>
+
+              </table>
+
+      </div>
+
+      <div  id="gensetTable" class=" hide">
+        <table id="genset_Table" class="genset_Table">
+          <thead>
+
+            <th colspan="12"></th>
+
+          </thead>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+          </tr>
+
+        </table>
+
+</div>
 
         <div id="mainDashboard" class="mainDashboard hide">
 
@@ -1879,15 +1951,16 @@ function showEngineDashbaord (){
 
 }
 
-
 function displayEngineType(event) {
   document.getElementById("engineTable").classList.remove("hide");
   document.getElementById("mainDashboard").classList.remove("hide");
-//   showEngineDashbaord ()
+  document.getElementById("batteryTable").classList.add("hide");
+  document.getElementById("gensetTable").classList.add("hide");
+
 
   const table = document.getElementById("Table");
   let i = 0
-  let row, engineDetail;
+  let row, engineDetail ;
 
   const EventID = event.target.value
   console.log(EventID)
@@ -1957,8 +2030,6 @@ engine.Margin()
    rpm_min = 1400
    rpm_max = parseFloat(engineDetail.Engine_speed)
  }
-
-
     document.getElementById('displayRPM').innerHTML= rpm_min + " minimun rpm"
     document.getElementById('RPM').value = rpm_min
     document.getElementById('RPM').max = rpm_max
@@ -1994,6 +2065,173 @@ engine.Margin()
 
 }
 
+
+
+function displayGenSetType(event) {
+  document.getElementById("engineTable").classList.add("hide");
+  document.getElementById("gensetTable").classList.remove("hide");
+  document.getElementById("bat_Table").classList.add("hide");
+  document.getElementById("mainDashboard").classList.remove("hide");
+
+  
+
+  const table = document.getElementById("genset_Table");
+  let i = 0
+  let row, gensetDetail;
+
+  const EventID = event.target.value
+  console.log(EventID)
+if (EventID==="Wärtsilä_31DF"){
+  gensetDetail = genset.GenSet2
+  alert(gensetDetail)
+  console.log(genset.GenSet2)
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+}
+
+}
+else if(EventID==="Wärtsilä_34DF"){
+  gensetDetail = genset.GenSet1
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+}
+
+
+}
+ 
+
+ ratedPower = parseFloat(gensetDetail.Gen_Power) 
+ meanPressure = parseFloat(gensetDetail.mean_Presure)
+ cylinderBore = parseFloat(gensetDetail.cylinderBore)
+ cylinders = parseFloat(gensetDetail.cylinders)
+ pistonStroke = parseFloat(gensetDetail.pistonStroke)
+ Gen_Power = parseFloat(gensetDetail.Gen_Power)
+ rated_BSEC = parseFloat(gensetDetail.BSEC)
+ engine_effic = gensetDetail.efficiency
+
+ supplier = gensetDetail.supplier
+ ratedSpeed = parseFloat(gensetDetail.Engine_speed)
+ gensetDetail.SFOC= ((rated_BSEC/42700)*(1-engine_effic)+(rated_BSEC/42700)).toFixed(2)*1 + " kg/kWh"
+ ratedSfoc = parseFloat(gensetDetail.SFOC)*1000
+ 
+EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
+//  EngineCal.SFOC(load,power,ratedSfoc,supplier)
+engine.Margin()
+ torqueDisplay ()
+ powerDisplay()
+ rpmDisplay()
+ loadDisplay()
+ loadWattDisplay ()
+ currentSfocDisplay()
+    // updating sliders
+   
+    document.getElementById('displayRPM').innerHTML= rpm_min + " minimun rpm"
+    document.getElementById('RPM').value = rpm_min
+    document.getElementById('RPM').max = rpm_max
+    document.getElementById('RPM').min = rpm_min
+
+   minLoad= document.getElementById('load').min
+    document.getElementById('loadDisplay').innerHTML= minLoad+ " minimun load %"
+    document.getElementById('load').value = minLoad
+    enginePower = Gen_Power
+    minPower = enginePower*0.1
+
+    document.getElementById('power').max = (enginePower-10)
+    document.getElementById('power').min = minPower
+    document.getElementById('power').value = minPower
+    document.getElementById('powerDisplay').innerHTML= minPower+ " minimun desired power "
+
+
+  for (let [key, value] of Object.entries(gensetDetail)) {
+    console.log(`${key}: ${value}`);
+    document.getElementById("gensetTable").classList.remove("hide");
+
+      let table = document.getElementById("genset_Table");
+    //   table.classList.remove("hide")
+       row = table.insertRow(i)
+     console.log(row)
+    row.insertCell(0).innerHTML =`<strong>`+`${key}:</strong> `;
+    row.insertCell(1).innerHTML = `<strong>` +`${value}`+ "</strong>";
+    i++;
+  }
+  let header= table.createTHead();
+    let newRow = header.insertRow(0);
+    newRow.innerHTML= "<th colspan=12>Product details and specifications </th>"
+
+}
+
+
+
+function displayBatteryType(event) {
+  document.getElementById("bat_Table").classList.remove("hide");
+  document.getElementById("engineTable").classList.add("hide");
+  document.getElementById("mainDashboard").classList.add("hide");
+  document.getElementById("gensetTable").classList.add("hide");
+
+  const table = document.getElementById("bat_Table");
+  let i = 0
+  let row, batteryDetail,c_ratec_rate;
+
+  const EventID = event.target.value
+  
+if (EventID==="Orca_Energy"){
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+}
+
+ batteryDetail = battery.corvus2
+ capacity = parseFloat(batteryDetail.capacity) 
+ c_rate = parseFloat(batteryDetail.c_Rate) 
+  c_rate_peak = parseFloat(batteryDetail.c_Rate_peak) 
+  if(!c_rate_peak){
+    c_rate_peak = c_rate;
+  }
+  batteryDetail.cont_charging_power = (capacity/(c_rate*60/60)).toFixed(1)
+    batteryDetail.peak_charging_power = (capacity/(c_rate_peak*60/60)).toFixed(1)
+    batteryDetail.SOC = capacity*0.2
+ 
+}
+
+else if (EventID==="Blue_Whale"){
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+}
+
+ batteryDetail = battery.corvus1
+ capacity = parseFloat(batteryDetail.capacity) 
+ c_rate = parseFloat(batteryDetail.c_Rate) 
+  c_rate_peak = parseFloat(batteryDetail.c_Rate_peak) 
+  if(!c_rate_peak){
+    c_rate_peak = c_rate;
+  }
+  batteryDetail.cont_charging_power = (capacity/(c_rate*60/60)).toFixed(1) + " kW"
+   batteryDetail.peak_charging_power = (capacity/(c_rate_peak*60/60)).toFixed(1) + " kW"
+   batteryDetail.SOC = capacity*0.2 +" kWh"
+ 
+}
+  
+  for (let [key, value] of Object.entries(batteryDetail)) {
+    console.log(`${key}: ${value}`);
+    document.getElementById("batteryTable").classList.remove("hide");
+
+      let table = document.getElementById("bat_Table");
+    //   table.classList.remove("hide")
+       row = table.insertRow(i)
+     console.log(row)
+    row.insertCell(0).innerHTML =`<strong>`+`${key}:</strong> `;
+    row.insertCell(1).innerHTML = `<strong>` +`${value}`+ "</strong>";
+    i++;
+  }
+  let header= table.createTHead();
+    let newRow = header.insertRow(0);
+    newRow.innerHTML= "<th colspan=12>Product details and specifications </th>"
+
+}
+
+
+
+
+
 function powerOn(){
   const EventID = "power"
  
@@ -2013,7 +2251,7 @@ function engineDashboard(EventID ,val ){
     alert(EventID)
 
     sfocDisplay ()
-    alert(val)
+  
      c= (10/100)*val;
      n = 10
      if(val >=20 && val <= 100){
@@ -2175,34 +2413,29 @@ else if(EventID === 'powerInput' || EventID ==='power'){
         
     //   for ( k = minPower; k < val;k +=c) {
 
-    //     inputData(i);
-    //     i++
-    //     }
-
-    //     function inputData(i) {
-    //     setTimeout(function() {
-
-    //             if(val -n >c ){
-    //                 console.log("testing")
-    //             load = n
-    //             EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-    //             console.log("this is the load 1",load)
-    //          }else{
-    //         load = val
-    //         EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-    //         console.log("this is the load last",load)
-    //             }
-    //             Plotly.extendTraces('plot', {
-    //             x: [[engine_loadPercent]],
-    //             y: [[sfoc_cal]]
-    //           }, [0], 10000)
-    //           n+=c
-
-    //     }, 1000 * i);
-    //     }
-//}
 
 }
+}
+
+function dispProSystem(event){
+  const EventValue = event.target.value 
+  if(EventValue ==="DE"){
+  
+  }
+  else if(EventValue === "ME"){
+  
+  }
+  else if(EventValue === "DE_ME"){
+
+}
+else if(EventValue === "DE_battery"){
+
+}
+else if(EventValue === "battery_E"){
+
+}
+
+  
 }
 
 

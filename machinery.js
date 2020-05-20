@@ -51,6 +51,7 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
        console.log(this.sfocRelative)
       this.SFOC_main = (this.sfocRelative*this.sfocBase).toFixed(1)
       sfoc_cal = parseFloat(this.SFOC_main);
+      alert(sfoc_cal)
     } 
     else if (this.supplier === "Cat") {
         this.sfocRelative = 0.7024*this.EL *this.EL-0.97728*this.EL + 1.35;
@@ -579,6 +580,7 @@ function propellerProperties (){
 }
 
 
+
  function engineSellection(){
   
     this.Margin = function(){
@@ -598,91 +600,86 @@ function propellerProperties (){
     }
 
  }
+ function PMS (){
+
+ }
+
+ function BMS (){
+
+     this.charge_battery = function (c_rate,capacity,SOC,charge_power){
+         this.charging = true;
+         this.c_rate = parseFloat(c_rate);
+         this.charge_time = this.c_rate*60/60; // 
+         this.b_capacity = parseFloat(capacity);
+         this.charge_power = charge_power;
+         this.SOC =SOC
+         do {
+            this.charged_SOC = this.charging_power* this.charge_time*parseFloat(DOD);
+             this.SOC += this.charged_SOC
+         } while (this.SOC < this.capacity);
+      
+     };
+     this.discharge_battery = function (DOD,dis_power,capacity,SOC,c_rate){
+         this.b_capacity = parseFloat(capacity);
+         this.disc_power = dis_power
+         this.c_rate = parseFloat(c_rate);
+         this.charge_time = this.c_rate*60/60; // 
+          this.DOD = parseFloat(DOD)/100;
+          this.SOC =SOC
+        
+        do {
+        this.discharged_SOC = this.disc_power*this.charge_time* this.DOD;
+        this.SOC -= this.charged_SOC
+            
+        } while (this.discharged_SOC > this.b_capacity*this.DOD );
+
+     }
+ }
 
  
- let batterySystem = {
+ let batteries_properties = {
    supplier:{
       corvus1:{
-        supplier: "corvus",
-         model: "Orca Power",
-         batteryType:"Lithoum-ion",
-         c_Rate: `15 C`,
-         lifeCycle:800, // number of complete charge/dischage before it goes belwo 80%
-         DOD: "80 %", // Depth of dischargeis 80%
-         voltage:"", // range 100 to 1200v
-         chargeState:"",
-        // example
-        capacity: `39 kwh`,
-        norminalVoltage: `890 VDC`,
-        weight: `680 kg`,
-        heigh: `2200 mm`,
-        width:   `645  mm`,
-        depth: `705  mm`,
-
-      },
-      corvus3:{
         supplier: "corvus",
          model: "Corvus Blue Whale",
          batteryType:"Lithoum-ion",
          c_Rate: `0.5 C`,
           c_Rate_peak : "1 C", // peak
-         SOC:  "",   // state of charge
-        DOD:  "",
+         DOD:  "",
         // example
         capacity: `2400 kWh`,
-        norminalVoltage: "1075 VDC",
+        //  SOC : parseFloat(capacity)*0.2, // SOC cant be less than 20%
+        // cont_charging_power : capacity/(parseFloat(c_Rate)*60/60),
+        // peak_charging_power : capacity/(parseFloat(c_Rate_peak)*60/60),
+        nor_Voltage: "1075 VDC",
         voltage: " 1142 VDC",
         weight: "23300 kg",
-        heigh: `2000 mm`,
+        depth: `2000 mm`,
         width:   `1200  mm`,
         length: `8600  mm`,
-
 
       },
 
       corvus2:{
         supplier: "corvus",
          model: "Orca Energy",
-         batteryType:"Lithoum-ion",
+         battery_Type:"Lithoum-ion",
          c_Rate_peak : `6 C`, // peak
-          c_Rate_continous: `3 C`,
+          c_Rate: `3 C`,
          lifeCycle: 800, // number of complete charge/dischage before it goes belwo 80%
          DOD: "80 %", // Depth of dischargeis 80%
          voltage:"1100 VDC ", // range 100 to 1200v
-         SOC: "",  // state of charge
         // example
         capacity: "125 kwh",
-        norminalVoltage: "980 VDC",
-        source:`https://corvusenergy.com/products/corvus-orca-energy/`,
+         SOC : "",//parseFloat(capacity)*0.2, // SOC cant be less than 20%
+         cont_charging_power : "",// capacity/(parseFloat(c_Rate)*60/60),
+         peak_charging_power : "",//capacity/(parseFloat(c_Rate_peak)*60/60),
+        nor_Voltage: "980 VDC",
         weight: "1620 kg",
         heigh: "2200 mm",
         width: "645 mm",
         depth: "705 mm",
-
       }
-
-    //   PBES:{
-    //     supplier: "PBES",
-    //      model: "PB1",
-    //      batteryType:"Lithoum-ion",
-    //      c_RateRMS: "3 C",
-    //      c_RateDischarge: "6 C",
-    //      c_RateCharge: 3, //peak
-    //      chargeState: "",
-    //      lifeCycle1 : "7000 cycles; @ 100 %",
-    //       DOD1: "100 %",
-    //      lifeCycle2 : "15000 cycles;  @ 80 %",
-    //       DOD2: "80 %",
-
-    //      voltage:"", // range 100 to 1200v
-    //     // example
-    //     capacity: "65 kwh",
-    //     norminalVoltage: "888 VDC",
-    //     weight: "1190 kg", //kg
-    //     height: "2560 mm",
-    //     lenght: "895 mm", //mm
-    //     width: "630 mm",//mm
-    //   },
 
     }
 
@@ -736,15 +733,79 @@ let engineData ={
       },
 }
 
+const Generator_sets = {
+    Wärtsilä:{
+      
+        GenSet1:{
+          supplier:"wartsila",
+          GenSET_type: "Wärtsilä 34DF",
+          model: "12V34DF",
+          frequency: "60 Hz",
+          Cylinder_output : "480 kW/cyl",
+          IMO_compliant : " Tier III",
+          Engine_speed:"720 RPM",
+          SFOC:"",
+          BSEC : "7590 kJ/kWh",
+          pistonStroke : "430 mm",
+          cylinderBore: "310 mm",
+          mean_Presure : "22.0 bar ",
+          cylinders: 12,
+          fuelType: "MDO",
+          Engin_Power: "5760 kW",
+          Gen_Power: "5530 kW",
+          efficiency: 0.95,
+          voltage: "13.8 kV",
+          weight: "96 tonnes", // kg
+          height:"4365 mm",
+          length: "10075 mm",
+          width: "3060 mm",
+        },
+        GenSet2:{
+          supplier:"wartsila",
+          GenSET_type: "Wärtsilä 31DF",
+          model: "8V31DF",
+          frequency: "50 Hz",
+          Cylinder_output : " 550 kW/cyl",
+          IMO_compliant : " Tier III",
+          Engine_speed:"750 RPM",
+          SFOC:"",
+          BSEC : "7220 kJ/kWh",
+          pistonStroke : "430 mm",
+          cylinderBore: "310 mm",
+          mean_Presure : "27.1 bar ",
+          fuelType: "MDO",
+          Engine_Power: "4400 kW",
+          Gen_Power: "4225 kW",
+          efficiency: 0.95,
+          voltage: "13.8 kV",
+          weight: "90 tonnes",
+          height:"4880 mm",
+          length: "9100 mm",
+          width: "3110 mm",
+        }
+}
+}
 
+//engine 
 let wartsila32 = engineData.wartsila2
 let wartsila46 = engineData.wartsila3
+
+//Generator set 
+let genset = Generator_sets.Wärtsilä
+
+//Ship hull and resistance 
 let shipHull = new ship()
 let calResistnace = new resistance()
 let EngineCal = new engineAnalysis()
 let propeller = new propellerProperties()
 let engine = new engineSellection()
 
+//Battery 
+const battery = batteries_properties.supplier
+const B_M_S = new BMS() 
 
-console.log()
+
+
+console.log(battery.corvus2)
+
 
