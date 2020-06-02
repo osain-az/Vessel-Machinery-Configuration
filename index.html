@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ship Machinery Configuration </title>
     <script src="machinery.js"></script>
+    <script src="eedi.js"></script>
+
     <!-- Load c3.css -->
 <link href="./c3-0.7.15/c3.css" rel="stylesheet">
 
@@ -33,6 +35,9 @@
     padding: 14px 16px;
     text-decoration: none;
     font-size: 17px;
+    }
+    .status{
+      border: solid  red 2px;
     }
 
     .topnav a.active {
@@ -77,17 +82,77 @@ tr:hover {background-color: #ddd;}
       }
       .powerSource{
         display: grid;
-        grid-template-columns: 33% 33% 33% ;
+        grid-template-columns: auto ;
         grid-template-rows: 1fr;
         grid-auto-flow: column;
         margin: 20px;
          border: solid plum 2px;
       }
+    
+      
+      .EEDI_main{
+        border: solid #6d5757 2px;
+      }
+      .EEDI{
+        width:100%;
+      display: grid;
+      grid-template-rows: 1fr;
+       grid-auto-flow: column;
+      }
+      .ME_AE span:last-child{
+        border: solid rgb(168, 33, 85) 2px;
+        float: right;
+        margin-right: 10px;
+        padding: 5px;
+      }
+      .ME_AE span:first-child{
+        margin-left: 28%;
+        margin-right: 20px;
+      }
+
+      .EEDI_ME,.EEDI_ME{
+        width : 110%;
+       grid-row: 2;
+       grid-column: 1;
+       text-align: center;
+       border : solid  rgb(75, 62, 95) 2px;
+      }
+      .EEDI_AE span,.EEDI_ME span{
+        margin-right: 2px;
+      }
+      .MEAE2{
+        width: 50px;
+        margin-left: 2px;
+        margin-right: 15px;
+      }
+      .MEAE{
+        width: 10px;
+        margin-top: 10px;
+      }
+      .pilotfuel{
+        margin-left: 60px;
+      }
+      .pilotfuel select{
+        padding: 4px;
+        border: solid rgb(236, 175, 238) 2px;
+      }
+      /* .EEDI_opt span{
+       margin-left: 15px;
+      } */
+      .EEDI_opt{
+         width : 90%;
+        margin-left : 10%;
+       grid-row: 2;
+       grid-column: 2;
+       text-align: center;
+       border : solid  rgb(75, 62, 95) 2px;
+      }
 
     .range{
-    width: 60%;
+     width: 60%;
      margin-bottom: 20px;
-    margin-top: 20px;
+     margin-top: 20px;
+
     }
 
     .grides{
@@ -101,7 +166,7 @@ tr:hover {background-color: #ddd;}
     margin: 15px;
 
     }
-    .hull,.appendage,.SternBulbous{
+    .hull,.appendage,.SternBulbous,.simulation{
       width: 100%;
 
      /* background-color:rgba(44, 81, 117, 0.7); */
@@ -129,8 +194,6 @@ tr:hover {background-color: #ddd;}
     clear: both;
     padding: 2px;
     }
-
-
 
     .hullDimension,.resistance ,.appendage {
 
@@ -296,7 +359,6 @@ tr:hover {background-color: #ddd;}
       margin-left: 4%;
     }
     
-  
     .mainDashboard{
         display: flex;
         flex-wrap: nowrap;
@@ -315,9 +377,54 @@ tr:hover {background-color: #ddd;}
     grid-auto-flow: column;
     margin: 15px;
     margin-left: 0;
+  
 
     }
+    .simulation{
+     /* background-color:rgba(0, 2, 4, 0.7); */
+     background-color:rgba(44, 81, 117, 0.7);
+     width: 97%;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: auto; 
+    grid-auto-flow: column;
+    margin: auto;
+    }
+    .create_custo_bat,.create_custo_genset,.create_custo_engine
+    {
+     float: right;
+     margin-right: 15%;
+     padding: 6px;
+     
+    }
+   .custom_button,.tableconfirm {
+     padding: 12px;
+     color: white;
+     cursor: pointer;
+     font-size: 20px;
+     border-radius: 10px;
+     border :solid hotpink 2px;
+     background-color: rgb(46, 84, 88);
+    }
+    .sellected_pro{
+     /* background-color:rgba(0, 2, 4, 0.7); */
+     background-color:rgba(44, 81, 117, 0.7);
+     width: 97%;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: auto; 
+    grid-auto-flow: column;
+    margin: auto;
+   
+    }
 
+   .sim{
+     width: 60px;
+     margin-left: 10px;
+   }
+   .profile input{
+     margin-left: 5px;
+   }
 
 .testin{
         margin: 30px;
@@ -333,7 +440,6 @@ tr:hover {background-color: #ddd;}
         margin: 15px;
         color: aqua;
         font-size: 1.3em;
-
     }
     .engineInput{
         color: aqua;
@@ -403,7 +509,7 @@ tr:hover {background-color: #ddd;}
 
     this:<input type="range" step="5" oninput="myFunction(this.value)">
     <p id="demo"></p> -->
-
+       <h1 class="status">Note: Site still under development </h1>
     <div class="main">
         <h1>Ship Machinery Configuration and Simulation</h1>
         <div>
@@ -425,29 +531,22 @@ tr:hover {background-color: #ddd;}
                <div>
                <p class="newtest">ABT <input type="range" name="" class="shipDimension" id="ABT" min=10 value="13.4848" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayABT spanNew"id="displayABT"  > </span > </p>
                <p>hB <input type="range" name="" class="shipDimension" id="hB" min="0" value="4" step="0.1" max="20"  oninput="shipDimension(event)"><span class="displayhB  spanNew"id="displayhB"> </span> </p>
-
                <p>Transom AT <input type="range" name="" class="shipDimension" id="AT" min="3" value="16" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayAT spanNew"id="displayAT"> </span> </p>
-
                <div class="coefficient">
                 <p>CB: <input type="range" name="" class="shipDimension" id="Cb" min="0" value="0.572" max="1" step="0.01"  oninput="shipDimension(event)"><span class="displayCb spanNew"id="displayCb" > </span> </p>
                 <!-- <p>CP: <input type="range" name="" class="shipDimension" id="CP" min="0" value="" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> -->
                 <p>CM: <input type="range" name="" class="shipDimension" id="Cm" min="0" value="0.98" step="0.01" max="1"  oninput="shipDimension(event)"><span class="displayCm spanNew"id="displayCm" > </span> </p>
                 <p>LCB at Lwl (%): <input type="range" name="" class="shipDimension" id="LCB" min="-5" value="1.53" step="0.1" max="6"  oninput="shipDimension(event)"><span class="displayLCB spanNew"id="displayLCB" > </span> </p>
                 </div>
-
                <form action="" onchange="appendageCal(event)" class="">
-
                <h3>Appendage</h3>
                  <div class="appendage">
-
                  <div class="area">
                    <input type="checkbox" id="rudderBehindSkegCheck" name="Bilge Keel" value="">
                         <label for="Rudder behind skeg">  Rudder behind skeg </label>
                     <input type="range" name="" class="inputArea" id="rudderBehindSkeg" min="1.5" value="1.5" step="0.1" max="2"><span class="displayRudderBehindSkeg spanNew"id="displayRudderBehindSkeg"> </span> <br> <br>
                   Area : <input type="range" name="" class="inputArea" id="ArearudderBehindSkeg" min="0" value="0" step="0.1" max="60"><span class="RudderBehindSkeg spanNew"id="RudderBehindSkegArea"> </span> 
                 </div>
-
-
                 <div class="area1">
                     <input type="checkbox" id="rudderBehindSternCheck" name="Bilge Keel" value="">
                         <label for="Rudder behind Stern">  Rudder behind Stern </label>
@@ -463,7 +562,6 @@ tr:hover {background-color: #ddd;}
                   Area <input type="range" name="" class="inputArea" id="SkegArea" min="0" value="0" step="0.1" max="60"><span class="displaySkeg spanNew"id="displaySkegArea"> </span>
 
                 </div>
-
                 <div class="area3">
                     <input type="checkbox" id="ShaftsCheck" name="Shafts" value="">
                        <label for="Shafts">   Shafts  </label>
@@ -471,7 +569,6 @@ tr:hover {background-color: #ddd;}
                     Area <input type="range" name="" class="inputArea" id="ShaftsArea" min="0" value="0" step="0.1" max="60"><span class="displayShafts spanNew"id="displayShaftsArea"> </span>
                  </div>
             </form>
-
 
                 <form action="" onchange="appendageCal(event)" class="area11">
                     <input type="checkbox" id="BilgeKeelAreaCheck" name="Bilge Keel" value="">
@@ -507,11 +604,8 @@ tr:hover {background-color: #ddd;}
                 diameter : <input type="range" name="" class="inputArea" id="thrusterDiameter" min="0" value="0" step="0.1" max="15"><span class="displaythrusterDiameter spanNew"id="displaythrusterDiameter"> </span> <br> <br>
                 numbers of thruster : <input type="range" name="" class="inputArea" id="thrusterNO" min="1" value="2" step="" max="10"><span class="displayHullBossings spanNew"id="displaythrusterNO"> </span> <br>
                   </form>
-
                 </div>
-
                 <div class="SternBulbous">
-
                   <div class="stern "  >
                     <strong>choose Stern Shape</strong>
                   <select class="" onchange= "sternType(event)" id="stern">
@@ -530,13 +624,10 @@ tr:hover {background-color: #ddd;}
                  <form action=""onchange="appendageCal(event)">
                     <input type="checkbox" id="bulbous" name="bulbous bow" value="bulbous">
                     <label for="bulbous bow"> Bulbous bow</label><br>
-
                   </form>
                 </div>
 
               </div>
-
-
               <div>
                 <form action=""onchange="appendageCal(event)">
                    <input type="checkbox" id="Roughness" name="Roughness" value="Roughness">
@@ -656,15 +747,11 @@ tr:hover {background-color: #ddd;}
                 <option value="TwinScrew"> Twin Screw</option>
                 </select>
               </div>
-
             </div>
-
             <div class="propellerTable">
               <table id="propellerTable" class="Table">
                 <thead>
-  
                   <th colspan="12">Propeller parameters using  Wageningen B-Screw Series  </th>
-  
                 </thead>
                 <thead>
   
@@ -700,6 +787,10 @@ tr:hover {background-color: #ddd;}
                   <td>advance propeller speed </td>
                   <td><span id="Va">0</span></td>
                 </tr>
+                <tr>
+                  <td>propeller speed n  rpm </td>
+                  <td><span id="propeller_speed">0</span></td>
+                </tr>
                 <!-- <tr>
                   <td>Thrust loading Cth</td>
                   <td><span id="Cth">0</span></td>
@@ -708,6 +799,7 @@ tr:hover {background-color: #ddd;}
                   <td>Thrust T</td>
                   <td><span id="thrust">0</span></td>
                 </tr>
+                
                 <tr>
                   <td>Thrust Power</td>
                   <td><span id="thrustP">0</span></td>
@@ -725,12 +817,13 @@ tr:hover {background-color: #ddd;}
                   <td>Break  Power </td>
                   <td><span id="pb">0</span></td>
                 </tr>
-
-               
-                <!-- <tr>
-                  <td>Total resistance</td>
-                  <td><span id="RT">0</span></td>
-                </tr> -->
+                <td>SMCR  Power </td>
+                <td><span id="smcr">0</span></td>
+              </tr> 
+                <tr>
+                  <td>Testing</td>
+                  <td><span id="RT"><input type="text" name="" id=""></span></td>
+                </tr>
 
               </table>
             </div>
@@ -739,9 +832,113 @@ tr:hover {background-color: #ddd;}
       </div>
     </div>
 
+    <div  class="EEDI_main hide">
+      <h2>EED1 Emission index calculation </h2>
+      <p class="center"> <strong >To calculate the emission index of the vessel/ship according to EEDI, the Main and Auxiliary engine parameter are needed. Choose which to start with: </strong>
+      </p>
+       <form action="" onchange="EEDI_emission(event)" class="ME_AE">
+      <span><input type="radio" name="EEDI" id="radio_ME" value="Main engine"><strong> Main engine parameters</strong></span>
+      <input type="radio" name="EEDI" id="radio_AE" value="Main engine"> <span><strong> Auxiliary Engine parameters</strong></span>
+      <span id="EEDI_phase" class="" ><strong> activate phase 3</strong> <input type="checkbox" name="EEDI" id="phase" class="phase" value="" > </span>
+
+      <span id="radio_EEDI" class="hide" ><strong> close section</strong> <input type="radio" name="EEDI" id="radio_close" class="close" value="closed page" > </span>
+
+       </form>
+    <div class="EEDI" id="EEDI">
+      
+      <div class="EEDI_ME hide" id="EEDI_ME"onchange="EEDI_emission(event)">
+        <form action="" class="EEDI_AE_form" >
+          <h3 class="center"> Main Engine and fuel type</h3>
+          <p><strong>Note: before inputting any value click the check icon of the type of engine </strong></p>
+          <input type="checkbox" name="EEDI" id="ME_LNG_MDO" value="ME_LNG_MDO" class="MEAE">  <span>D_F (LNG_MDO) engine  Power kW :  </span> <input type="text" name="" id="ME_LNG_MDO_power" class="MEAE2"> <span></span>  <span>N0. of engine </span> <input type="text" name="" id="ME_LNG_MDO_NO" class="MEAE2"> <span></span><span>SFOC g/kwh:</span><input type="text" name="" id="ME_LNG_MDO_SFOC"class="MEAE2"><br> <br>
+          <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+          <span>Shaft Generator power <input type="text" name="" id=""></span><br> <br>
+
+          <input type="checkbox" name="EEDI" id="ME_LNG_HFO" value="" class="MEAE">  <span>D_F (LNG_HFO) engine  Power kW :  </span> <input type="text" name="" id="ME_LNG_HFO_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span> <input type="text" name="" id="ME_LNG_HFO_NO" class="MEAE2"><span></span> <span> SFOC g/kwh:</span><input type="text" name="" id="ME_LNG_HFO_SFOC" class="MEAE2"><br><br>
+          <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+          <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
+
+           <input type="checkbox" name="EEDI" id="ME_LNG_MGO" value="" class="MEAE">  <span>D_F (LNG_MGO) engine  Power kW :  </span> <input type="text" name="" id="ME_LNG_MGO_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span> <input type="text" name="" id="ME_LNG_MGO_NO" class="MEAE2"><span></span> <span> SFOC :</span><input type="text" name="" id="ME_LNG_MGO_SFOC" class="MEAE2"><br><br>
+           <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+          <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
+
+           <span class="pilotfuel" id="pilotfuel"><span> Dual Engine Pilot Fuel </span>
+           <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+           <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
+ 
+           <select name="" id="pilot_fuel" >
+            <option value=""><strong>Choose Fuel</strong> </option>
+            <option value="MDO">MDO</option>
+            <option value="HFO">HFO</option>
+          </select>
+          <span>SFOC g/kwh:</span><input type="text">
+        </span><br><br>
+          <input type="checkbox" name="EEDI" id="ME_LNG" value="ME_LNG" class="MEAE">  <span> LNG fuel engine  Power kW :  </span> <input type="text" name="" id="ME_LNG_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span><input type="text" name="" id="ME_LNG_NO" class="MEAE2"><span></span> <span> SFOC g/kwh:</span><input type="text" name="" id="ME_LNG_SFOC" class="MEAE2"><br><br>
+          <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+          <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
+
+          <input type="checkbox" name="EEDI" id="ME_MGO" value="ME_MGO" class="MEAE">  <span> MGO fuel engine  Power kW :  </span> <input type="text" name="" id="ME_MGO_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span><input type="text" name="" id="ME_MGO_NO" class="MEAE2"> <span></span><span> SFOC g/kwh:</span><input type="text" name="" id="ME_MGO_SFOC" class="MEAE2"><br><br>
+          <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+          <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
+
+          <input type="checkbox" name="EEDI" id="ME_MDO" value="ME_MDO" class="MEAE">  <span> MDO fuel engine  Power kW :  </span> <input type="text" name="" id="ME_MDO_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span><input type="text" name="" id="ME_MDO_NO" class="MEAE2"> <span></span><span>SFOC g/kwh:</span><input type="text" name="" id="ME_MDO_SFOC" class="MEAE2"><br><br>
+          <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+          <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
+
+          <input type="checkbox" name="EEDI" id="ME_HFO" value="ME_HFO" class="MEAE">  <span> HFO fuel engine  Power kW :  </span> <input type="text" name="" id="ME_HFO_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span><input type="text" name="" id="ME_HFO_NO" class="MEAE2"><span></span> <span> SFOC g/kwh:</span><input type="text" name="" id="ME_HFO_SFOC" class="MEAE2"><br><br>
+          <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
+          <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
+        </form>
+      </div>
+      <div class="EEDI_AE hide" id="EEDI_AE">
+           <form action="" class="EEDI_AE_form" onchange="EEDI_emission(event)">
+             <h3 class="center"> Auxiliary Engine and fuel type</h3>
+              <input type="checkbox" name="EEDI" id="AE_LNG_MDO" value="AE_LNG_MDO" class="MEAE">  <span>Dual Fuel (LNG_MDO) engine  Power kW :  </span> <input type="text" name="" id="AE_LNG_MDO_power"> <span></span>  <span>N0 of engine </span> <input type="text" name="" id="AE_LNG_MDO_NO"> <span></span><br> <br>
+              <input type="checkbox" name="EEDI" id="AE_LNG_HFO" value="" class="MEAE">  <span>Dual Fuel  (LNG_HFO) engine  Power kW :  </span> <input type="text" name="" id="AE_LNG_HFO_power"> <span></span>  <span>N0 of engine </span> <input type="text" name="" id="AE_LNG_HFO_NO"> <span> SFOC</span><input type="text" name="" id="AE_LNG_HFO_NO"><br><br>
+              <input type="checkbox" name="EEDI" id="AE_LNG_MGO" value="" class="MEAE">  <span>Dual Fuel (LNG_MGO) engine  Power kW :  </span> <input type="text" name="" id="AE_LNG_MGO_power"> <span></span>  <span>N0 of engine </span> <input type="text" name="" id="AE_LNG_MGO_"> <span></span><br><br>
+              <input type="checkbox" name="EEDI" id="AE_LNG" value="AE_LNG" class="MEAE">  <span> LNG fuel engine  Power kW :  </span> <input type="text" name="" id="AE_LNG_power"> <span></span>  <span>N0 of engine </span> <input type="text" name="" id="AE_LNG_NO"> <span></span><br><br>
+              <input type="checkbox" name="EEDI" id="AE_MGO" value="AE_MGO" class="MEAE">  <span> MGO fuel engine  Power kW :  </span> <input type="text" name="" id="AE_MGO_power"> <span></span>  <span>N0 of engine </span> <input type="text" name="" id="AE_MGO_NO"> <span></span><br><br>
+              <input type="checkbox" name="EEDI" id="AE_MDO" value="AE_MDO" class="MEAE">  <span> MDO fuel engine  Power kW :  </span> <input type="text" name="" id="AE_MDO_power"> <span></span>  <span>N0 of engine </span> <input type="text" name="" id="AE_MDO_NO"> <span></span><br><br>
+              <input type="checkbox" name="EEDI" id="AE_HFO" value="AE_HFO" class="MEAE">  <span> HFO fuel engine  Power kW :  </span> <input type="text" name="" id="AE_HFO_power"> <span></span>  <span>N0 of engine </span> <input type="text" name="" id="AE_HFO_NO"> <span></span><br><br>
+           </form>
+      </div>
+      <div class="EEDI_opt"onchange="EEDI_emission(event)">
+        <span><strong>Choose ship type : </strong></span>
+        <select name="" id="">
+          <option value="">Ship type</option>
+          <option value="BulkCarrier"> Bulk Carrier </option>
+          <option value="GasCarrier"> Gas Carrier </option>
+          <option value="Tanker"> Tanker </option>
+          <option value="Containership">container ship </option>
+          <option value="GeneralCargo"> General Cargo Ship </option>
+          <option value="RefrigeratedCargo"> Refrigerated Cargo carrier </option>
+          <option value="combinationCarrier"> Combination carrier </option>
+          <option value="LNGCarrier">LNG carrier </option>
+          <option value="RoRoVehicleCarrier"> Ro-ro cargo Vehicle Carrier </option>
+          <option value="RoRoCargoShip"> Ro-ro cargo ship </option>
+          <option value="RoRoPassengerShip"> Ro-ro Passenger ship  </option>
+          <option value="CruiseShip"> Passenger cruise ship </option>
+        </select> <br><br>
+      </span>
+        
+        <span> <strong>DeadWeight : </strong><input type="text" name="" id="" class="MEAE2"></span>
+        <span> <strong> Tonnage weight : </strong><input type="text" name="" id="" class="MEAE2"></span> <br><br>
+        <span id="LNGCarrier_check" class="hide">
+          <span> Diesel electric</span>  <input type="checkbox" name="" id="LNG_DE" > <br>
+        </span>
+        <span>Shaft Motor installed <input type="checkbox" name="" id=""></span> <br>
+        <span>Shaft Generator installed <input type="checkbox" name="" id=""></span>
+
+      </div>
+    </div>
+    <div class="EEDI_results center" id="EEDI_results">
+      <h3>EEDI Calculated Result</h3>
+      <span class="EEDI_result" id="EEDI_result"></span>
+    </div>
+  </div>
 
     <div class="prop_system">
-    <div class= >
+    <div class= > 
        <h2> Propulsion System </h2>
       <form class="propulsion_type" onchange="dispProSystem(event)">
        <span>mechanical Propulsion</span> <input type="radio" name="Propulsion" id="ME_pro" value="ME"> 
@@ -765,7 +962,6 @@ tr:hover {background-color: #ddd;}
            <option value=""></option> -->
            </select>
           </div>
-
          <div class="battery_source" >
            <strong><p class="center">Choose Battery model </p></strong>
            <select class="battery" onchange="displayBatteryType(event)">
@@ -787,91 +983,141 @@ tr:hover {background-color: #ddd;}
              <!-- <option value="kongsberg">Kongsberg</option> -->
              <option value="Wärtsilä_34DF">Wärtsilä 34DF  </option>
              <option value="Wärtsilä_31DF">Wärtsilä 31DF</option>
-            
+
              </select>
            </div>
-
-
+          
+           <div class="disp_sim_envirnmt" onchange="display_sim(event)">
+             <span><input type="checkbox" name="" id="sim_check"><strong>Open simulation</strong> </span> <br>
+             <span><input type="radio" name="use_result" id="use_result" ><strong>Use previous result</strong></span> <br>
+             <span><input type="radio" name="use_result" id="define_result"><strong>Define new power</strong></span> <br>
+           </div>
         </div>
        </div>
+        <div class="sim_environment hide" id="sim_environment">
+              <h3>Simulation inputs and parameters configuration</h3>
+           <div class="simulation " id="simulation" >  
+              <div class="profile" id="profile" onchange="sim_data(event), display_sim_param()">
+                <strong><span>Ship/Vessel Operation</span></strong> <br> <br>
+                 <span> <input type="checkbox" name="" id="transit" >Transit : </span> 
+                 <span class="transit hide" id="transit_span">Voyage nautical mile <input type="text"  name="" class="sim" id="transit_dis">
+                </span> 
+                <br><br>
+                 <span>  <input type="checkbox" name="" id="standby" >Stand by : </span> 
+                 <span id="standby_time_span" class="hide"> time (Hr)<input type="text" name="" class="sim" id="standby_time"></span>
+                 <br><br>
 
-                <div  id="engineTable" class=" hide">
-                    <table id="Table" class="Table">
-                      <thead>
+                 <span>  <input type="checkbox" name="" id="DP">DP operation :</span>
+                 <span id="DP_time_span" class="hide"> Operation time (Hr)<input type="text" name="" class="sim" id="DP_time"></span>
+                 <br><br>
+                 <span>  <input type="checkbox" name="" id="harbor">Harbor : </span>
+                 <span id="harbor_time_span" class="hide"> time (Hr)<input type="text" name="" class="sim" id="harbor_time"></span>
+                 <br><br>
+              </div>
+              <div onchange="sim_data(event)">
+                <strong><span>Simulation environment </span></strong><br><br>
+                <span> <input type="checkbox" name="" id="calm_sim">  Calm water</span><br><br>
+                <span>  <input type="checkbox" name="" id="None_calm_sim"> None Calm water </span><br><br>
+                <span class="wave hide" id="wave"><span>max significant Wave height : </span><input type="text" name="" id="wave_height" class="sim">
+                <br><br></span> 
+                <span>Simulation time (min) <input type="text" name="" class="sim" id="sim_time"></span>
 
-                        <th colspan="12"></th>
-
-                      </thead>
-                      <tr>
-                        <td></td>
-                        <td></td>
-                      </tr>
-                      <tr>
-
-                        <td></td>
-                        <td></td>
-                      </tr>
-
-                    </table>
-
+              </div>
+                <div class="load_profile" onchange="sim_data(event)">
+                  <strong><span>Load Profile : </span></strong><br><br>
+                     <span>Auxiliary Load : <input type="text" name="" id="aux_load" class="sim"></span> 
+                     <span id="aux_load_disp"></span><br><br>
+                     <span>Propulsion Load<input type="text" name="" id="main_load" class="sim"></span> 
+                     <span id="main_load_load_disp"></span><br><br>
+                </div>          
+              </div>
+           </div>
+         <div class="sellected_disp" id="sellected_disp">
+           <h3>Vessel/ship machinery and parameters  </h3>
+           <div class="sellected_pro">
+             <div class="main_pro">
+             <strong><span>Main Engine</span></strong><br><br>
+             <span>Engine Power: </span> <span id="main_eng_power_dis"></span><br>
+             <span>engine RPM: </span> <span id="main_engine_rpm"></span><br>
+             <span>N0.of engines: </span> <span id="no_engines"></span><br>
+             <span>installed power: </span><span id="main_installed_power"></span> <br>
+             <span>Propulsion power :</span> <span id="propulsion_p"></span >
             </div>
-
-
-            <div  id="batteryTable" class=" hide">
-              <table id="bat_Table" class="bat_Table">
+           <div class="aux_pro">
+             <strong><span>Auxiliary Engine</span></strong><br><br>
+             <span><strong>Engine Power :</strong> </span> <span id="aux_eng_power_dis"></span><br>
+             <span><strong>engine RPM : </strong></span> <span id="aux_engine_rpm"></span><br>
+             <span><strong>N0. of engines :</strong> </span> <span id="aux_no_engines"></span><br>
+             <span><strong>Auxiliary Load :</strong> </span><span id="aux_load"></span> <br>
+             <span><strong>installed power :</strong> </span><span id="aux_installed_power"></span> <br>  
+           </div>
+           <div class="gen_pro">
+            <strong><span>General info</span></strong><br><br>
+             <strong><span>Propulsion type : </span> <span></span></strong> <br>
+             <span>Total installed power</span><span></span> <br>
+             <strong><span>Propulsion type : </span></strong> 
+           </div>
+         </div > 
+       </div>
+            <div  id="engineTable" class=" hide">
+              <div class="create_custo_engine hide" id="custom_engine" onclick="displayEngineType(event)">
+                <input type="button" value="create customized engine" class="custom_button" id="custom_engine">
+              </div>
+              <form  onsubmit="displayEngineType(event)" id="custo_confirm">
+              <table id="Table" class="Table" onchange="custom_engine_genset(event)">
                 <thead>
-
-                  <th colspan="12"></th>
-
+                  <th colspan="3"></th>
                 </thead>
                 <tr>
                   <td></td>
                   <td></td>
                 </tr>
-                <tr>
-
-                  <td></td>
-                  <td></td>
-                </tr>
-
               </table>
-
+            </form>
+      </div>
+            <div id="batteryTable" class=" hide">
+              <div class="create_custo_bat" onclick="displayBatteryType(event)">
+                <input type="button" value="create customized Pack" class="custom_button" id="custom_battery">
+              </div>
+              <form  onsubmit="displayBatteryType(event)" id="custo_confirm">
+              <table id="bat_Table" class="bat_Table" onchange="custom_bat_pack(event)" >
+                <thead>
+                  <th colspan="3"></th>
+                </thead>
+                <tr>
+                  <td></td>
+                  <td></td>  
+                </tr>
+              </table>
+            </form>
       </div>
 
-      <div  id="gensetTable" class=" hide">
-        <table id="genset_Table" class="genset_Table">
+      <div  id="gensetTable" class=" hide" >
+        <div class="create_custo_genset hide" id="custo_genset" onclick="displayGenSetType(event)">
+          <input type="button" value="create customized genset" class="custom_button" id="custom_genset" >
+         </div>
+        <form onsubmit="displayGenSetType(event)" id="custo_confirm" >
+        <table id="genset_Table" class="genset_Table" onchange="custom_engine_genset(event)" >
           <thead>
-
-            <th colspan="12"></th>
-
+            <th colspan="3"></th>
           </thead>
           <tr>
             <td></td>
             <td></td>
           </tr>
-          <tr>
-            <td></td>
-            <td></td>
-          </tr>
-
         </table>
-
-</div>
-
+      </form>
+  </div>
         <div id="mainDashboard" class="mainDashboard hide">
 
          <div id="engineDashboard" class="grides">
-
                 <div class="power chartDisp" >
                     <p>Engine rated power </p>
                     <div id="powerChart" class="chart"></div>
-
                 </div>
-
                 <div class="torque chartDisp" id="torque">
                     <p>Engine Torque kNm</p>
                     <div id="torqueChart" class="chart"></div>
-
                 </div>
                 <div class="RPM chartDisp" id="RPM">
                     <p>Engine Speed RPM</p>
@@ -880,28 +1126,18 @@ tr:hover {background-color: #ddd;}
                 <div class="load chartDisp" >
                 <p>Engine load in %</p>
                     <div id="loadChart" class="chart">
-
                 </div>
             </div>
-
                 <div class="loadwatt chartDisp" id="loadwatt">
                     <p>Engine load kW</p>
                     <div id="loadWattChart" class="chart"></div>
                 </div>
-
                 <div class="SFOC_chart chartDisp" id="SFOC_chart">
                     <p> current SFOC </p>
                     <div id="sfocChart" class="chart"></div>
               </div>
-
-
-
             </div>
-
-
-
         <div class="dashboardControl">
-
 
             <!-- parameters control and configuration  -->
             <div class="engineInput">
@@ -930,18 +1166,14 @@ tr:hover {background-color: #ddd;}
           </div>
 
         </div>
-
-
-
-                       <!-- grapph ploting here -->
-                       <div class="SFOC" id="SFOC">
-                        <div id="plot" class="plot"></div>
+              <!-- grapph ploting here -->
+           <div class="SFOC" id="SFOC">
+          <div id="plot" class="plot"></div>
           </div>
-
-
     </div>
 
     <div class="addedMachinery">
+  
         <h2>The chose machinery will be dispplay here  </h2>
 
     </div>
@@ -954,10 +1186,11 @@ tr:hover {background-color: #ddd;}
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
     Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
     formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw, Rwave,H,Rfoul,RT_calm,SM,
-    Ns,Pb,RPM_pro,SMCR,Ptotal
+    Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,aux_no_eng,aux_load,main_inst_power,
+    star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type
 
 
- // all constant
+ // Major constant
  viscosity = 0.0000012 // m/s^2
  g = 9.81  // m/s^2
  density = 1025 // kg/m^3
@@ -1129,8 +1362,6 @@ function torqueDisplay (){
     console.log("torque max")
     torqueMax = i+torque
 
-
-
 var chart1 = c3.generate({
 
   bindto: '#torqueChart',
@@ -1192,8 +1423,6 @@ setTimeout(function () {
 
 
 }
-
-
 
 function rpmDisplay(){
     if(!speedRPM){
@@ -1257,8 +1486,6 @@ setTimeout(function () {
         columns: [['Speed', speedRPM*0.7]]
     });
 }, 3000);
-
-
 
 setTimeout(function () {
     chart2.load({
@@ -1343,9 +1570,6 @@ setTimeout(function () {
 
 
 }
-
-
-
 
 function loadWattDisplay (){
     if(!load){
@@ -1860,6 +2084,8 @@ function propellers(event){
   document.getElementById('pb').innerHTML=  Pb + " kW"
 
    document.getElementById('Va').innerHTML=  Va + " m/s"
+   document.getElementById('smcr').innerHTML=  SMCR + " kW"
+   document.getElementById('propeller_speed').innerHTML=  propel_speed + " rad/s"
 
 
 }
@@ -1905,6 +2131,7 @@ let c,k,val,i,s
 
 let lastRPM;
 let i = 1;
+
 function loadSfoc(val){
     // this is for the percentage Range slider
  document.getElementById('loadDisplay').innerHTML= val + " engine load %"
@@ -1918,6 +2145,96 @@ function loadSfoc(val){
 // i++
 
 }
+
+// function EEDI_emission(event){
+//  //  http://www.imo.org/en/OurWork/Environment/PollutionPrevention/AirPollution/Documents/245(66).pdf
+//  //  http://www.imo.org/en/OurWork/Environment/PollutionPrevention/AirPollution/Documents/245(66).pdf
+//   // http://www.imo.org/en/OurWork/Environment/PollutionPrevention/AirPollution/Documents/Air%20pollution/M2%20EE%20regulations%20and%20guidelines%20final.pdf
+
+//   const EventID = event.target.id
+//   const check = event.target.checked
+//   const ship_type = event.target.value
+//   const EventVal = event.target.value
+//   let P_ME, P_AE,N0,MCR
+
+//   const ME_LNG_MDO_check =  document.getElementById("ME_LNG_MDO").checked
+//   const ME_LNG_HFO_check =  document.getElementById("ME_LNG_HFO").checked
+//   const ME_LNG_MGO_check =  document.getElementById("ME_LNG_MGO").checked
+//   const ME_LNG_check =  document.getElementById("ME_LNG").checked
+//   const ME_MGO_check =  document.getElementById("ME_MGO").checked
+//   const ME_MDO_check =  document.getElementById("ME_MDO").checked
+//   // const ME_MGO_check =  document.getElementById("ME_MGO").checked
+
+//   const AE_LNG_MDO_check =  document.getElementById("ME_LNG_MDO").checked
+//   const AE_LNG_HFO_check =  document.getElementById("ME_LNG_HFO").checked
+//   const AE_LNG_MGO_check =  document.getElementById("ME_LNG_MGO").checked
+//   const AE_LNG_check =  document.getElementById("ME_LNG").checked
+//   const AE_MGO_check =  document.getElementById("ME_MGO").checked
+//   const AE_MDO_check =  document.getElementById("ME_MDO").checked
+//   // const AE_MGO_check =  document.getElementById("ME_MGO").checked
+
+//   // const lng_DE_check =  document.getElementById("LNGCarrier_check").checked
+//   // const lng_DE_check =  document.getElementById("LNGCarrier_check").checked
+
+  
+//   if(EventID === "radio_ME"){
+//     document.getElementById("EEDI").classList.remove("hide")
+//     document.getElementById("EEDI_AE").classList.add("hide")
+//     document.getElementById("EEDI_ME").classList.remove("hide")
+//     document.getElementById("radio_EEDI").classList.remove("hide")
+
+//   }
+//   else if(EventID === "radio_AE"){
+//     document.getElementById("EEDI").classList.remove("hide")
+//     document.getElementById("EEDI_ME").classList.add("hide")
+//     document.getElementById("EEDI_AE").classList.remove("hide")
+//     document.getElementById("radio_EEDI").classList.remove("hide")
+
+//   }
+//   else if(EventID === "radio_close"){
+//     document.getElementById("EEDI").classList.add("hide")
+
+//   }
+
+//   else if (ME_LNG_MDO_check === true){
+     
+//     if(EventID==="ME_LNG_MDO"){
+//       const ME_LNG_MDO_f = EventVal
+//     }
+//     else if(EventID==="ME_LNG_MDO_power"){
+//      const ME_LNG_MDO_power = EventVal
+//     }
+//     else if(EventID==="ME_LNG_MDO_NO"){
+//      const ME_LNG_MDO_NO = EventVal
+//     }
+//     else if(EventID==="ME_LNG_MDO_SFOC"){
+//      const ME_LNG_MDO_SFOC = EventVal 
+//     }
+
+//   }
+
+//   if(ship_type === "containership"){
+//     DWT_70 = 0.7*DWT  
+//     //DWT_70 is used for the attained EEDI 
+//     a = 174.22
+//     c = 0.201
+    
+//     EEDI_ref = 3.1144*(190*n_P_ME*P_ME + 215*P_AE)/(0.7*DWT*V_ref)
+//   }
+//   else if(ship_type === "LNGCarrier" || lng_DE_check === true){
+//     document.getElementById("LNGCarrier_check").classList.remove("hide")
+    
+//   }
+
+//   else if(EventID ==="LNG_DE"){
+
+
+//   }
+
+//   else if(ship_type ==="CruiseShip"|| ship_type ==="RoRoVehicleCarrier" ){
+// //TODO: show  input field for GT and Dead weight 
+//   }
+// }
 
 
 function powerSfoc(val){
@@ -1938,7 +2255,9 @@ alert("Estimation using the RPM is still under improvemnt !, use other methods")
 
 }
 
+
 function showEngineDashbaord (){
+  
   document.getElementById("mainDashboard").classList.remove("hide");
   document.getElementById("engineDashboard").classList.remove("hide");
   document.getElementById("engineDashboard").classList.add("grides");
@@ -1951,58 +2270,63 @@ function showEngineDashbaord (){
 
 }
 
+  // using to assign either for engine or genset
+
 function displayEngineType(event) {
+  event.preventDefault()
   document.getElementById("engineTable").classList.remove("hide");
   document.getElementById("mainDashboard").classList.remove("hide");
   document.getElementById("batteryTable").classList.add("hide");
   document.getElementById("gensetTable").classList.add("hide");
-
+  document.getElementById("custo_genset").classList.add("hide");
+  document.getElementById("custom_engine").classList.remove("hide");
 
   const table = document.getElementById("Table");
   let i = 0
-  let row, engineDetail ;
+  let row, engineDetail, custo_eng_details;
 
-  const EventID = event.target.value
-  console.log(EventID)
-if (EventID==="wartsila 32"){
+  const EventVal = event.target.value
+  const EventID = event.target.id
+  
+if (EventVal==="wartsila 32"){
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
 }
-
  engineDetail = wartsila32
- ratedPower = parseFloat(engineDetail.power) 
- 
- engineStrokes =wartsila32.Strokes
- meanPressure = parseFloat(wartsila32.mean_Presure)
- cylinderBore = parseFloat(wartsila32.cylinderBore)
- cylinders = parseFloat(wartsila32.cylinders)
- pistonStroke = parseFloat(wartsila32.pistonStroke)
- enginePower = parseFloat(wartsila32.power)
- ratedSfoc = parseFloat(wartsila32.SFOC)
- supplier = wartsila32.supplier
- ratedSpeed = parseFloat(wartsila32.Engine_speed)
-
-//  speedRPM  = 432
-
- 
 }
-
-else if (EventID==="wartsila 46F") {
+else if (EventVal==="wartsila 46F") {
+  engineDetail = wartsila46
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
-}
-engineStrokes =wartsila32.Strokes
- meanPressure = parseFloat(wartsila46.mean_Presure)
- cylinderBore = parseFloat(wartsila46.cylinderBore)
- cylinders = parseFloat(wartsila46.cylinders)
- pistonStroke = parseFloat(wartsila46.pistonStroke)
- enginePower = parseFloat(wartsila46.power)
- ratedSfoc = parseFloat(wartsila46.SFOC)
- supplier = wartsila46.supplier
- ratedSpeed = parseFloat(wartsila46.Engine_speed)
- engineDetail = wartsila46
+
 }
 
+}
+else if(EventID==="custom_engine"){
+  engineDetail = custom_engine
+  create_type = EventID
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+ }
+}
+else if(EventID==="custo_confirm"){
+  engineDetail = created_engine
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+ }
+}
+
+engineStrokes =engineDetail.Strokes
+ratedPower = parseFloat(engineDetail.power) 
+ meanPressure = parseFloat(engineDetail.mean_Presure)
+ cylinderBore = parseFloat(engineDetail.cylinderBore)
+ cylinders = parseFloat(engineDetail.cylinders)
+ pistonStroke = parseFloat(engineDetail.pistonStroke)
+ enginePower = parseFloat(engineDetail.power)
+ ratedSfoc = parseFloat(engineDetail.SFOC)
+ supplier = engineDetail.supplier
+ ratedSpeed = parseFloat(engineDetail.Engine_speed)
+ 
 EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
 engine.Margin()
@@ -2014,18 +2338,14 @@ engine.Margin()
  currentSfocDisplay()
     // updating sliders
    
-
   if(engineDetail.speed_type=== "Medium-Speed"){
    rpm_min = 400
    rpm_max = parseFloat(engineDetail.Engine_speed)
-
  }
-
  else if(engineDetail.speed_type=== "Slow-Speed"){
    rpm_min = 10
    rpm_max = parseFloat(engineDetail.Engine_speed)
  }
-
  else if(engineDetail.speed_type=== "Fast-Speed"){
    rpm_min = 1400
    rpm_max = parseFloat(engineDetail.Engine_speed)
@@ -2045,7 +2365,7 @@ engine.Margin()
     document.getElementById('power').min = minPower
     document.getElementById('power').value = minPower
     document.getElementById('powerDisplay').innerHTML= minPower+ " minimun desired power "
-
+    let count = Object.keys(engineDetail).length
 
   for (let [key, value] of Object.entries(engineDetail)) {
     console.log(`${key}: ${value}`);
@@ -2061,45 +2381,72 @@ engine.Margin()
   }
   let header= table.createTHead();
     let newRow = header.insertRow(0);
+    let Tfooter = table.createTFoot();
+    let nfooter = Tfooter.insertRow(0);
     newRow.innerHTML= "<th colspan=12>Product details and specifications </th>"
-
+    if(EventID ==="custom_engine"){
+    nfooter.innerHTML= `<th colspan=12><input type="submit" value="Confirm input" id="custo_confirm" class="tableconfirm"> </th>`
+    }else{    
+      let newrow = table.insertRow(count+1)
+      newrow.insertCell(0).innerHTML =`<strong>N0. of installed engine</strong> `;
+      newrow.insertCell(1).innerHTML = `<input type="text" name="" id="N0_gen" required>`
+    nfooter.innerHTML= `<th colspan=12><input type="button" value="choose engine" id="choose_sys" class="tableconfirm"> </th>`
+    }
 }
 
-
-
 function displayGenSetType(event) {
+  event.preventDefault()
   document.getElementById("engineTable").classList.add("hide");
   document.getElementById("gensetTable").classList.remove("hide");
-  document.getElementById("bat_Table").classList.add("hide");
+  document.getElementById("batteryTable").classList.add("hide");
   document.getElementById("mainDashboard").classList.remove("hide");
+  document.getElementById("custo_genset").classList.remove("hide");
+  document.getElementById("custom_engine").classList.add("hide");
 
-  
 
   const table = document.getElementById("genset_Table");
   let i = 0
   let row, gensetDetail;
 
-  const EventID = event.target.value
-  console.log(EventID)
-if (EventID==="Wärtsilä_31DF"){
+  const EventVal = event.target.value
+  const EventID = event.target.id
+ 
+if (EventVal==="Wärtsilä_31DF"){
+  
   gensetDetail = genset.GenSet2
-  alert(gensetDetail)
-  console.log(genset.GenSet2)
+ 
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
 }
 
 }
-else if(EventID==="Wärtsilä_34DF"){
+else if(EventVal==="Wärtsilä_34DF"){
+  
   gensetDetail = genset.GenSet1
+  
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
 }
 
 
+}
+else if(EventID==="custom_genset"){
+  gensetDetail = custom_genset
+  create_type = EventID
+  alert("is the right one")
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+}
+}
+
+else if(EventID==="custo_confirm"){
+  gensetDetail = created_genset
+  console.log(gensetDetail)
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+}
 }
  
-
  ratedPower = parseFloat(gensetDetail.Gen_Power) 
  meanPressure = parseFloat(gensetDetail.mean_Presure)
  cylinderBore = parseFloat(gensetDetail.cylinderBore)
@@ -2111,8 +2458,13 @@ else if(EventID==="Wärtsilä_34DF"){
 
  supplier = gensetDetail.supplier
  ratedSpeed = parseFloat(gensetDetail.Engine_speed)
- gensetDetail.SFOC= ((rated_BSEC/42700)*(1-engine_effic)+(rated_BSEC/42700)).toFixed(2)*1 + " kg/kWh"
+ if(EventID ==="custom_genset"){
+  gensetDetail.SFOC
+ }else {
+  gensetDetail.SFOC= ((rated_BSEC/42700)*(1-engine_effic)+(rated_BSEC/42700)).toFixed(2)*1 + " kg/kWh"
  ratedSfoc = parseFloat(gensetDetail.SFOC)*1000
+ }
+
  
 EngineCal.torque(engineStrokes,speedRPM,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
@@ -2141,28 +2493,42 @@ engine.Margin()
     document.getElementById('power').value = minPower
     document.getElementById('powerDisplay').innerHTML= minPower+ " minimun desired power "
 
-
+  let count = Object.keys(gensetDetail).length
   for (let [key, value] of Object.entries(gensetDetail)) {
-    console.log(`${key}: ${value}`);
+    console.log(`${key}: ${value}`)
+    console.log(i)
+    
     document.getElementById("gensetTable").classList.remove("hide");
 
       let table = document.getElementById("genset_Table");
     //   table.classList.remove("hide")
        row = table.insertRow(i)
      console.log(row)
+     console.log(i)
     row.insertCell(0).innerHTML =`<strong>`+`${key}:</strong> `;
     row.insertCell(1).innerHTML = `<strong>` +`${value}`+ "</strong>";
     i++;
+    // row = table.insertRow(i)
+    
   }
   let header= table.createTHead();
     let newRow = header.insertRow(0);
+    let Tfooter = table.createTFoot();
+    let nfooter = Tfooter.insertRow(0);
     newRow.innerHTML= "<th colspan=12>Product details and specifications </th>"
+    if(EventID ==="custom_genset"){
+    nfooter.innerHTML= `<th colspan=12><input type="submit" value="Confirm input" id="custo_confirm" class="tableconfirm"> </th>`
+    }else{ 
+      let newrow = table.insertRow(count+1)
+      newrow.insertCell(0).innerHTML =`<strong>N0. of installed genset</strong> `;
+      newrow.insertCell(1).innerHTML = `<input type="text" name="" id="N0_gen" required>`
+     nfooter.innerHTML= `<th colspan=12><input type="submit" value="choose Genset" id="choose_sys" class="tableconfirm"> </th>`
+    }
 
 }
 
-
-
 function displayBatteryType(event) {
+  event.preventDefault()
   document.getElementById("bat_Table").classList.remove("hide");
   document.getElementById("engineTable").classList.add("hide");
   document.getElementById("mainDashboard").classList.add("hide");
@@ -2170,16 +2536,36 @@ function displayBatteryType(event) {
 
   const table = document.getElementById("bat_Table");
   let i = 0
-  let row, batteryDetail,c_ratec_rate;
+  let row, batteryDetail,c_ratec_rate,custom_batteryDetail ;
 
-  const EventID = event.target.value
+  const EventVa = event.target.value
+  const EventID = event.target.id
   
-if (EventID==="Orca_Energy"){
+if (EventVa==="Orca_Energy"){
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
+  batteryDetail = battery.corvus2
 }
-
- batteryDetail = battery.corvus2
+}
+else if (EventVa==="Blue_Whale"){
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+  batteryDetail = battery.corvus1
+}
+}
+//display the customized babttery details 
+else if(EventID ==="custom_battery"){
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+  batteryDetail = custom_battery
+}
+}
+else if(EventID ==="custo_confirm"){
+  while (table.hasChildNodes()) {
+  table.removeChild(table.firstChild);
+  batteryDetail = created_battery
+}
+}
  capacity = parseFloat(batteryDetail.capacity) 
  c_rate = parseFloat(batteryDetail.c_Rate) 
   c_rate_peak = parseFloat(batteryDetail.c_Rate_peak) 
@@ -2189,27 +2575,7 @@ if (EventID==="Orca_Energy"){
   batteryDetail.cont_charging_power = (capacity/(c_rate*60/60)).toFixed(1)
     batteryDetail.peak_charging_power = (capacity/(c_rate_peak*60/60)).toFixed(1)
     batteryDetail.SOC = capacity*0.2
- 
-}
-
-else if (EventID==="Blue_Whale"){
-  while (table.hasChildNodes()) {
-  table.removeChild(table.firstChild);
-}
-
- batteryDetail = battery.corvus1
- capacity = parseFloat(batteryDetail.capacity) 
- c_rate = parseFloat(batteryDetail.c_Rate) 
-  c_rate_peak = parseFloat(batteryDetail.c_Rate_peak) 
-  if(!c_rate_peak){
-    c_rate_peak = c_rate;
-  }
-  batteryDetail.cont_charging_power = (capacity/(c_rate*60/60)).toFixed(1) + " kW"
-   batteryDetail.peak_charging_power = (capacity/(c_rate_peak*60/60)).toFixed(1) + " kW"
-   batteryDetail.SOC = capacity*0.2 +" kWh"
- 
-}
-  
+  // loop over the object of the battery details and display them on the table 
   for (let [key, value] of Object.entries(batteryDetail)) {
     console.log(`${key}: ${value}`);
     document.getElementById("batteryTable").classList.remove("hide");
@@ -2222,14 +2588,136 @@ else if (EventID==="Blue_Whale"){
     row.insertCell(1).innerHTML = `<strong>` +`${value}`+ "</strong>";
     i++;
   }
-  let header= table.createTHead();
+  let header= table.createTHead(); // create table haeder 
     let newRow = header.insertRow(0);
     newRow.innerHTML= "<th colspan=12>Product details and specifications </th>"
-
+    let Tfooter = table.createTFoot();
+    let nfooter = Tfooter.insertRow(0);
+  
+    if(EventID ==="custom_battery"){
+    nfooter.innerHTML= `<th colspan=12><input type="submit" value="Confirm input" id="custo_confirm" class="tableconfirm"></th>`
+    }else{    
+    nfooter.innerHTML= `<th colspan=12><input type="button" value="choose battery pack" id="choose_sys" class="tableconfirm"> </th>`
+    }
 }
 
+function custom_bat_pack(event){
+ //capturing the input date for the customized battery and creating a new battery pack
+   const eventID = event.target.id
+  const eventVal = event.target.value
+  
+      if(eventID==="supplier"){
+        created_battery.supplier = eventVal 
+      }
+      else if(eventID==="c_Rate_peak"){
+        created_battery.c_Rate_peak = eventVal + " c"
+      }
+      else if(eventID==="c_Rate"){
+        created_battery.c_Rate = eventVal + " c"
+      }
+      else if(eventID==="lifeCycle"){
+        created_battery.lifeCycle = eventVal
+      }
+      else if(eventID==="DOD"){
+        created_battery.DOD = eventVal
+      }
+      else if(eventID==="voltage"){
+        created_battery.voltage = eventVal + " kV"
+      }
+      else if(eventID==="capacity"){
+        created_battery.capacity = eventVal + " kWh"
+      }
+      else if(eventID==="nor_Voltage"){
+        created_battery.nor_Voltage = eventVal + " VDC"
+      }
+      else if(eventID==="weight"){
+        created_battery.weight = eventVal + " mm"
+      }
+      else if(eventID==="heigh"){
+        created_battery.height = eventVal + " mm"
+      }
+      else if(eventID==="width"){
+        created_battery.width = eventVal + " mm"
+      }
+      else if(eventID==="depth"){
+        created_battery.depth = eventVal + " mm"
+      }
+      
+}
 
+function custom_engine_genset(event){
+ //capturing the input date for the customized battery and creating a new battery pack
 
+  create_type // using to assign either for engine or genset
+ let object_detail 
+ 
+ if(create_type==="custom_engine"){
+   //create new engine object
+   object_detail = created_engine  
+ }
+ else if(create_type==="custom_genset"){
+  object_detail = created_genset
+ }
+ const eventID = event.target.id
+  const eventVal = event.target.value
+  // alert(eventID)
+if(eventID==="supplier"){
+  object_detail.supplier = eventVal
+   }
+      else if(eventID==="frequency"){
+        object_detail.frequency = eventVal +" Hz"
+      }
+      else if(eventID==="rpm"){
+        object_detail.Engine_speed = eventVal + " rpm"
+      }
+      else if(eventID==="SFOC"){
+        object_detail.SFOC = eventVal + " g/kWh"
+     
+      }
+      else if(eventID==="BSEC"){
+        object_detail.BSEC = eventVal + " kJ/kWh"
+
+      }
+      else if(eventID==="pistonStroke"){
+        object_detail.pistonStroke = eventVal + " mm"
+      }
+      else if(eventID==="cylinderBore"){
+        object_detail.cylinderBore = eventVal + " mm"
+      }
+      else if(eventID==="mean_Presure"){
+        object_detail.mean_Presure = eventVal  + " bar"
+      }
+      else if(eventID==="fuel_type"){
+        object_detail.fuel_type = eventVal
+        if(eventVal==="LNG"){
+          object_detail.LHV = "48 MJ/kg"
+          
+        }
+        else if(eventVal==="MDO" || eventVal==="MGO"){
+          object_detail.LHV = "42.7 MJ/kg"
+        }
+        else if(eventVal==="HFO"){
+          object_detail.LHV = "40.2 MJ/kg"
+        }
+      }
+      else if(eventID==="Engin_Power"){
+        object_detail.Engin_Power = eventVal + " kW"
+      
+      }
+      else if(eventID==="Gen_Power"){
+        object_detail.Gen_Power = eventVal + " kW"
+      }
+      else if(eventID==="efficiency"){
+        object_detail.efficiency = eventVal
+       
+      }
+      else if(eventID==="speed_type"){
+        object_detail.speed_type = eventVal
+      }
+      else if(eventID==="Strokes"){
+        object_detail.Strokes = eventVal + " mm"
+      } 
+}
 
 
 function powerOn(){
@@ -2405,16 +2893,189 @@ else if(EventID === 'powerInput' || EventID ==='power'){
 
   }
   engineDashboard(EventID,val )
-    // sfocDisplay ()
-    // c= (10/100)*val;
-    //  if(val >=minPower && val <= enginePower){
-    //     i = 0
-    //     n= minPower;
-        
-    //   for ( k = minPower; k < val;k +=c) {
-
 
 }
+}
+
+//  let simulate,DP_time, habor_time,standby_time,PpowerInstall,
+//  star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate
+
+function display_sim(event){
+
+  const sim_check = document.getElementById("sim_check").checked
+ const use_result_check = document.getElementById("use_result").checked
+ if(use_result_check ===true){
+  const sim_check = document.getElementById("sim_environment").checked
+  
+}
+
+else if (sim_check ===true){
+  document.getElementById("sim_environment").classList.remove("hide")
+  
+}
+
+}
+// let transit_dis
+// function sim_data(event){
+//   transit_dis= event.target.value
+//   alert(transit_dis)
+//  transit_dis =  document.getElementById("transit_dis").value
+
+// }
+
+//sim = simulation
+function sim_data(event){
+  // display the field and get the input data in the simulation environment 
+  const eventID = event.target.id
+  const eventcheck = event.target.checked
+
+ aux_load = document.getElementById("aux_load").value
+ main_Pb =  document.getElementById("main_load").value
+ sim_time =  document.getElementById("sim_time").value
+ transit_dis =  document.getElementById("transit").value
+ DP_operat_time =  document.getElementById("DP_time").value
+ harbor_time =  document.getElementById("DP_time").value
+ standby_time =  document.getElementById("DP_time").value
+
+ wave_height =  document.getElementById("wave_height").value
+
+if(eventcheck === false){
+    //hide respective element
+    if(eventID === "opera_time"){
+  document.getElementById("opera_time_span").classList.add("hide")
+    }
+  else if(eventID==="None_calm_sim"){
+  document.getElementById("wave").classList.add("hide")
+  }
+  else if(eventID ==="transit"){
+   //display input fieled for in inputing wave height when simulating in wave environment
+  document.getElementById("transit_span").classList.add("hide")
+ }
+ else if(eventID ==="standby"){
+   //display input fieled for in inputing wave height when simulating in wave environment
+  document.getElementById("standby_time_span").classList.add("hide")
+ }
+ else if(eventID ==="harbor"){
+   //display input fieled for in inputing wave height when simulating in wave environment
+  document.getElementById("harbor_time_span").classList.add("hide")
+ }
+ else if(eventID ==="DP"){
+   //display input fieled for in inputing wave height when simulating in wave environment
+  document.getElementById("DP_time_span").classList.add("hide")
+ }
+ 
+}
+
+else if (eventcheck ===true){
+  if(eventID ==="opera_time"){
+   //display operation time when simulating for DP, Harbor
+  document.getElementById("opera_time_span").classList.remove("hide")
+ }
+
+ else if(eventID ==="None_calm_sim"){
+   //display input fieled for in inputing wave height when simulating in wave environment
+  document.getElementById("wave").classList.remove("hide")
+ }
+ else if(eventID ==="transit"){
+   //display input fieled for in inputing wave height when simulating in wave environment
+  document.getElementById("transit_span").classList.remove("hide")
+ }
+ else if(eventID ==="standby"){
+  document.getElementById("standby_time_span").classList.remove("hide")
+ }
+ else if(eventID ==="harbor"){
+  document.getElementById("harbor_time_span").classList.remove("hide")
+ }
+ else if(eventID ==="DP"){
+  document.getElementById("DP_time_span").classList.remove("hide")
+ }
+ 
+}
+
+display_sim_param()
+}
+
+
+function display_sim_param(){
+//display the parameters prameters that has been input or sellected 
+ document.getElementById("main_eng_power_dis").innerHTML =  enginePower + "  kW"
+ document.getElementById("main_engine_rpm").innerHTML = ratedSpeed + " rpm"
+ document.getElementById("no_engines").innerHTML =  " engine installed"
+ document.getElementById("propulsion_p").innerHTML = Pb+ " kW   "
+ document.getElementById("main_installed_power").innerHTML = main_inst_power  +" kW  "
+ 
+ document.getElementById("aux_eng_power_dis").innerHTML =  aux_enginePower + "  kW"
+ document.getElementById("aux_engine_rpm").innerHTML = aux_ratedSpeed + " rpm"
+ document.getElementById("aux_no_engines").innerHTML = aux_no_eng + " "
+ document.getElementById("aux_load").innerHTML = aux_load +  " kW  "
+ document.getElementById("aux_installed_power").innerHTML = aux_inst_power +  " kW  "
+
+}
+
+function PMS(){
+  this.main_
+}
+
+function main_Simulate(){
+  display_sim_param()
+  const trans_check = document.getElementById("transit").checked
+  const standby_check = document.getElementById("standby").checked
+  const DP_check = document.getElementById("DP").checked
+  const harbor_check = document.getElementById("harbor").checked
+  sim_time = document.getElementById("sim_time").value
+ 
+  const eventID = event.target.id
+  const eventVal = event.target.value
+  
+  
+ if (trans_check === true && eventVal ===transit){
+    transit_dis = eventVal*0.00053996
+    transit_time = (transit_dis/shipSpeed)/3600 //time for transit in seconds
+    sim_time = sim_time*60
+    time_step = (transit_time/sim_time)*0.5 //time step for every 0.5 seconds
+  const sim_interv = setInterval(sim, 500);
+  time= time_step
+  end_sim
+  function sim() {
+    load = pb
+    EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+    FC = pb*(SFOC/1000).time
+    FC_ton = FC/1000
+    enginePower
+    shipSpeed
+      time+=time_step
+      end_sim+=500
+    if (time ===end_sim) {
+      clearInterval(sim_interv);
+    } else {
+      
+    }
+  
+}
+
+  // else if(DP){
+
+  // }
+  // else if(harbor){
+
+  // }
+  // else if(standdy){
+   
+  // }
+
+}
+}
+// function start_sim(){
+// //   setTimeout(function() {
+
+// // }, 100 * i);
+// while do {
+  
+// } while (condition);
+// }
+
+function end_simulate(){
+  simulate = false
 }
 
 function dispProSystem(event){
@@ -2437,6 +3098,7 @@ else if(EventValue === "battery_E"){
 
   
 }
+
 
 
     </script>
