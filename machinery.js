@@ -571,6 +571,8 @@ function propellerProperties (){
         ND = Pe/Pd
         Ps = Pd/NT
         Pb = ((Pd/Ns).toFixed(2))*1
+        engine_torgue = Pb/(2*Math.PI*propel_speed)
+        propel_torque = Pd/(2*Math.PI*propel_speed)
         
       }else{
         Pe = RT_calm*shipSpeed // effective power
@@ -579,17 +581,15 @@ function propellerProperties (){
         ND = Pe/Pd
         Ps = Pd/NT
         Pb = ((Pd/Ns).toFixed(2))*1
-        pb_calm =Pb
+        Pb_calm =Pb
+        engine_torgue = Pb/(2*Math.PI*propel_speed)
+        propel_torque = Pd/(2*Math.PI*propel_speed)
       }
-       engine_torgue = Pb/(2*Math.PI*propel_speed)
-       propel_torque = pd/(2*Math.PI*propel_speed)
-
        speedRPM = propel_speed *60//for low speed engine 
        
    }
     
 }
-
 
 
  function engineSellection(){
@@ -645,274 +645,6 @@ function propellerProperties (){
 
      }
  }
-
-//  function emission(){
-   
-//      this.shipType = function(ship_type, DWT,phase){
-        
-//         if(phase ===3){
-//             this.x2 = 30
-//             this.x1 =this.x2
-//         }else{
-//          this.x1 = 15
-//         this.x2 = 20
-//         }
-//          if(ship_type ==="BulkCarrier"){
-
-//              if(DWT > 20000){
-                 
-//                  X = this.x2
-                 
-//              }
-//              else if(DWT> 10000 && DWT < 20000){
-//                 X = 0 + ((DWT-10000)*(this.x2-0))/(20000-10000)
-//              }
-//              this.a = 961.79
-//              this.b = DWT
-//              this.c = 0.477 
-
-//          }
-
-//          else if (ship_type ==="GasCarrier"){
-//             if(DWT > 10000){
-//                 X = this.x2
-//             }
-//             else if(DWT> 2000 && DWT < 10000){
-//                X = 0 + ((DWT-2000)*(this.x2-0))/(10000-2000)
-//             } 
-//             this.a = 1120.00
-//              this.b = DWT
-//              this.c = 0.456    
-//         }
-
-//         else if (ship_type ==="Tanker"){
-//             if(DWT > 20000){
-//                 X = this.x2
-//             }
-//             else if(DWT> 4000 && DWT < 20000){
-//                X = 0 + ((DWT-4000)*(this.x2-0))/(20000-4000)
-//             }  
-//             this.a = 1218.80
-//              this.b = DWT
-//              this.c = 0.488   
-//         }
-
-//         else if (ship_type ==="Containership"){
-//             if(DWT > 15000){
-//                 X = this.x2
-//             }
-//             else if(DWT> 10000 && DWT < 15000){
-//                X = 0 + ((DWT-10000)*(this.x2-0))/(15000-10000)
-//             }  
-//             this.a = 174.22
-//              this.b = DWT
-//              this.c = 0.201 
-//             this.EEDI_required = (1-X/100)* this.a *DWT**-this.c 
-//         }
-
-//         else if (ship_type ==="RefrigeratedCargo"){
-//             if(DWT > 5000){
-//                 X = this.x1
-//             }
-//             else if(DWT> 3000 && DWT < 5000){
-//                X = 0 + ((DWT-3000)*(this.x1-0))/(5000-3000)
-//             }  
-//             this.a = 227.01
-//              this.b = DWT
-//              this.c = 0.244  
-//         }
-
-//         else if (ship_type ==="GeneralCargo"){
-//             if(DWT > 15000){
-//                 X = this.x1
-//             }
-//             else if(DWT> 3000 && DWT < 15000){
-//                X = 0 + ((DWT-3000)*(this.x1-0))/(15000-3000)
-//             }
-//             this.a = 107.48
-//              this.b = DWT
-//              this.c = 0.216     
-//         }
-
-//         else if (ship_type ==="combinationCarrier"){
-//             if(DWT > 20000){
-//                 X = this.x2
-//             }
-//             else if(DWT> 4000 && DWT < 20000){
-//                X = 0 + ((DWT-4000)*(this.x2-0))/(20000-4000)
-//             } 
-//             this.a = 1219.00
-//              this.b = DWT
-//              this.c = 0.488    
-//         }
-
-//         else if (ship_type ==="LNGCarrier"){
-//             if(DWT > 10000){
-//                 X = this.x2
-//             }  
-//             this.a = 2253.7
-//             this.b = DWT
-//             this.c = 0.474 
-//         }
-//         else if (ship_type ==="RoRoVehicleCarrier"){
-//             if(DWT > 10000){
-//                 X = this.x1
-//             }
-//             else if(DWT/GT < 0.3){
-//                this.a =  (DWT/GT)**-0.7*780.36
-//                this.c = 0.471
-//                this.b = DWT
-//             }
-//             else if(DWT/GT>= 0.3){
-//                this.a =  1812.63
-//                this.c = 0.471
-//                this.b = DWT
-//             }
-//         }
-//         else if (ship_type ==="RoRoCargoShip"){
-//             if(DWT > 2000){
-//                 X = 20
-//             }
-//             else if(DWT> 1000 && DWT < 2000){
-//                X = 0 + ((DWT-1000)*(20-0))/(2000-1000)
-//             }  
-//             this.a =  1405.15
-//             this.c = 0.498
-//             this.b = DWT   
-//         }
-//         else if (ship_type ==="RoRoPassengerShip"){
-//             if(DWT > 1000){
-//                 X = this.x2
-//             }
-//             else if(DWT> 250 && DWT < 1000){
-//                X = 0 + ((DWT-250)*(this.x2-0))/(1000-250)
-//             } 
-//             this.a =  752.16
-//             this.c = 0.381
-//             this.b = DWT    
-//         }
-//         else if (ship_type ==="CruiseShip"){
-//             if(DWT > 85000){
-//                 X = this.x2
-//             }
-//             else if(DWT> 25000 && DWT < 85000){
-//                X = 0 + ((DWT-25000)*(this.x2-0))/(85000-25000)
-//             }    
-//             this.a =  170.84
-//             this.c = 0.214
-//             this.b = GT
-//         }
-    
-//      }
-//      this.EEDI = function (){
-//          //source = http://www.imo.org/en/OurWork/Environment/PollutionPrevention/AirPollution/Documents/Air%20pollution/MEPC.308%2873%29.pdf
-//          // source page 30
-
-//          //http://www.imo.org/en/OurWork/Environment/PollutionPrevention/AirPollution/Documents/Air%20pollution/M2%20EE%20regulations%20and%20guidelines%20final.pdf
-         
-//          this.MCR_ME = ""    //MCR for main engine
-//          this.MCR_ME2 = ""    //MCR for main engine
-//          this.capacity = ""  //Dead weight of the summer load draught
-//          this.V_ref = ""  //ship speed according to EEDI regulaton
-//          this.P_ME = 0.75*this.MCR_ME
-//          this.P_AE = 0.05*this.MCR_ME  //for auxiliary engine
-//          if(this.MCR_ME2){
-//             this.P_ME2 = 0.75*this.MCR_ME
-//             this.P_AE = 0.05*(this.MCR_ME + this.MCR_ME2)  //for auxiliary engine
-//          }else{
-//             this.MCR_ME2 = 0  
-//          }
-//          this.CF_ME_MDO = 3.206   //CF is a factor according to the Main ENGINE correspond to each fuel 
-//          this.CF_AE_MDO = 3.206   //CF is a factor according to the auxiliary engine correspond to each fuel 
-//          this.SFC_ME = ""  // Specific fuel consumption of P_ME (main engine)
-//          this.SFC_AE = ""  // Specific fuel consumption of P_AE (auxiliary engine)
-//          this.SFC_ME_LNG = ""  // Specific fuel consumption of P_ME (main engine)
-//          this.SFC_AE_LNG = ""  // Specific fuel consumption of P_AE (auxiliary engine)
-//          this.SFC_ME1 = ""  // Specific fuel consumption of P_ME (main engine)
-//          this.SFC_AE1 = ""  // Specific fuel consumption of P_AE (auxiliary engine)
-
-//          this.density_LNG = 450 //kg/m^3
-//          this.density_HFO = 991 //kg/m^3
-//          this.density_MDO = 900 //kg/m^3
-//          this.LHV_LNG = 48000 //kJ/kg
-//          this.LHV_HFO = 40200 //kJ/kg
-//          this.LHV_MDO = 42700  //kJ/kg
-
-//          this.filling_LNG =  0.95 //Filling rate of LNG tank
-//          this.filing_HFO =  0.98 // Filling rate of HFO tank
-//          this.filling_MDO = 0.98  //Filling rate of MDO tank
-        
-//          this.tank_V_LNG =""
-//          this.tank_V_HFO = ""
-//          this.tank_V_MDO = ""
-//          this.CF_ME_pilotFuel_MDO = 3.206   //CF is a factor of pilot fuel for dual fuel Main ENGINE correspond to each fuel 
-//         this.CF_AE_pilotFuel_MDO = 3.206  //CF is a factor of pilot fuel for dual fuel  auxiliary engine correspond to each fuel  
-//         this.CF__LNG = 2.75   //CF is a factor dual fuel  using LNG
-//         this.SFC_ME_pilot = ""  // Specific fuel consumption of P_ME (main engine) of teh pilot fuel
-//         this.SFC_AE_pilot = ""  // Specific fuel consumption of P_ME (auxiliary engine) of teh pilot fuel
-//         this.EEDI = ((this.P_ME*(this.CF_ME_pilotFuel_MDO* this.SFC_ME_pilot*this.CF_ME*this.SFC_ME)) + (this.P_AE *(this.CF_AE_pilotFuel_MDO*this.SFC_AE_pilot*this.CF_AE*this.SFC_AE)))/(this.V_ref*this.capacity)
-        
-//         this.P_ME_total
-//         this.P_AE_total
-//         this.P_total
-//         this.P_total_gas
-        
-//         this.tank_V_gas
-//         this.density_gas
-//         this.LHV_gas
-//         this.filling_gas
-//         this.tank_V_fluid
-//         this.density_fluid
-//         this.LHV_fluid
-//         this.Fj = 1 // correction factor for ship with special desig e.g ice class etc
-//         this.Fi // correction factor for ship capcity 
-//         this.Fc = 1 // correction factor for ship capcity with alternative cargo type  e.g LNG ship in gas carrier segment 
-//         this.Fw = 1 // correction factor for speed reduction due to see wave condtion 
-          
-//         this.P_eff   // 75% of installed power of each innovative  technologies that contribute to ship propulsion 
-//         this.P_AE_eff   // Auxilary power reduction due to the use of innovative electric power generation technologies
-//         this.Feff      // correction factor for innovative technologies
-//         this.n_eff  // number of innovative technology
-        
-//         this.n_ME   // numbers of main engine 
-//         this.P_PTI // 75% of power take-in systems e.g shaft motor
-
-//         this.n_PTI // numbers of power take-in systems e.g shaft motor
-
-//         this.Fdf_gas = ((this.P_total/this.P_total_gas)*this.tank_V_gas*this.density_gas*this.LHV_gas*this.filling_gas)/(this.tank_V_fluid*this.density_fluid*this.LHV_fluid *this.filling_fluid)+(this.tank_V_gas*this.density_gas*this.LHV_gas*this.filling_gas)
-
-//         this.EEDI = ((this.P_ME_total*(this.CF_ME_pilotFuel*this.SFC_ME_pilot + this.CF_ME*this.SFC_ME)) + (this.P_AE_total*(this.CF_AE_pilotFuel*this.SFC_AE_pilot*this.CF_AE*this.SFC_AE)))/(this.V_ref*this.capacity)
-
-
-
-//          else if(Dual_fuel && main_fuel ==="LNG"){
-//             this.Fdf_gas = ((this.P_ME+this.P_AE)*this.tank_V_LNG*this.density_LNG*this.LHV_LNG*this.filling_LNG)/((this.P_ME+this.P_AE)*this.tank_V_HFO*density_HFO*this.LHV_HFO *this.filling_HFO *this.tank_V_MDO*density_MDO*this.LHV_MDO *this.filling_MDO*this.tank_V_LNG*this.density_LNG*this.LHV_LNG*this.filling_LNG)
-//             this.EEDI = ((this.P_ME*(this.CF_ME_pilotFuel_MDO* this.SFC_ME_pilot*this.CF_ME*this.SFC_ME)) + (this.P_AE *(this.CF_AE_pilotFuel_MDO*this.SFC_AE_pilot*this.CF_AE*this.SFC_AE)))/(this.V_ref*this.capacity)
-
-//          }
-//          else if(both_Dual_fuel){
-//             this.Fdf_gas = ((this.P_ME+this.P_AE)*this.tank_V_LNG*this.density_LNG*this.LHV_LNG*this.filling_LNG)/((this.P_ME+this.P_AE)*this.tank_V_HFO*density_HFO*this.LHV_HFO *this.filling_HFO *this.tank_V_MDO*density_MDO*this.LHV_MDO *this.filling_MDO*this.tank_V_LNG*this.density_LNG*this.LHV_LNG*this.filling_LNG)
-//             this.Fdf_fluid = 1-this.Fdf_gas
-
-//             this.EEDI = ((this.P_ME*(this.Fdf_gas*(this.CF_ME_pilotFuel_MDO* this.SFC_ME_pilot + this.CF_ME*this.SFC_ME_LNG)+(this.Fdf_fluid*(this.CF_ME*this.SFC_ME_LNG)))) + (this.P_AE*(this.Fdf_gas*(this.CF_AE_pilotFuel_MDO* this.SFC_AE_pilot + this.CF_AE*this.SFC_AE_LNG)+(this.Fdf_fluid*(this.CF_ME*this.SFC_ME_LNG))))/(this.V_ref*this.capacity))
-
-//          }
-//          else if(main_fuel){
-//           //one main engine dual fuel(LNG,pilot fuel and MDO) and one maine engine (MDO) with one dual fuel auxiliary engine (LNG,pilot fuel and MDO)
-//           this.Fdf_gas = ((this.P_ME+this.P_AE)*this.tank_V_LNG*this.density_LNG*this.LHV_LNG*this.filling_LNG)/((this.P_ME+this.P_AE)*this.tank_V_HFO*density_HFO*this.LHV_HFO *this.filling_HFO *this.tank_V_MDO*density_MDO*this.LHV_MDO *this.filling_MDO*this.tank_V_LNG*this.density_LNG*this.LHV_LNG*this.filling_LNG)
-
-//           this.EEDI = ((this.P_ME*(this.CF_ME_pilotFuel_MDO* this.SFC_ME_pilot + this.CF_ME*this.SFC_ME)) + (this.P_ME2* this.CF_ME*this.SFC_ME2 *this.P_AE *(this.CF_AE_pilotFuel_MDO*this.SFC_AE_pilot + this.CF_AE*this.SFC_AE)))/(this.V_ref*this.capacity)
-
-//          }
-       
-//      }
-//      this.sulfur = function(){
-//          //http://www.imo.org/en/OurWork/Environment/PollutionPrevention/AirPollution/Documents/Third%20Greenhouse%20Gas%20Study/GHG3%20Executive%20Summary%20and%20Report.pdf
-//          // page 143
-//         //  this.SOx = SFOC × 2 × 0.97753 × fuel_sulphur_content
-//      }
-//  }
-
  
  let batteries_properties = {
    supplier:{
@@ -1068,7 +800,6 @@ let engineData ={
         mean_Presure :` bar <input type="text" name="" id="mean_Presure" class="custom_input" required>`,
         // cylinders: 8,
         // cylinder_output: "1200 kW/cyl",
-
      
       },
       custom_created:{
