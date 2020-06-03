@@ -390,6 +390,19 @@ tr:hover {background-color: #ddd;}
     grid-auto-flow: column;
     margin: auto;
     }
+    .start_sim{
+      text-align: center;
+      color: white;
+      padding: 10px;
+      font-size: 20px;
+      cursor: pointer;
+      background-color: rgb(77, 190, 73);
+      border :solid rgb(110, 100, 4) 2px;
+      border-radius: 10px;
+    }
+    /* .start_sim.main{
+      text-align: ce;
+    } */
     .create_custo_bat,.create_custo_genset,.create_custo_engine
     {
      float: right;
@@ -825,7 +838,6 @@ tr:hover {background-color: #ddd;}
     </div>
       </div>
     </div>
-
     <div  class="EEDI_main hide">
       <h2>EED1 Emission index calculation </h2>
       <p class="center"> <strong >To calculate the emission index of the vessel/ship according to EEDI, the Main and Auxiliary engine parameter are needed. Choose which to start with: </strong>
@@ -834,9 +846,7 @@ tr:hover {background-color: #ddd;}
       <span><input type="radio" name="EEDI" id="radio_ME" value="Main engine"><strong> Main engine parameters</strong></span>
       <input type="radio" name="EEDI" id="radio_AE" value="Main engine"> <span><strong> Auxiliary Engine parameters</strong></span>
       <span id="EEDI_phase" class="" ><strong> activate phase 3</strong> <input type="checkbox" name="EEDI" id="phase" class="phase" value="" > </span>
-
       <span id="radio_EEDI" class="hide" ><strong> close section</strong> <input type="radio" name="EEDI" id="radio_close" class="close" value="closed page" > </span>
-
        </form>
     <div class="EEDI" id="EEDI">
       
@@ -870,7 +880,6 @@ tr:hover {background-color: #ddd;}
           <input type="checkbox" name="EEDI" id="ME_LNG" value="ME_LNG" class="MEAE">  <span> LNG fuel engine  Power kW :  </span> <input type="text" name="" id="ME_LNG_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span><input type="text" name="" id="ME_LNG_NO" class="MEAE2"><span></span> <span> SFOC g/kwh:</span><input type="text" name="" id="ME_LNG_SFOC" class="MEAE2"><br><br>
           <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
           <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
-
           <input type="checkbox" name="EEDI" id="ME_MGO" value="ME_MGO" class="MEAE">  <span> MGO fuel engine  Power kW :  </span> <input type="text" name="" id="ME_MGO_power" class="MEAE2"> <span></span>  <span>N0 of engine:</span><input type="text" name="" id="ME_MGO_NO" class="MEAE2"> <span></span><span> SFOC g/kwh:</span><input type="text" name="" id="ME_MGO_SFOC" class="MEAE2"><br><br>
           <span>Shaft Motor power<input type="text" name="" id=""></span> <br> <br>
           <span>Shaft Generator power <input type="text" name="" id=""></span> <br> <br>
@@ -922,7 +931,6 @@ tr:hover {background-color: #ddd;}
         </span>
         <span>Shaft Motor installed <input type="checkbox" name="" id=""></span> <br>
         <span>Shaft Generator installed <input type="checkbox" name="" id=""></span>
-
       </div>
     </div>
     <div class="EEDI_results center" id="EEDI_results">
@@ -930,7 +938,6 @@ tr:hover {background-color: #ddd;}
       <span class="EEDI_result" id="EEDI_result"></span>
     </div>
   </div>
-
     <div class="prop_system">
     <div class= > 
        <h2> Propulsion System </h2>
@@ -943,11 +950,10 @@ tr:hover {background-color: #ddd;}
       </form>
    </div>  
         <div class="powerSource column" id="powerSource" >
-        
         <div class="engine_source">
           
             <strong><p class="center">choose engine model</p></strong>
-          <select class="engine" onchange="displayEngineType(event)">
+          <select class="engine" onchange="displayEngineType(event)" id="engine_select">
            <option value="" selected><strong>Choose engine</strong> </option>
            <!-- <option value="kongsberg">Kongsberg</option> -->
            <option value="wartsila 32">Wartsila 32</option>
@@ -958,8 +964,7 @@ tr:hover {background-color: #ddd;}
           </div>
          <div class="battery_source" >
            <strong><p class="center">Choose Battery model </p></strong>
-           <select class="battery" onchange="displayBatteryType(event)">
-
+           <select class="battery" onchange="displayBatteryType(event)" id="battery_select">
             <option value="" selected><strong> choose Battery pack </strong> </option>
             <!-- <option value="kongsberg">Kongsberg</option> -->
             <option value="Orca_Energy">corvus Orca Engergy </option>
@@ -971,7 +976,7 @@ tr:hover {background-color: #ddd;}
 
           <div class="GenSet_source" >
             <strong><p class="center">Choose Generator set </p></strong>
-            <select class="genset" onchange="displayGenSetType(event)">
+            <select class="genset" onchange="displayGenSetType(event)" id="genset_select">
  
              <option value="" selected><strong> Choose Genset  </strong> </option>
              <!-- <option value="kongsberg">Kongsberg</option> -->
@@ -983,9 +988,10 @@ tr:hover {background-color: #ddd;}
           
            <div class="disp_sim_envirnmt" onchange="display_sim(event)">
              <span><input type="checkbox" name="" id="sim_check"><strong>Open simulation</strong> </span> <br>
-             <span><input type="radio" name="use_result" id="use_result" ><strong>Use previous result</strong></span> <br>
-             <span><input type="radio" name="use_result" id="define_result"><strong>Define new power</strong></span> <br>
+             <span><input type="radio" name="use_result" id="use_result" ><strong>Use calculated result</strong></span> <br>
+             <span><input type="radio" name="use_result" id="define_result"><strong>Define new propulsion power</strong></span> <br>
            </div>
+
         </div>
        </div>
         <div class="sim_environment hide" id="sim_environment">
@@ -1000,7 +1006,6 @@ tr:hover {background-color: #ddd;}
                  <span>  <input type="checkbox" name="" id="standby" >Stand by : </span> 
                  <span id="standby_time_span" class="hide"> time (Hr)<input type="text" name="" class="sim" id="standby_time"></span>
                  <br><br>
-
                  <span>  <input type="checkbox" name="" id="DP">DP operation :</span>
                  <span id="DP_time_span" class="hide"> Operation time (Hr)<input type="text" name="" class="sim" id="DP_time"></span>
                  <br><br>
@@ -1019,12 +1024,18 @@ tr:hover {background-color: #ddd;}
               </div>
                 <div class="load_profile" onchange="sim_data(event)">
                   <strong><span>Load Profile : </span></strong><br><br>
-                     <span>Auxiliary Load : <input type="text" name="" id="aux_load" class="sim"></span> 
+                     <span>Auxiliary Load : <input type="text" name="" id="aux_load_input" class="sim"></span> 
                      <span id="aux_load_disp"></span><br><br>
                      <span>Propulsion Load<input type="text" name="" id="main_load" class="sim"></span> 
                      <span id="main_load_load_disp"></span><br><br>
-                </div>          
+                </div>  
+       
               </div>
+              <div class="start_sim_main center" onchange="">
+                <span><input type="button" value="Start Simulation" class="start_sim"></span>
+                 <span></span>
+                 <span></span>
+             </div>
            </div>
          <div class="sellected_disp" id="sellected_disp">
            <h3>Vessel/ship machinery and parameters  </h3>
@@ -1045,6 +1056,14 @@ tr:hover {background-color: #ddd;}
              <span><strong>Auxiliary Load :</strong> </span><span id="aux_load"></span> <br>
              <span><strong>installed power :</strong> </span><span id="aux_installed_power"></span> <br>  
            </div>
+           <div class="battery_pro">
+            <strong><span>Battery pack</span></strong><br><br>
+            <span><strong>battery capacity :</strong> </span> <span id="b_capacity"></span><br>
+            <span><strong>c_rate : </strong></span> <span id="c_rate_pro"></span><br>
+            <span><strong>voltage :</strong> </span><span id="volt_pro"></span> <br>
+            <span><strong>DOO :</strong> </span><span id="DOD_pro"></span> <br>  
+            <span><strong>SOC :</strong> </span><span id="SOC_pro"></span> <br>  
+          </div>
            <div class="gen_pro">
             <strong><span>General info</span></strong><br><br>
              <strong><span>Propulsion type : </span> <span></span></strong> <br>
@@ -1053,11 +1072,11 @@ tr:hover {background-color: #ddd;}
            </div>
          </div > 
        </div>
-            <div  id="engineTable" class=" hide">
+         <div  id="engineTable" class=" hide">
               <div class="create_custo_engine hide" id="custom_engine" onclick="displayEngineType(event)">
                 <input type="button" value="create customized engine" class="custom_button" id="custom_engine">
               </div>
-              <form  onsubmit="displayEngineType(event)" id="custo_confirm">
+              <form  onsubmit="displayEngineType(event)"  class="custom">
               <table id="Table" class="Table" onchange="custom_engine_genset(event)">
                 <thead>
                   <th colspan="3"></th>
@@ -1073,7 +1092,7 @@ tr:hover {background-color: #ddd;}
               <div class="create_custo_bat" onclick="displayBatteryType(event)">
                 <input type="button" value="create customized Pack" class="custom_button" id="custom_battery">
               </div>
-              <form  onsubmit="displayBatteryType(event)" id="custo_confirm">
+              <form  onsubmit="displayBatteryType(event)" class="custom">
               <table id="bat_Table" class="bat_Table" onchange="custom_bat_pack(event)" >
                 <thead>
                   <th colspan="3"></th>
@@ -1090,7 +1109,7 @@ tr:hover {background-color: #ddd;}
         <div class="create_custo_genset hide" id="custo_genset" onclick="displayGenSetType(event)">
           <input type="button" value="create customized genset" class="custom_button" id="custom_genset" >
          </div>
-        <form onsubmit="displayGenSetType(event)" id="custo_confirm" >
+        <form onsubmit="displayGenSetType(event)" class="custom" >
         <table id="genset_Table" class="genset_Table" onchange="custom_engine_genset(event)" >
           <thead>
             <th colspan="3"></th>
@@ -1153,12 +1172,9 @@ tr:hover {background-color: #ddd;}
               </form>
               <div >
                 <button onclick="powerOn()" class="powerOn"><strong>Power On Engine </strong></button>
-              </div>
-              
+              </div>             
           </div>
-
           </div>
-
         </div>
               <!-- grapph ploting here -->
            <div class="SFOC" id="SFOC">
@@ -1174,7 +1190,7 @@ tr:hover {background-color: #ddd;}
 
     <script>
 
-    let data, data2, RPM, Power,enginetype,speedRPM, engineStrokes, meanPressure,cylinderBore,pistonStroke,sfoc_cal,
+    let data, data2, RPM, Power,enginetype,speedRPM, engineStrokes, meanPressure,cylinderBore,pistonStroke,sfoc_cal,sfoc_cal_aux,
     enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed,
     minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
@@ -2282,7 +2298,11 @@ function displayEngineType(event) {
   const EventVal = event.target.value
   const EventID = event.target.id
   
-if (EventVal==="wartsila 32"){
+  if(EventID==="choose_sys"){
+   
+   throw "testing the"
+ }
+else if (EventVal==="wartsila 32"){
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
 }
@@ -2379,13 +2399,19 @@ engine.Margin()
     let nfooter = Tfooter.insertRow(0);
     newRow.innerHTML= "<th colspan=12>Product details and specifications </th>"
     if(EventID ==="custom_engine"){
+      const y = document.getElementsByClassName("custom")[0]
     nfooter.innerHTML= `<th colspan=12><input type="submit" value="Confirm input" id="custo_confirm" class="tableconfirm"> </th>`
+    y.id="custo_confirm"
     }else{    
       let newrow = table.insertRow(count+1)
       newrow.insertCell(0).innerHTML =`<strong>N0. of installed engine</strong> `;
       newrow.insertCell(1).innerHTML = `<input type="text" name="" id="N0_gen" required>`
-    nfooter.innerHTML= `<th colspan=12><input type="button" value="choose engine" id="choose_sys" class="tableconfirm"> </th>`
+    nfooter.innerHTML= `<th colspan=12><input type="submit" value="choose engine" id="choose_sys" class="tableconfirm"> </th>`
+    
+    const x = document.getElementsByClassName("custom")[0]
+    x.id="choose_sys"
     }
+    sellected_engine = engineDetail
 }
 
 function displayGenSetType(event) {
@@ -2404,7 +2430,7 @@ function displayGenSetType(event) {
 
   const EventVal = event.target.value
   const EventID = event.target.id
- 
+  
 if (EventVal==="Wärtsilä_31DF"){
   
   gensetDetail = genset.GenSet2
@@ -2426,7 +2452,7 @@ else if(EventVal==="Wärtsilä_34DF"){
 else if(EventID==="custom_genset"){
   gensetDetail = custom_genset
   create_type = EventID
-  alert("is the right one")
+  
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
 }
@@ -2487,9 +2513,9 @@ engine.Margin()
     document.getElementById('powerDisplay').innerHTML= minPower+ " minimun desired power "
 
   let count = Object.keys(gensetDetail).length
+
+  //displaying the data in a table 
   for (let [key, value] of Object.entries(gensetDetail)) {
-    console.log(`${key}: ${value}`)
-    console.log(i)
     
     document.getElementById("gensetTable").classList.remove("hide");
 
@@ -2502,7 +2528,6 @@ engine.Margin()
     row.insertCell(1).innerHTML = `<strong>` +`${value}`+ "</strong>";
     i++;
     // row = table.insertRow(i)
-    
   }
   let header= table.createTHead();
     let newRow = header.insertRow(0);
@@ -2511,13 +2536,17 @@ engine.Margin()
     newRow.innerHTML= "<th colspan=12>Product details and specifications </th>"
     if(EventID ==="custom_genset"){
     nfooter.innerHTML= `<th colspan=12><input type="submit" value="Confirm input" id="custo_confirm" class="tableconfirm"> </th>`
+    const x = document.getElementsByClassName("custom")[2]
+    x.id="custo_confirm"
     }else{ 
       let newrow = table.insertRow(count+1)
       newrow.insertCell(0).innerHTML =`<strong>N0. of installed genset</strong> `;
       newrow.insertCell(1).innerHTML = `<input type="text" name="" id="N0_gen" required>`
      nfooter.innerHTML= `<th colspan=12><input type="submit" value="choose Genset" id="choose_sys" class="tableconfirm"> </th>`
+     const x = document.getElementsByClassName("custom")[2]
+    x.id="choose_sys"
     }
-
+  sellected_genset = gensetDetail
 }
 
 function displayBatteryType(event) {
@@ -2533,8 +2562,13 @@ function displayBatteryType(event) {
 
   const EventVa = event.target.value
   const EventID = event.target.id
+
+ if(EventID==="choose_sys"){
   
-if (EventVa==="Orca_Energy"){
+   throw "testing the"
+ }
+  
+else if (EventVa==="Orca_Energy"){
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
   batteryDetail = battery.corvus2
@@ -2589,9 +2623,14 @@ else if(EventID ==="custo_confirm"){
   
     if(EventID ==="custom_battery"){
     nfooter.innerHTML= `<th colspan=12><input type="submit" value="Confirm input" id="custo_confirm" class="tableconfirm"></th>`
+    const x = document.getElementsByClassName("custom")[1]
+    x.id="custo_confirm"
     }else{    
-    nfooter.innerHTML= `<th colspan=12><input type="button" value="choose battery pack" id="choose_sys" class="tableconfirm"> </th>`
+    nfooter.innerHTML= `<th colspan=12><input type="submit" value="choose battery pack" id="choose_sys" class="tableconfirm" > </th>`
+    const x = document.getElementsByClassName("custom")[1]
+    x.id="choose_sys"
     }
+    sellected_battery = batteryDetail
 }
 
 function custom_bat_pack(event){
@@ -2634,8 +2673,7 @@ function custom_bat_pack(event){
       }
       else if(eventID==="depth"){
         created_battery.depth = eventVal + " mm"
-      }
-      
+      }      
 }
 
 function custom_engine_genset(event){
@@ -2701,8 +2739,7 @@ if(eventID==="supplier"){
         object_detail.Gen_Power = eventVal + " kW"
       }
       else if(eventID==="efficiency"){
-        object_detail.efficiency = eventVal
-       
+        object_detail.efficiency = eventVal    
       }
       else if(eventID==="speed_type"){
         object_detail.speed_type = eventVal
@@ -2712,27 +2749,18 @@ if(eventID==="supplier"){
       } 
 }
 
-
 function powerOn(){
   const EventID = "power"
  
   engineDashboard(EventID ,Ptotal)
-
 }
 
 function engineDashboard(EventID ,val ){
-  // let  k,i, n, c,t, eventID //val,
-  
-  //const EventID  
-    t = 1
-    // alert(val)
-    // alert(EventID )
-    
-  if(EventID ==='loadInput'|| EventID ==='load'){
-    alert(EventID)
 
+    t = 1 
+  if(EventID ==='loadInput'|| EventID ==='load'){
+    
     sfocDisplay ()
-  
      c= (10/100)*val;
      n = 10
      if(val >=20 && val <= 100){
@@ -2742,7 +2770,6 @@ function engineDashboard(EventID ,val ){
         inputData(i);
         i++
         }
-
         function inputData(i) {
         setTimeout(function() {
 
@@ -2770,24 +2797,19 @@ function engineDashboard(EventID ,val ){
  
   else if(EventID === 'powerInput' || EventID ==='power'){
     sfocDisplay ()
-    alert(val)
     c= (10/100)*val;
      if(val >=minPower && val <= enginePower){
-      alert(val)
         i = 0
-        n= minPower;
-        
+        n= minPower;  
       for ( k = minPower; k < val;k +=c) {
-
         inputData(i);
         i++
         }
 
-        function inputData(i) {
+     function inputData(i) {
         setTimeout(function() {
-
-                if(val -n >c ){
-                    console.log("testing")
+               if(val -n >c ){
+    
                 load = n
                 EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
                 console.log("this is the load 1",load)
@@ -2801,7 +2823,6 @@ function engineDashboard(EventID ,val ){
                 y: [[sfoc_cal]]
               }, [0], 10000)
               n+=c
-
         }, 1000 * i);
         }
 }
@@ -2809,23 +2830,17 @@ function engineDashboard(EventID ,val ){
   }
 }
 
-
 function getValues(event){
     let val, k,i, n, c,t
     t = 1
-    
   const EventID = event.target.id;
 
  if (EventID ==='RPM' || EventID === 'RPMInput') {
       RPM  = event.target.value
-
     if (EventID ==='RPMInput') {
      document.getElementById(EventID).value = ""
-
     }
-
 }
-
 else if(EventID ==='loadInput'|| EventID ==='load'){
     if( EventID ==='loadInput'){
       val = document.getElementById(EventID).value
@@ -2836,38 +2851,7 @@ else if(EventID ==='loadInput'|| EventID ==='load'){
       document.getElementById("loadDisplay").innerHTML= val + "% engine power"
     }
     engineDashboard(EventID,val)
-    // sfocDisplay ()
-    //  c= (10/100)*val;
-    //  n = 10
-    //  if(val >=20 && val <= 100){
-    //     i = 0
-    //   for ( k = 10; k < val;k +=c) {
 
-    //     inputData(i);
-    //     i++
-    //     }
-
-    //     function inputData(i) {
-    //     setTimeout(function() {
-
-    //         console.log(i);
-    //             if(val -n >c ){
-    //             load = (n/100)*enginePower
-    //             EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-    //             console.log("this is the load 1",load)
-    //          }else{
-    //         load = (val/100)*enginePower
-    //         EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-    //         console.log("this is the load last",load)
-    //             }
-    //             Plotly.extendTraces('plot', {
-    //             x: [[engine_loadPercent]],
-    //             y: [[sfoc_cal]]
-    //           }, [0], 10000)
-    //           n+=c
-
-    //     }, 1000 * i);
-    //     }
 }
 // }
 
@@ -2876,14 +2860,10 @@ else if(EventID === 'powerInput' || EventID ==='power'){
   if(EventID === 'powerInput'){
 
     val = parseFloat(document.getElementById(EventID).value)
-
     document.getElementById(EventID).value = ""
-
     document.getElementById("powerDisplay").innerHTML= val + " engine load kW"
-
   }else{
     val = parseFloat(document.getElementById(EventID).value)
-
   }
   engineDashboard(EventID,val )
 
@@ -2899,7 +2879,6 @@ function display_sim(event){
  const use_result_check = document.getElementById("use_result").checked
  if(use_result_check ===true){
   const sim_check = document.getElementById("sim_environment").checked
-  
 }
 
 else if (sim_check ===true){
@@ -2922,14 +2901,13 @@ function sim_data(event){
   const eventID = event.target.id
   const eventcheck = event.target.checked
 
- aux_load = document.getElementById("aux_load").value
+ aux_load = document.getElementById("aux_load_input").value
  main_Pb =  document.getElementById("main_load").value
  sim_time =  document.getElementById("sim_time").value
  transit_dis =  document.getElementById("transit").value
  DP_operat_time =  document.getElementById("DP_time").value
  harbor_time =  document.getElementById("DP_time").value
  standby_time =  document.getElementById("DP_time").value
-
  wave_height =  document.getElementById("wave_height").value
 
 if(eventcheck === false){
@@ -3002,27 +2980,29 @@ function display_sim_param(){
  document.getElementById("aux_no_engines").innerHTML = aux_no_eng + " "
  document.getElementById("aux_load").innerHTML = aux_load +  " kW  "
  document.getElementById("aux_installed_power").innerHTML = aux_inst_power +  " kW  "
-
 }
 
 function PMS(){
-  this.main_
+  this.ME_sys = function(){
+    
+  }
+  this.ME_sys = function(){  
+  }
 }
 
 function main_Simulate(){
   display_sim_param()
+  let type 
   const trans_check = document.getElementById("transit").checked
   const standby_check = document.getElementById("standby").checked
   const DP_check = document.getElementById("DP").checked
   const harbor_check = document.getElementById("harbor").checked
   sim_time = document.getElementById("sim_time").value
- 
   const eventID = event.target.id
   const eventVal = event.target.value
   
-  
  if (trans_check === true && eventVal ===transit){
-    transit_dis = eventVal*0.00053996
+    transit_dis = eventVal*0.00053996 // meters
     transit_time = (transit_dis/shipSpeed)/3600 //time for transit in seconds
     sim_time = sim_time*60
     time_step = (transit_time/sim_time)*0.5 //time step for every 0.5 seconds
@@ -3030,10 +3010,16 @@ function main_Simulate(){
   time= time_step
   end_sim
   function sim() {
-    load = pb
-    EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-    FC = pb*(SFOC/1000).time
+    load = pb // break power 
+    type = "main" // the type is only important when it is auxilary calculation
+    EngineCal.SFOC(load,enginePower,ratedSfoc,supplier,type)
+    FC = pb*(sfoc_cal/1000).time
     FC_ton = FC/1000
+    //for Auxiliary engine and load 
+     type = "auxilary"
+    EngineCal.SFOC(load,enginePower,ratedSfoc,supplier,type)
+    FC_aux = aux_load*(SFOC/1000).time
+    FC_ton_aux = FC_aux/1000
     enginePower
     shipSpeed
       time+=time_step
@@ -3073,19 +3059,31 @@ function end_simulate(){
 
 function dispProSystem(event){
   const EventValue = event.target.value 
+  propuls_type = EventValue
+ 
   if(EventValue ==="DE"){
-  
+    document.getElementById("engine_select").disabled =true
+    document.getElementById("battery_select").disabled =true
   }
   else if(EventValue === "ME"){
-  
+    document.getElementById("engine_select").disabled =false
+    document.getElementById("battery_select").disabled =true
+    document.getElementById("genset_select").disabled =false
   }
   else if(EventValue === "DE_ME"){
-
+    document.getElementById("battery_select").disabled =true
+    document.getElementById("genset_select").disabled =false
+    document.getElementById("engine_select").disabled =false
 }
 else if(EventValue === "DE_battery"){
-
+  document.getElementById("battery_select").disabled =false
+  document.getElementById("genset_select").disabled =false
+  document.getElementById("engine_select").disabled =true
 }
 else if(EventValue === "battery_E"){
+  document.getElementById("battery_select").disabled =false
+  document.getElementById("genset_select").disabled =true
+  document.getElementById("engine_select").disabled =true
 
 }
 

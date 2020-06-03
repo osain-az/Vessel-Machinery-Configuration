@@ -2,7 +2,6 @@
 function engineAnalysis (){
 
 this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumber,pistonStroke){
-    
     this.mean_p = mean_Presure;// bar 
     this.cylinderBore = cylinderBore*0.001;//m
     this.pistonStroke = pistonStroke *0.001;//m
@@ -14,9 +13,7 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     }
     else if((this.engineStroke === "2 Stroke")) {
         this.cranshaftRev = 1
-    }
-
-   
+    }   
     // this.pistonSpeed = 
     this.cylinderNumber = cylinderNumber,
     this.area = (3.1413*this.cylinderBore*this.cylinderBore)/4
@@ -24,17 +21,15 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     this.force = this.area*this.mean_p*100000;
 
     this.Torque = ((this.mean_p*100000*this.shipVolume)/(2*3.143*this.cranshaftRev))/1000
-
     // this.power = ((this.Torque*1000*2*3.143*this.speedRPM)/60)/1000
-    // load = this.power
-    
-   
+    // load = this.power  
 },
 
-//NOTE: SFOC is use of the baseline for teh engine is not provided my supplier  
- this.SFOC = function(load, enginePower, SFOC,supplier) {
+//NOTE: SFOC is use of the baseline for the engine since the supplier dont provided the engine baseline   
+ this.SFOC = function(load, enginePower, SFOC,supplier,type) {
     this.supplier = supplier
     this.load = load
+    this.type = type // used to determine weather is auxilary engine or main engine 
     this.enginePower = enginePower
     this.EL = this.load/this.enginePower
     this.sfocBase = SFOC // used as the baseline for the engine if not provided 
@@ -43,14 +38,19 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     engine_loadPercent = parseFloat((this.EL*100).toFixed(1))
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
    
-
     if (this.supplier === "wartsila") {
     //   this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
     this.sfocRelative = 0.455*this.EL *this.EL-0.71*this.EL + 1.28; // general
        console.log(this.sfocRelative)
       this.SFOC_main = (this.sfocRelative*this.sfocBase).toFixed(1)
-      sfoc_cal = parseFloat(this.SFOC_main);
-      alert(sfoc_cal)
+      if(this.type === "auxilary"){
+        sfoc_cal_aux = parseFloat(this.SFOC_main);
+
+      }else{
+        sfoc_cal = parseFloat(this.SFOC_main);
+
+      }
+      
     } 
     else if (this.supplier === "Cat") {
         this.sfocRelative = 0.7024*this.EL *this.EL-0.97728*this.EL + 1.35;
@@ -89,12 +89,9 @@ function ship(){
         Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)* (0.615989*this.c23 + 0.111439*Cm**3 +0.000571111*stern + 
         0.245357*(this.c23/Cm)) + 3.45538*AT + (ABT/Cb)*(1.4660538 + 0.5839497/Cm) // Surface weted area 
 
-        console.log(Sa)
-
      }
 
     this.hull = function(){
-
          Lwl; // Lenght on waterLine
         AT     //Immersed of the transverse sectional area of the transomat AP zero speed 
         hB      //
@@ -119,7 +116,6 @@ function ship(){
             T = 0.5*(Tf + TA)
         }
         // this.Sa =1.025*((shipVolume/this.T)+1.7*this.Lpp*this.T) // Surface weted area 
-
     }
 }
 
@@ -376,15 +372,14 @@ function resistance(){
      }
 
     this.frictionalResistance = function(){
-        // this.density = 
+         
          Rf = (density*Cf*shipSpeed**2*Sa)/2
          Rf = Rf/1000
          Rf = (Rf.toFixed(3))*1
          console.log("Rf",Rf)
-
     }
     this.finalWaveResistance = function(){
-
+       // resolving of wave for high froud number and low froud number 
         if(Fn < 0.4){
             calResistnace.waveResistance()
 
@@ -406,8 +401,7 @@ function resistance(){
         // Fouling resistance 
         Rfoul = 10*RT_calm 
         Rfoul = ((Rfoul/1000).toFixed(2))*1
-
-        
+  
     }
 
     this.totalResistance = function(){
@@ -591,7 +585,6 @@ function propellerProperties (){
     
 }
 
-
  function engineSellection(){
   
     this.Margin = function(){
@@ -610,9 +603,24 @@ function propellerProperties (){
     }
 
  }
- function PMS (){
 
- }
+ function PMS(){
+    this.ME_sys = function(){
+        this.install_pro_power = eng_power // installed power for propulsion 
+        this.break_power = Pb    //power need to propel the vessel
+        this.Auxilary_load  = Aux_load
+        this.install_Aux_power = Aux_power
+        // this.N0_Aux_eng = 
+        // this.N0_main_eng = 
+        // this.PTO_Power = PTO
+        // if(this.PTO_Power && this.install_Aux_power ){
+
+        // }
+    }
+    this.ME_sys = function(){
+      
+    }
+  }
 
  function BMS (){
 
