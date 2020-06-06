@@ -242,7 +242,6 @@ tr:hover {background-color: #ddd;}
       margin-left: 15px;
     }
    
-
      .area {
         /* border:  solid plum 2px; */
         grid-row: 1;
@@ -378,7 +377,6 @@ tr:hover {background-color: #ddd;}
     margin: 15px;
     margin-left: 0;
   
-
     }
     .simulation{
      /* background-color:rgba(0, 2, 4, 0.7); */
@@ -390,13 +388,14 @@ tr:hover {background-color: #ddd;}
     grid-auto-flow: column;
     margin: auto;
     }
-    .start_sim{
+    .start_sim,.view_data{
       text-align: center;
-      color: white;
-      padding: 10px;
+      margin: 15px;
+      /* color: rgb(104, 86, 86); */
+      padding: 7px;
       font-size: 20px;
       cursor: pointer;
-      background-color: rgb(77, 190, 73);
+       background-color: rgb(77, 190, 73); 
       border :solid rgb(110, 100, 4) 2px;
       border-radius: 10px;
     }
@@ -987,15 +986,15 @@ tr:hover {background-color: #ddd;}
            </div>
           
            <div class="disp_sim_envirnmt" onchange="display_sim(event)">
-             <span><input type="checkbox" name="" id="sim_check"><strong>Open simulation</strong> </span> <br>
-             <span><input type="radio" name="use_result" id="use_result" ><strong>Use calculated result</strong></span> <br>
+             <span><input type="checkbox" name="" id="sim_check"><strong>Open simulation</strong> </span> <br><br>
+             <span><input type="radio" name="use_result" id="use_result" checked ><strong>Use calculated result</strong></span> <br>
              <span><input type="radio" name="use_result" id="define_result"><strong>Define new propulsion power</strong></span> <br>
            </div>
-
         </div>
        </div>
         <div class="sim_environment hide" id="sim_environment">
               <h3>Simulation inputs and parameters configuration</h3>
+          <form name="myform" onsubmit="preview(event)" id="view_data">
            <div class="simulation " id="simulation" >  
               <div class="profile" id="profile" onchange="sim_data(event), display_sim_param()">
                 <strong><span>Ship/Vessel Operation</span></strong> <br> <br>
@@ -1017,28 +1016,31 @@ tr:hover {background-color: #ddd;}
                 <strong><span>Simulation environment </span></strong><br><br>
                 <span> <input type="checkbox" name="" id="calm_sim">  Calm water</span><br><br>
                 <span>  <input type="checkbox" name="" id="None_calm_sim"> None Calm water </span><br><br>
-                <span class="wave hide" id="wave"><span>max significant Wave height : </span><input type="text" name="" id="wave_height" class="sim">
+                <span class="wave hide" id="wave"><span>max significant Wave height (m) : </span><input type="text" name="" id="wave_height" class="sim">
                 <br><br></span> 
                 <span>Simulation time (min) <input type="text" name="" class="sim" id="sim_time"></span>
 
               </div>
                 <div class="load_profile" onchange="sim_data(event)">
                   <strong><span>Load Profile : </span></strong><br><br>
-                     <span>Auxiliary Load : <input type="text" name="" id="aux_load_input" class="sim"></span> 
+                     <span>Auxiliary Load kW : <input type="text" name="" id="aux_load_input" class="sim"></span> 
                      <span id="aux_load_disp"></span><br><br>
-                     <span>Propulsion Load<input type="text" name="" id="main_load" class="sim"></span> 
+                     <span id="propulsion_input" class="">Propulsion Load kW<input type="text" name="" id="main_load" class="sim"></span> 
                      <span id="main_load_load_disp"></span><br><br>
                 </div>  
        
               </div>
-              <div class="start_sim_main center" onchange="">
-                <span><input type="button" value="Start Simulation" class="start_sim"></span>
-                 <span></span>
+              <div class="start_sim_main center" >
+                <span><input type="button" value="Start Simulation" class="start_sim" id="start_sim" disabled></span>
+                 <span><input type="submit" value="preview selected data " class="view_data" id="viewdata"></span>
                  <span></span>
              </div>
+             <!-- <input type="submit" value="preview selected data " class="view_data" id="view_data"> -->
+            </form>
            </div>
-         <div class="sellected_disp" id="sellected_disp">
-           <h3>Vessel/ship machinery and parameters  </h3>
+          
+         <div class="sellected_disp hide" id="sellected_disp" >
+           <h3 class="center"> selected and parameters and input data </h3>
            <div class="sellected_pro">
              <div class="main_pro">
              <strong><span>Main Engine</span></strong><br><br>
@@ -1068,6 +1070,7 @@ tr:hover {background-color: #ddd;}
             <strong><span>General info</span></strong><br><br>
              <strong><span>Propulsion type : </span> <span></span></strong> <br>
              <span>Total installed power</span><span></span> <br>
+             <strong><span>Simulation time : </span></strong> 
              <strong><span>Propulsion type : </span></strong> 
            </div>
          </div > 
@@ -1196,8 +1199,9 @@ tr:hover {background-color: #ddd;}
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
     Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
     formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw, Rwave,H,Rfoul,RT_calm,SM,
-    Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,aux_no_eng,aux_load,main_inst_power,
-    star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type
+    Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,No_of_eng,No_of_genset,aux_load,main_inst_power,
+    star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type,sellected_genset,sellected_battery,sellected_engine,propulsion_syst,
+    aux_ratesfoc,gen_supplier,FC_ton,FC_ton_aux
 
 
  // Major constant
@@ -1258,10 +1262,6 @@ const  interval = setInterval(function() {
 }, 100);
 
 }
-
-
- 
-
 
 
 function sfocDisplay (){
@@ -1565,7 +1565,6 @@ setTimeout(function () {
 
 // }, 6000);
 // let k = sfoc_cal
-
 
     var interval = setInterval(function() {
 
@@ -2281,7 +2280,7 @@ function showEngineDashbaord (){
 }
 
   // using to assign either for engine or genset
-
+  let engineDetail
 function displayEngineType(event) {
   event.preventDefault()
   document.getElementById("engineTable").classList.remove("hide");
@@ -2293,15 +2292,24 @@ function displayEngineType(event) {
 
   const table = document.getElementById("Table");
   let i = 0
-  let row, engineDetail, custo_eng_details;
+  let row, custo_eng_details;
+
 
   const EventVal = event.target.value
   const EventID = event.target.id
-  
   if(EventID==="choose_sys"){
-   
+    if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
+    //updating the object that holds the sellected engine and updating it with number of engines installed
+    let N0_eng = document.getElementById("N0_eng").value
+    sellected_engine = engineDetail
+  sellected_engine.No_of_engine = N0_eng //
+  document.getElementById("engineTable").classList.add("hide");
    throw "testing the"
  }
+  
 else if (EventVal==="wartsila 32"){
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
@@ -2312,11 +2320,14 @@ else if (EventVal==="wartsila 46F") {
   engineDetail = wartsila46
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
-
 }
 
 }
 else if(EventID==="custom_engine"){
+  if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
   engineDetail = custom_engine
   create_type = EventID
   while (table.hasChildNodes()) {
@@ -2324,12 +2335,15 @@ else if(EventID==="custom_engine"){
  }
 }
 else if(EventID==="custo_confirm"){
+  if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
   engineDetail = created_engine
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
  }
 }
-
 engineStrokes =engineDetail.Strokes
 ratedPower = parseFloat(engineDetail.power) 
  meanPressure = parseFloat(engineDetail.mean_Presure)
@@ -2351,7 +2365,6 @@ engine.Margin()
  loadWattDisplay ()
  currentSfocDisplay()
     // updating sliders
-   
   if(engineDetail.speed_type=== "Medium-Speed"){
    rpm_min = 400
    rpm_max = parseFloat(engineDetail.Engine_speed)
@@ -2405,15 +2418,13 @@ engine.Margin()
     }else{    
       let newrow = table.insertRow(count+1)
       newrow.insertCell(0).innerHTML =`<strong>N0. of installed engine</strong> `;
-      newrow.insertCell(1).innerHTML = `<input type="text" name="" id="N0_gen" required>`
+      newrow.insertCell(1).innerHTML = `<input type="text" name="" id="N0_eng" required>`
     nfooter.innerHTML= `<th colspan=12><input type="submit" value="choose engine" id="choose_sys" class="tableconfirm"> </th>`
-    
     const x = document.getElementsByClassName("custom")[0]
     x.id="choose_sys"
     }
-    sellected_engine = engineDetail
 }
-
+let gensetDetail;
 function displayGenSetType(event) {
   event.preventDefault()
   document.getElementById("engineTable").classList.add("hide");
@@ -2426,12 +2437,23 @@ function displayGenSetType(event) {
 
   const table = document.getElementById("genset_Table");
   let i = 0
-  let row, gensetDetail;
+  let row;
 
   const EventVal = event.target.value
   const EventID = event.target.id
   
-if (EventVal==="Wärtsilä_31DF"){
+ if(EventID==="choose_sys"){
+  if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
+   let N0_gen = document.getElementById("N0_gen").value
+  sellected_genset = gensetDetail
+  sellected_genset.No_of_genset = N0_gen
+  console.log(sellected_genset)
+   throw "testing the"
+ }
+else if (EventVal==="Wärtsilä_31DF"){
   
   gensetDetail = genset.GenSet2
  
@@ -2450,6 +2472,10 @@ else if(EventVal==="Wärtsilä_34DF"){
 
 }
 else if(EventID==="custom_genset"){
+  if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
   gensetDetail = custom_genset
   create_type = EventID
   
@@ -2459,6 +2485,10 @@ else if(EventID==="custom_genset"){
 }
 
 else if(EventID==="custo_confirm"){
+  if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
   gensetDetail = created_genset
   console.log(gensetDetail)
   while (table.hasChildNodes()) {
@@ -2546,9 +2576,9 @@ engine.Margin()
      const x = document.getElementsByClassName("custom")[2]
     x.id="choose_sys"
     }
-  sellected_genset = gensetDetail
+  
 }
-
+let batteryDetail
 function displayBatteryType(event) {
   event.preventDefault()
   document.getElementById("bat_Table").classList.remove("hide");
@@ -2558,13 +2588,18 @@ function displayBatteryType(event) {
 
   const table = document.getElementById("bat_Table");
   let i = 0
-  let row, batteryDetail,c_ratec_rate,custom_batteryDetail ;
+  let row,c_ratec_rate,custom_batteryDetail ;
 
   const EventVa = event.target.value
   const EventID = event.target.id
 
  if(EventID==="choose_sys"){
-  
+  if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
+  sellected_battery = batteryDetail
+  console.log(sellected_battery)
    throw "testing the"
  }
   
@@ -2582,6 +2617,11 @@ else if (EventVa==="Blue_Whale"){
 }
 //display the customized babttery details 
 else if(EventID ==="custom_battery"){
+  
+      if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
   batteryDetail = custom_battery
@@ -2630,11 +2670,15 @@ else if(EventID ==="custo_confirm"){
     const x = document.getElementsByClassName("custom")[1]
     x.id="choose_sys"
     }
-    sellected_battery = batteryDetail
+   
 }
 
 function custom_bat_pack(event){
  //capturing the input date for the customized battery and creating a new battery pack
+ if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
    const eventID = event.target.id
   const eventVal = event.target.value
   
@@ -2678,7 +2722,10 @@ function custom_bat_pack(event){
 
 function custom_engine_genset(event){
  //capturing the input date for the customized battery and creating a new battery pack
-
+ if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
   create_type // using to assign either for engine or genset
  let object_detail 
  
@@ -2851,10 +2898,8 @@ else if(EventID ==='loadInput'|| EventID ==='load'){
       document.getElementById("loadDisplay").innerHTML= val + "% engine power"
     }
     engineDashboard(EventID,val)
-
 }
 // }
-
 else if(EventID === 'powerInput' || EventID ==='power'){
 
   if(EventID === 'powerInput'){
@@ -2875,15 +2920,33 @@ else if(EventID === 'powerInput' || EventID ==='power'){
 
 function display_sim(event){
 
+  if(!propulsion_syst){
+    alert("choose propulsion system first")
+    throw "propulsion system unknow"
+  }
+const eventID = event.target.id
+const eventVal = event.target.value
+const eventcheck = event.target.checked
   const sim_check = document.getElementById("sim_check").checked
  const use_result_check = document.getElementById("use_result").checked
- if(use_result_check ===true){
-  const sim_check = document.getElementById("sim_environment").checked
+ const define_result_check = document.getElementById("define_result").checked
+ 
+
+ if(eventID==="define_result"){
+  document.getElementById("main_load").disabled = false;
+}
+ else if (sim_check ===true){
+  document.getElementById("sim_environment").classList.remove("hide")
+} 
+else if (sim_check ===false){
+  document.getElementById("sim_environment").classList.add("hide")
+  
 }
 
-else if (sim_check ===true){
-  document.getElementById("sim_environment").classList.remove("hide")
-  
+ if(use_result_check ===true){
+  // const sim_check = document.getElementById("sim_environment").checked
+  document.getElementById("main_load").disabled = true;
+
 }
 
 }
@@ -2896,11 +2959,13 @@ else if (sim_check ===true){
 // }
 
 //sim = simulation
+let transit_dis_mils
 function sim_data(event){
   // display the field and get the input data in the simulation environment 
   const eventID = event.target.id
   const eventcheck = event.target.checked
-
+  const eventVal = event.target.value
+ 
  aux_load = document.getElementById("aux_load_input").value
  main_Pb =  document.getElementById("main_load").value
  sim_time =  document.getElementById("sim_time").value
@@ -2914,53 +2979,72 @@ if(eventcheck === false){
     //hide respective element
     if(eventID === "opera_time"){
   document.getElementById("opera_time_span").classList.add("hide")
+  document.getElementById("opera_time").false
     }
   else if(eventID==="None_calm_sim"){
   document.getElementById("wave").classList.add("hide")
+  document.getElementById("wave_height").required = false
+
   }
   else if(eventID ==="transit"){
    //display input fieled for in inputing wave height when simulating in wave environment
   document.getElementById("transit_span").classList.add("hide")
+  document.getElementById("transit").required = false
  }
  else if(eventID ==="standby"){
    //display input fieled for in inputing wave height when simulating in wave environment
   document.getElementById("standby_time_span").classList.add("hide")
+  document.getElementById("standby_time").required = false
  }
  else if(eventID ==="harbor"){
    //display input fieled for in inputing wave height when simulating in wave environment
   document.getElementById("harbor_time_span").classList.add("hide")
+  document.getElementById("harbor_time").required = false
  }
  else if(eventID ==="DP"){
    //display input fieled for in inputing wave height when simulating in wave environment
   document.getElementById("DP_time_span").classList.add("hide")
+  document.getElementById("DP_time").required = false
  }
  
 }
 
 else if (eventcheck ===true){
+ 
   if(eventID ==="opera_time"){
    //display operation time when simulating for DP, Harbor
   document.getElementById("opera_time_span").classList.remove("hide")
+  document.getElementById("opera_time").required = true
  }
 
  else if(eventID ==="None_calm_sim"){
    //display input fieled for in inputing wave height when simulating in wave environment
   document.getElementById("wave").classList.remove("hide")
+  document.getElementById("wave_height").required = true
  }
  else if(eventID ==="transit"){
    //display input fieled for in inputing wave height when simulating in wave environment
   document.getElementById("transit_span").classList.remove("hide")
+  document.getElementById("transit").required = true
  }
  else if(eventID ==="standby"){
   document.getElementById("standby_time_span").classList.remove("hide")
+  document.getElementById("standby_time").required = true
  }
  else if(eventID ==="harbor"){
   document.getElementById("harbor_time_span").classList.remove("hide")
+  document.getElementById("harbor_time").required = true
  }
  else if(eventID ==="DP"){
   document.getElementById("DP_time_span").classList.remove("hide")
+  document.getElementById("DP_time").required = true
+
  }
  
+}
+// alert(eventID)
+if(eventID==="transit_dis"){
+  transit_dis_mils = eventVal
 }
 
 display_sim_param()
@@ -2968,18 +3052,99 @@ display_sim_param()
 
 
 function display_sim_param(){
+
+ let eng_power, gen_pwer
+  if(sellected_genset||!sellected_genset){
+    if(sellected_genset){
+    No_of_genset = parseFloat(sellected_genset.No_of_genset) 
+    aux_enginePower = parseFloat(sellected_genset.Gen_Power)
+    aux_inst_power =No_of_genset* aux_enginePower
+   
+    }
+    else if(!sellected_genset){
+    aux_enginePower = 0
+    aux_inst_power = 0
+    No_of_genset = 0
+  }
+  }
+  else if(sellected_engine || !sellected_engine){
+    if(sellected_engine){
+    No_of_eng =parseFloat(sellected_engine.No_of_engine)
+    eng_power = parseFloat(sellected_engine.power)
+    main_inst_power = No_of_eng*eng_power
+    console.log(sellected_engine)
+    }
+    else if(!sellected_engine){
+    No_of_eng = 0
+    eng_power = 0
+    main_inst_power = 0
+    alert("engine not sellected")
+   }
+  }
+  else if(sellected_battery){
+
+  }
+  
 //display the parameters prameters that has been input or sellected 
- document.getElementById("main_eng_power_dis").innerHTML =  enginePower + "  kW"
+ document.getElementById("main_eng_power_dis").innerHTML =  eng_power + "  kW"
  document.getElementById("main_engine_rpm").innerHTML = ratedSpeed + " rpm"
- document.getElementById("no_engines").innerHTML =  " engine installed"
+ document.getElementById("no_engines").innerHTML =  No_of_eng 
  document.getElementById("propulsion_p").innerHTML = Pb+ " kW   "
  document.getElementById("main_installed_power").innerHTML = main_inst_power  +" kW  "
  
- document.getElementById("aux_eng_power_dis").innerHTML =  aux_enginePower + "  kW"
- document.getElementById("aux_engine_rpm").innerHTML = aux_ratedSpeed + " rpm"
- document.getElementById("aux_no_engines").innerHTML = aux_no_eng + " "
+ document.getElementById("aux_eng_power_dis").innerHTML =  aux_enginePower + "  kw"
+//  document.getElementById("aux_engine_rpm").innerHTML = aux_ratedSpeed + " rpm"
+ document.getElementById("aux_no_engines").innerHTML =  No_of_genset + " "
  document.getElementById("aux_load").innerHTML = aux_load +  " kW  "
- document.getElementById("aux_installed_power").innerHTML = aux_inst_power +  " kW  "
+ document.getElementById("aux_installed_power").innerHTML = aux_inst_power + " kW  "
+}
+
+
+function dispProSystem(event){
+
+// disabled the different power source according propulsion system eg (if you choose mechanical propulsion then battery is disabled) 
+  const table_eng = document.getElementById("Table");
+  const table_bat = document.getElementById("bat_Table");
+  const table_gen = document.getElementById("genset_Table");
+  
+  const EventValue = event.target.value 
+  propuls_type = EventValue
+ 
+  if(EventValue ==="DE"){
+    document.getElementById("engine_select").disabled =true
+    document.getElementById("battery_select").disabled =true
+    document.getElementById("batteryTable").classList.add("hide");
+
+  }
+  else if(EventValue === "ME"){
+    document.getElementById("engine_select").disabled =false
+    document.getElementById("battery_select").disabled =true
+    document.getElementById("genset_select").disabled =false
+    document.getElementById("batteryTable").classList.add("hide");
+
+  }
+  else if(EventValue === "DE_ME"){
+    document.getElementById("battery_select").disabled =true
+    document.getElementById("genset_select").disabled =false
+    document.getElementById("engine_select").disabled =false
+    document.getElementById("batteryTable").classList.add("hide");
+}
+else if(EventValue === "DE_battery"){
+  document.getElementById("battery_select").disabled =false
+  document.getElementById("genset_select").disabled =false
+  document.getElementById("engine_select").disabled =true
+  document.getElementById("engineTable").classList.add("hide");
+}
+else if(EventValue === "battery_E"){
+  document.getElementById("battery_select").disabled =false
+  document.getElementById("genset_select").disabled =true
+  document.getElementById("engine_select").disabled =true
+  document.getElementById("gensetTable").classList.add("hide");
+  document.getElementById("engineTable").classList.add("hide");
+
+}
+propulsion_syst = EventValue
+  
 }
 
 function PMS(){
@@ -2990,41 +3155,78 @@ function PMS(){
   }
 }
 
+function preview(event){
+  event.preventDefault()
+  const eventID = event.target.id
+
+  if(eventID ==="view_data"){
+    document.getElementById("sellected_disp").classList.remove("hide")
+  }
+  main_Simulate()
+}
+let trans_check,standby_check,harbor_check,DP_check,sim_time
 function main_Simulate(){
   display_sim_param()
-  let type 
-  const trans_check = document.getElementById("transit").checked
-  const standby_check = document.getElementById("standby").checked
-  const DP_check = document.getElementById("DP").checked
-  const harbor_check = document.getElementById("harbor").checked
+  let type,end_sim,time
+   trans_check = document.getElementById("transit").checked
+   standby_check = document.getElementById("standby").checked
+   DP_check = document.getElementById("DP").checked
+   harbor_check = document.getElementById("harbor").checked
   sim_time = document.getElementById("sim_time").value
+  transit_dis_mils 
   const eventID = event.target.id
   const eventVal = event.target.value
   
- if (trans_check === true && eventVal ===transit){
-    transit_dis = eventVal*0.00053996 // meters
+ if (trans_check === true){
+    transit_dis = transit_dis_mils*1852 // meters
     transit_time = (transit_dis/shipSpeed)/3600 //time for transit in seconds
-    sim_time = sim_time*60
-    time_step = (transit_time/sim_time)*0.5 //time step for every 0.5 seconds
+    end_sim = sim_time*60*1000 // convert the input time to milli seconds  
+    time_step = (transit_time*3600*1000/(end_sim /500)) //time step for every 0.5 seconds
   const sim_interv = setInterval(sim, 500);
-  time= time_step
-  end_sim
+  time_step = time_step/(3600*1000)
+  time = 0
+  FC_ton = 0
+  sim_time = 0 // used to stored time past which correspond to the distance moved 
   function sim() {
-    load = pb // break power 
+    load = Pb // break power 
     type = "main" // the type is only important when it is auxilary calculation
+    console.log("load",load)
+    console.log("engine power",enginePower)
+    console.log("rate sfoc",ratedSfoc)
+    console.log("suplier",supplier)
+    time +=500
+    sim_time +=time_step
+    
     EngineCal.SFOC(load,enginePower,ratedSfoc,supplier,type)
-    FC = pb*(sfoc_cal/1000).time
-    FC_ton = FC/1000
+
+    FC = Pb*(sfoc_cal/1000)*time_step
+    console.log("step",time_step)
+    console.log("end sim",end_sim)
+    console.log("N Times",(end_sim /500))
+    console.log("time past ",sim_time)
+    console.log("time",time)
+    console.log("transit_dis",transit_dis)
+    console.log("transit_time",transit_time)
+    FC_ton += FC/1000
+    console.log("FC",FC)
+    console.log("FC TONS",FC_ton)
+
     //for Auxiliary engine and load 
      type = "auxilary"
-    EngineCal.SFOC(load,enginePower,ratedSfoc,supplier,type)
-    FC_aux = aux_load*(SFOC/1000).time
-    FC_ton_aux = FC_aux/1000
-    enginePower
-    shipSpeed
-      time+=time_step
-      end_sim+=500
-    if (time ===end_sim) {
+     aux_load
+     aux_enginePower
+     aux_ratesfoc
+     gen_supplier
+    // EngineCal.SFOC(aux_load,aux_enginePower,aux_ratesfoc,gen_supplier,type)
+    // FC_aux = aux_load*(SFOC/1000).time
+    // FC_ton_aux = FC_aux/1000
+    // console.log(FC_ton_aux)
+    if(end_sim-time <=499){
+      time_step = transit_time-sim_time
+      alert("alert")
+    }
+      
+    if (time >=end_sim) {
       clearInterval(sim_interv);
     } else {
       
@@ -3056,40 +3258,6 @@ function main_Simulate(){
 function end_simulate(){
   simulate = false
 }
-
-function dispProSystem(event){
-  const EventValue = event.target.value 
-  propuls_type = EventValue
- 
-  if(EventValue ==="DE"){
-    document.getElementById("engine_select").disabled =true
-    document.getElementById("battery_select").disabled =true
-  }
-  else if(EventValue === "ME"){
-    document.getElementById("engine_select").disabled =false
-    document.getElementById("battery_select").disabled =true
-    document.getElementById("genset_select").disabled =false
-  }
-  else if(EventValue === "DE_ME"){
-    document.getElementById("battery_select").disabled =true
-    document.getElementById("genset_select").disabled =false
-    document.getElementById("engine_select").disabled =false
-}
-else if(EventValue === "DE_battery"){
-  document.getElementById("battery_select").disabled =false
-  document.getElementById("genset_select").disabled =false
-  document.getElementById("engine_select").disabled =true
-}
-else if(EventValue === "battery_E"){
-  document.getElementById("battery_select").disabled =false
-  document.getElementById("genset_select").disabled =true
-  document.getElementById("engine_select").disabled =true
-
-}
-
-  
-}
-
 
 
     </script>

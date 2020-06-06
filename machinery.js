@@ -10,6 +10,7 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     
     if (this.engineStroke === "4 Stroke"){
         this.cranshaftRev = 2
+        this.cranshaftRev
     }
     else if((this.engineStroke === "2 Stroke")) {
         this.cranshaftRev = 1
