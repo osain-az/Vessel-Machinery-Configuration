@@ -590,10 +590,13 @@ function propellerProperties (){
   
     this.Margin = function(){
         this.sm = (Rfoul+Rwave)*shipSpeed
+        
         if(this.sm /Pd < 0.15){
+            
             SM = 15  //%
             Ptotal = (((Pb*(SM/100))+Pb).toFixed(2))*1
         }else{
+           
             SM = this.sm*100
             Ptotal = (((Pb*(SM/100))+Pb).toFixed(2))*1
         }
@@ -601,9 +604,11 @@ function propellerProperties (){
         SMCR = Pd*1+ ((100+SM)/100)/((100-this.EM)/100)
         SMCR = (SMCR.toFixed(2))*1
         
+        
     }
 
  }
+
 
  function PMS(){
     this.ME_sys = function(){
@@ -654,6 +659,130 @@ function propellerProperties (){
 
      }
  }
+  class alternativeFuel {
+      constructor(fuel_ton,type){
+          this.fuel_ton = fuel_ton;
+          this.type = type //type is used to differentiate propulsion engine and auxilary
+      }
+      LNG() {
+        this.LHV= "48000 kJ/kg";
+        this.cost = "700 $/ton";
+        this.density = "450 kg/m^3"
+       this.Sox = 0;
+       this.Cf = 2.750;
+       this.Nox = 0.0140;
+       this.PM = 0.00018;
+       this.NMVOC = 0.003
+       if(this.type ==="Auxiliary"){
+        // Calculation for Auxiliary engine
+      this.LNG_cost_Aux = parseFloat(this.cost)*this.fuel_ton
+       this.LNG_NMVOC_Aux = this.NMVOC*this.fuel_ton
+      this.LNG_PM_Aux = this.PM*this.fuel_ton
+      this.LNG_Sox_Aux = this.Sox*this.fuel_ton
+      this.LNG_NOx_Aux = this.Nox*this.fuel_ton
+      this.LNG_CO2_Aux = this.Cf*this.fuel_ton
+      this.LNG_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
+    }else{
+      this.LNG_cost = parseFloat(this.cost)*this.fuel_ton
+      this.LNG_NMVOC = this.NMVOC*this.fuel_ton
+      this.LNG_PM = this.PM*this.fuel_ton
+      this.LNG_Sox = this.Sox*this.fuel_ton
+      this.LNG_NOx = this.Nox*this.fuel_ton
+      this.LNG_CO2 = this.Cf*this.fuel_ton
+      this.LNG_volume = this.fuel_ton*1000/parseFloat(this.density)
+    }
+      }
+      MDO(){
+        this.LHV ="42700 kJ/kg";
+        this.cost= "900 $/ton";
+        this.density = "900 kg/m^3";
+       this.Sox = 0;
+       this.Cf = 3.205;
+       this.Nox = 0.08725;
+       this.PM = 0.00097;
+       this.NMVOC = 0.00308
+       if(this.type ==="Auxiliary"){
+        // Calculation for Auxiliary engine
+      this.MDO_cost_Aux = parseFloat(this.cost)*this.fuel_ton
+       this.MDO_NMVOC_Aux = this.NMVOC*this.fuel_ton
+      this.MDO_PM_Aux = this.PM*this.fuel_ton
+      this.MDO_Sox_Aux = this.Sox*this.fuel_ton
+      this.MDO_NOx_Aux = this.Nox*this.fuel_ton
+      this.MDO_CO2_Aux = this.Cf*this.fuel_ton
+      this.MDO_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
+    }else{
+      this.MDO_cost = parseFloat(this.cost)*this.fuel_ton
+      this.MDO_NMVOC = this.NMVOC*this.fuel_ton
+      this.MDO_PM = this.PM*this.fuel_ton
+      this.MDO_Sox = this.Sox*this.fuel_ton
+      this.MDO_NOx = this.Nox*this.fuel_ton
+      this.MDO_CO2 = this.Cf*this.fuel_ton
+      this.MDO_volume = this.fuel_ton*1000/parseFloat(this.density)
+    }
+   
+    }
+    MGO(){
+        this.LHV = "42700 kJ/kg";
+        this.cost = "500 $/ton";
+        this.density = "844.8 kg/m^3"
+       this.Sox = 0.010;
+       this.Cf = 3.205;
+       this.Nox = 0.0961;
+       this.PM = 0.00097;
+       this.NMVOC = 0.00308
+        
+      if(this.type ==="Auxiliary"){
+        // Calculation for Auxiliary engine
+      this.MGO_cost_Aux = parseFloat(this.cost)*this.fuel_ton
+       this.MGO_NMVOC_Aux = this.NMVOC*this.fuel_ton
+      this.MGO_PM_Aux = this.PM*this.fuel_ton
+      this.MGO_Sox_Aux = this.Sox*this.fuel_ton
+      this.MGO_NOx_Aux = this.Nox*this.fuel_ton
+      this.MGO_CO2_Aux = this.Cf*this.fuel_ton
+      this.MGO_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
+    }else{
+      this.MGO_cost = parseFloat(this.cost)*this.fuel_ton
+      this.MGO_NMVOC = this.NMVOC*this.fuel_ton
+      this.MGO_PM = this.PM*this.fuel_ton
+      this.MGO_Sox = this.Sox*this.fuel_ton
+      this.MGO_NOx = this.Nox*this.fuel_ton
+      this.MGO_CO2 = this.Cf*this.fuel_ton
+      this.MGO_volume = this.fuel_ton*1000/parseFloat(this.density)
+    }
+    }
+    HFO(){
+        this.LHV = "40200 kJ/kg";
+        this.cost = "600 $/ton";
+       this.density = "991 kg/m^3"
+       this.Sox = 0.025;
+       this.Cf = 3.114;
+       this.Nox = 0.0903;
+       this.PM = 0.00728;
+      this. NMVOC = 0.00308
+       
+      if(this.type ==="Auxiliary"){
+          // Calculation for Auxiliary engine
+        this.HFO_cost_Aux = parseFloat(this.cost)*this.fuel_ton
+         this.HFO_NMVOC_Aux = this.NMVOC*this.fuel_ton
+        this.HFO_PM_Aux = this.PM*this.fuel_ton
+        this.HFO_Sox_Aux = this.Sox*this.fuel_ton
+        this.HFO_NOx_Aux = this.Nox*this.fuel_ton
+        this.HFO_CO2_Aux = this.Cf*this.fuel_ton
+        this.HFO_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
+        LNG_emission = this.HFO_CO2_Aux
+      }else{
+        this.HFO_cost = parseFloat(this.cost)*this.fuel_ton
+        this.HFO_NMVOC = this.NMVOC*this.fuel_ton
+        this.HFO_PM = this.PM*this.fuel_ton
+        this.HFO_Sox = this.Sox*this.fuel_ton
+        this.HFO_NOx = this.Nox*this.fuel_ton
+        this.HFO_CO2 = this.Cf*this.fuel_ton
+        this.HFO_volume = this.fuel_ton*1000/parseFloat(this.density)
+      }
+    }
+
+    }
+
  
  let batteries_properties = {
    supplier:{
@@ -735,8 +864,8 @@ let engineData ={
         speed_type: "Medium-Speed",
         IMO_compliant: " Tier II ",
         model: "14V46F",
-        fuel_type: "MDO or HFO",
-        LHV: "42.7 MJ/kg",
+        fuel_type: "HFO",
+        LHV: "42700 kJ/kg",
         SFOC: "176 g/kWh",
         pistonStroke : "580 mm",
         cylinderBore: "460 mm",
@@ -757,8 +886,8 @@ let engineData ={
         speed_type: "Medium-Speed",
         IMO_compliant: " Tier II ",
         model: "12V32",
-        fuel_type: "MDO or HFO",
-        LHV: "",
+        fuel_type: "MDO",
+        LHV: "42700 kJ/kg",
         SFOC: "178,8 g/kWh",
         pistonStroke : "400 mm",
         cylinderBore: "320 mm",
@@ -827,7 +956,9 @@ const Generator_sets = {
           Cylinder_output : "480 kW/cyl",
           IMO_compliant : " Tier III",
           Engine_speed:"720 RPM",
+          fuel_type: "MDO",
           SFOC:"",
+          LHV: "42700 kJ/kg",
           BSEC : "7590 kJ/kWh",
           pistonStroke : "430 mm",
           cylinderBore: "310 mm",
@@ -845,12 +976,14 @@ const Generator_sets = {
         },
         GenSet2:{
           supplier:"wartsila",
+          GenSET_type: "Wärtsilä 34DF",
           model: "8V31DF",
           frequency: "50 Hz",
           Cylinder_output : " 550 kW/cyl",
           IMO_compliant : " Tier III",
           Engine_speed:"750 RPM",
           SFOC:"",
+          LHV: "42700 kJ/kg",
           BSEC : "7220 kJ/kWh",
           pistonStroke : "430 mm",
           cylinderBore: "310 mm",
@@ -942,14 +1075,13 @@ let engine = new engineSellection()
 const battery = batteries_properties.supplier
 const custom_battery = batteries_properties.supplier.customize
 const created_battery = batteries_properties.supplier.custom_created
-
+//power management system
 const B_M_S = new BMS() 
 
-
-
-console.log(battery.corvus2)
-
-//emiision factors 
-let cf_LNG, cf_MGO, cf_MDO,cf_HFO,soxf_LNG, soxf_MGO, soxf_MDO,soxf_HFO,Noxf_LNG, Noxf_MGO, Noxf_MDO,Noxf_HFO
+//Engine Margine 
+const Engine_Marine = new engineSellection()
+//alternative fuel
+// const fuel_altern = new alternativeFuel()
+console.log(Engine_Marine)
 
 
