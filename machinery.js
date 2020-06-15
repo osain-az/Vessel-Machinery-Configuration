@@ -659,14 +659,18 @@ function propellerProperties (){
 
      }
  }
-  class alternativeFuel {
-      constructor(fuel_ton,type){
-          this.fuel_ton = fuel_ton;
-          this.type = type //type is used to differentiate propulsion engine and auxilary
-      }
-      LNG() {
+
+  function fuel_properties() {
+    //   constructor(fuel_tonn,type){
+    //       this.fuel_tonn = fuel_tonn;
+    //       this.type = type //type is used to differentiate propulsion engine and auxilary
+    //   }
+  
+      this.LNG = function(fuel_tonn,type) {
+        this.fuel_tonn = fuel_tonn;
+        this.type = type
         this.LHV= "48000 kJ/kg";
-        this.cost = "700 $/ton";
+        this.price = "700 $/ton";
         this.density = "450 kg/m^3"
        this.Sox = 0;
        this.Cf = 2.750;
@@ -675,26 +679,50 @@ function propellerProperties (){
        this.NMVOC = 0.003
        if(this.type ==="Auxiliary"){
         // Calculation for Auxiliary engine
-      this.LNG_cost_Aux = parseFloat(this.cost)*this.fuel_ton
-       this.LNG_NMVOC_Aux = this.NMVOC*this.fuel_ton
-      this.LNG_PM_Aux = this.PM*this.fuel_ton
-      this.LNG_Sox_Aux = this.Sox*this.fuel_ton
-      this.LNG_NOx_Aux = this.Nox*this.fuel_ton
-      this.LNG_CO2_Aux = this.Cf*this.fuel_ton
-      this.LNG_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
+      this.LNG_cost_Aux = parseFloat(this.price)*this.fuel_tonn
+       this.LNG_NMVOC_Aux = this.NMVOC*this.fuel_tonn
+      this.LNG_PM_Aux = this.PM*this.fuel_tonn
+      this.LNG_Sox_Aux = this.Sox*this.fuel_tonn
+      this.LNG_NOx_Aux = this.Nox*this.fuel_tonn
+      this.LNG_CO2_Aux = this.Cf*this.fuel_tonn
+      this.LNG_volume_Aux = this.fuel_tonn*1000/parseFloat(this.density)
+      return {
+        LNG_NMVOC_Aux : parseFloat(this.LNG_NMVOC_Aux.toFixed(2)) ,
+        LNG_PM_Aux :parseFloat(this.LNG_PM_Aux.toFixed(2)),
+        LNG_cost_Aux : parseFloat(this.LNG_cost_Aux.toFixed(2)) ,
+        LNG_Sox_Aux : parseFloat(this.LNG_Sox_Aux.toFixed(2)),
+        LNG_NOx_Aux :  parseFloat(this.LNG_NOx_Aux.toFixed(2)),
+        LNG_CO2_Aux : parseFloat(this.LNG_CO2_Aux.toFixed(2)),
+        LNG_volume_Aux : parseFloat(this.LNG_volume_Aux.toFixed(2)) 
+      }
     }else{
-      this.LNG_cost = parseFloat(this.cost)*this.fuel_ton
-      this.LNG_NMVOC = this.NMVOC*this.fuel_ton
-      this.LNG_PM = this.PM*this.fuel_ton
-      this.LNG_Sox = this.Sox*this.fuel_ton
-      this.LNG_NOx = this.Nox*this.fuel_ton
-      this.LNG_CO2 = this.Cf*this.fuel_ton
-      this.LNG_volume = this.fuel_ton*1000/parseFloat(this.density)
+        
+      this.LNG_cost = parseFloat(this.price)*this.fuel_tonn
+      this.LNG_NMVOC = this.NMVOC*this.fuel_tonn
+      this.LNG_PM = this.PM*this.fuel_tonn
+      this.LNG_Sox = this.Sox*this.fuel_tonn
+      this.LNG_NOx = this.Nox*this.fuel_tonn
+      this.LNG_CO2 = this.Cf*this.fuel_tonn
+      this.LNG_volume = this.fuel_tonn*1000/parseFloat(this.density)
+      return {
+        LNG_NMVOC : parseFloat(this.LNG_NMVOC.toFixed(2)) ,
+        LNG_PM : parseFloat(this.LNG_PM.toFixed(2)),
+        LNG_cost : parseFloat(this.LNG_cost.toFixed(2)) ,
+        LNG_Sox : parseFloat(this.LNG_Sox.toFixed(2)),
+        LNG_NOx :  parseFloat(this.LNG_NOx.toFixed(2)),
+        LNG_CO2 : parseFloat(this.LNG_CO2.toFixed(2)),
+        LNG_volume : parseFloat(this.LNG_volume.toFixed(2)) 
+      }
     }
       }
-      MDO(){
+      this.MDO = function (fuel_tonn,type){
+          // check to eliminate different calculation by using just one calculation 
+          //for both main engine and auxiliary engine TODO:
+
+        this.fuel_tonn = fuel_tonn;
+        this.type = type
         this.LHV ="42700 kJ/kg";
-        this.cost= "900 $/ton";
+        this.price= "900 $/ton";
         this.density = "900 kg/m^3";
        this.Sox = 0;
        this.Cf = 3.205;
@@ -703,27 +731,52 @@ function propellerProperties (){
        this.NMVOC = 0.00308
        if(this.type ==="Auxiliary"){
         // Calculation for Auxiliary engine
-      this.MDO_cost_Aux = parseFloat(this.cost)*this.fuel_ton
-       this.MDO_NMVOC_Aux = this.NMVOC*this.fuel_ton
-      this.MDO_PM_Aux = this.PM*this.fuel_ton
-      this.MDO_Sox_Aux = this.Sox*this.fuel_ton
-      this.MDO_NOx_Aux = this.Nox*this.fuel_ton
-      this.MDO_CO2_Aux = this.Cf*this.fuel_ton
-      this.MDO_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
-    }else{
-      this.MDO_cost = parseFloat(this.cost)*this.fuel_ton
-      this.MDO_NMVOC = this.NMVOC*this.fuel_ton
-      this.MDO_PM = this.PM*this.fuel_ton
-      this.MDO_Sox = this.Sox*this.fuel_ton
-      this.MDO_NOx = this.Nox*this.fuel_ton
-      this.MDO_CO2 = this.Cf*this.fuel_ton
-      this.MDO_volume = this.fuel_ton*1000/parseFloat(this.density)
+    
+      this.MDO_cost_Aux = parseFloat(this.price)*this.fuel_tonn
+       this.MDO_NMVOC_Aux = this.NMVOC*this.fuel_tonn
+      this.MDO_PM_Aux = this.PM*this.fuel_tonn
+      this.MDO_Sox_Aux = this.Sox*this.fuel_tonn
+      this.MDO_NOx_Aux = this.Nox*this.fuel_tonn
+      this.MDO_CO2_Aux = this.Cf*this.fuel_tonn
+      this.MDO_volume_Aux = this.fuel_tonn*1000/parseFloat(this.density)
+      return {
+        MDO_NMVOC_Aux : parseFloat(this.MDO_NMVOC_Aux.toFixed(2)) ,
+        MDO_PM_Aux :parseFloat(this.MDO_PM_Aux.toFixed(2)),
+        MDO_cost_Aux : parseFloat(this.MDO_cost_Aux.toFixed(2)) ,
+        MDO_Sox_Aux : parseFloat(this.MDO_Sox_Aux.toFixed(2)),
+        MDO_NOx_Aux :  parseFloat(this.MDO_NOx_Aux.toFixed(2)),
+        MDO_CO2_Aux : parseFloat(this.MDO_CO2_Aux.toFixed(2)),
+        MDO_volume_Aux : parseFloat(this.MDO_volume_Aux.toFixed(2)) 
+      }
+
+    }
+    else{
+      this.MDO_cost = parseFloat(this.price)*this.fuel_tonn
+      this.MDO_NMVOC = this.NMVOC*this.fuel_tonn
+      this.MDO_PM = this.PM*this.fuel_tonn
+      this.MDO_Sox = this.Sox*this.fuel_tonn
+      this.MDO_NOx = this.Nox*this.fuel_tonn
+      this.MDO_CO2 = this.Cf*this.fuel_tonn
+      this.MDO_volume = this.fuel_tonn*1000/parseFloat(this.density)
+      return {
+   
+        MDO_NMVOC : parseFloat(this.MDO_NMVOC.toFixed(2)) ,
+        MDO_PM : parseFloat(this.MDO_PM.toFixed(2)),
+        MDO_cost : parseFloat(this.MDO_cost.toFixed(2)) ,
+        MDO_Sox : parseFloat(this.MDO_Sox.toFixed(2)),
+        MDO_NOx :  parseFloat(this.MDO_NOx.toFixed(2)),
+        MDO_CO2 : parseFloat(this.MDO_CO2.toFixed(2)),
+        MDO_volume : parseFloat(this.MDO_volume.toFixed(2)) 
+      }
     }
    
+      
     }
-    MGO(){
+    this.MGO = function (fuel_tonn,type){
+        this.fuel_tonn = fuel_tonn;
+        this.type = type
         this.LHV = "42700 kJ/kg";
-        this.cost = "500 $/ton";
+        this.price = "500 $/ton";
         this.density = "844.8 kg/m^3"
        this.Sox = 0.010;
        this.Cf = 3.205;
@@ -733,26 +786,47 @@ function propellerProperties (){
         
       if(this.type ==="Auxiliary"){
         // Calculation for Auxiliary engine
-      this.MGO_cost_Aux = parseFloat(this.cost)*this.fuel_ton
-       this.MGO_NMVOC_Aux = this.NMVOC*this.fuel_ton
-      this.MGO_PM_Aux = this.PM*this.fuel_ton
-      this.MGO_Sox_Aux = this.Sox*this.fuel_ton
-      this.MGO_NOx_Aux = this.Nox*this.fuel_ton
-      this.MGO_CO2_Aux = this.Cf*this.fuel_ton
-      this.MGO_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
+      this.MGO_cost_Aux = parseFloat(this.price)*this.fuel_tonn
+       this.MGO_NMVOC_Aux = this.NMVOC*this.fuel_tonn
+      this.MGO_PM_Aux = this.PM*this.fuel_tonn
+      this.MGO_Sox_Aux = this.Sox*this.fuel_tonn
+      this.MGO_NOx_Aux = this.Nox*this.fuel_tonn
+      this.MGO_CO2_Aux = this.Cf*this.fuel_tonn
+      this.MGO_volume_Aux = this.fuel_tonn*1000/parseFloat(this.density)
+      return {
+        MGO_NMVOC_Aux : parseFloat(this.MGO_NMVOC_Aux.toFixed(2)) ,
+        MGO_PM_Aux :parseFloat(this.MGO_PM_Aux.toFixed(2)),
+        MGO_cost_Aux : parseFloat(this.MGO_cost_Aux.toFixed(2)) ,
+        MGO_Sox_Aux : parseFloat(this.MGO_Sox_Aux.toFixed(2)),
+        MGO_NOx_Aux :  parseFloat(this.MGO_NOx_Aux.toFixed(2)),
+        MGO_CO2_Aux : parseFloat(this.MGO_CO2_Aux.toFixed(2)),
+        MGO_volume_Aux : parseFloat(this.MGO_volume_Aux.toFixed(2)) 
+      }
     }else{
-      this.MGO_cost = parseFloat(this.cost)*this.fuel_ton
-      this.MGO_NMVOC = this.NMVOC*this.fuel_ton
-      this.MGO_PM = this.PM*this.fuel_ton
-      this.MGO_Sox = this.Sox*this.fuel_ton
-      this.MGO_NOx = this.Nox*this.fuel_ton
-      this.MGO_CO2 = this.Cf*this.fuel_ton
-      this.MGO_volume = this.fuel_ton*1000/parseFloat(this.density)
+      this.MGO_cost = parseFloat(this.price)*this.fuel_tonn
+      this.MGO_NMVOC = this.NMVOC*this.fuel_tonn
+      this.MGO_PM = this.PM*this.fuel_tonn
+      this.MGO_Sox = this.Sox*this.fuel_tonn
+      this.MGO_NOx = this.Nox*this.fuel_tonn
+      this.MGO_CO2 = this.Cf*this.fuel_tonn
+      this.MGO_volume = this.fuel_tonn*1000/parseFloat(this.density)
+      return {
+        MGO_NMVOC : parseFloat(this.MGO_NMVOC.toFixed(2)) ,
+        MGO_PM : parseFloat(this.MGO_PM.toFixed(2)),
+        MGO_cost : parseFloat(this.MGO_cost.toFixed(2)) ,
+        MGO_Sox : parseFloat(this.MGO_Sox.toFixed(2)),
+        MGO_NOx :  parseFloat(this.MGO_NOx.toFixed(2)),
+        MGO_CO2 : parseFloat(this.MGO_CO2.toFixed(2)),
+        MGO_volume : parseFloat(this.MGO_volume.toFixed(2)) 
+
+      }
     }
     }
-    HFO(){
+    this.HFO = function(fuel_tonn,type){
+        this.fuel_tonn = fuel_tonn;
+        this.type = type
         this.LHV = "40200 kJ/kg";
-        this.cost = "600 $/ton";
+        this.price = "600 $/ton";
        this.density = "991 kg/m^3"
        this.Sox = 0.025;
        this.Cf = 3.114;
@@ -762,22 +836,40 @@ function propellerProperties (){
        
       if(this.type ==="Auxiliary"){
           // Calculation for Auxiliary engine
-        this.HFO_cost_Aux = parseFloat(this.cost)*this.fuel_ton
-         this.HFO_NMVOC_Aux = this.NMVOC*this.fuel_ton
-        this.HFO_PM_Aux = this.PM*this.fuel_ton
-        this.HFO_Sox_Aux = this.Sox*this.fuel_ton
-        this.HFO_NOx_Aux = this.Nox*this.fuel_ton
-        this.HFO_CO2_Aux = this.Cf*this.fuel_ton
-        this.HFO_volume_Aux = this.fuel_ton*1000/parseFloat(this.density)
-        LNG_emission = this.HFO_CO2_Aux
+        this.HFO_cost_Aux = parseFloat(this.price)*this.fuel_tonn
+         this.HFO_NMVOC_Aux = this.NMVOC*this.fuel_tonn
+        this.HFO_PM_Aux = this.PM*this.fuel_tonn
+        this.HFO_Sox_Aux = this.Sox*this.fuel_tonn
+        this.HFO_NOx_Aux = this.Nox*this.fuel_tonn
+        this.HFO_CO2_Aux = this.Cf*this.fuel_tonn
+        this.HFO_volume_Aux = this.fuel_tonn*1000/parseFloat(this.density)
+        return {
+            HFO_NMVOC_Aux : parseFloat(this.HFO_NMVOC_Aux.toFixed(2)) ,
+            HFO_PM_Aux :parseFloat(this.HFO_PM_Aux.toFixed(2)),
+            HFO_cost_Aux : parseFloat(this.HFO_cost_Aux.toFixed(2)) ,
+            HFO_Sox_Aux : parseFloat(this.HFO_Sox_Aux.toFixed(2)),
+            HFO_NOx_Aux :  parseFloat(this.HFO_NOx_Aux.toFixed(2)),
+            HFO_CO2_Aux : parseFloat(this.HFO_CO2_Aux.toFixed(2)),
+            HFO_volume_Aux : parseFloat(this.HFO_volume_Aux.toFixed(2)) 
+          }
       }else{
-        this.HFO_cost = parseFloat(this.cost)*this.fuel_ton
-        this.HFO_NMVOC = this.NMVOC*this.fuel_ton
-        this.HFO_PM = this.PM*this.fuel_ton
-        this.HFO_Sox = this.Sox*this.fuel_ton
-        this.HFO_NOx = this.Nox*this.fuel_ton
-        this.HFO_CO2 = this.Cf*this.fuel_ton
-        this.HFO_volume = this.fuel_ton*1000/parseFloat(this.density)
+        this.HFO_cost = parseFloat(this.price)*this.fuel_tonn
+        this.HFO_NMVOC = this.NMVOC*this.fuel_tonn
+        this.HFO_PM = this.PM*this.fuel_tonn
+        this.HFO_Sox = this.Sox*this.fuel_tonn
+        this.HFO_NOx = this.Nox*this.fuel_tonn
+        this.HFO_CO2 = this.Cf*this.fuel_tonn
+        this.HFO_volume = this.fuel_tonn*1000/parseFloat(this.density)
+        return {
+
+            MGO_NMVOC : parseFloat(this.HFO_NMVOC.toFixed(2)) ,
+            HFO_PM : parseFloat(this.HFO_PM.toFixed(2)),
+            HFO_cost : parseFloat(this.HFO_cost.toFixed(2)) ,
+            HFO_Sox : parseFloat(this.HFO_Sox.toFixed(2)),
+            HFO_NOx :  parseFloat(this.HFO_NOx.toFixed(2)),
+            HFO_CO2 : parseFloat(this.HFO_CO2.toFixed(2)),
+            HFO_volume : parseFloat(this.HFO_volume.toFixed(2)) 
+          }
       }
     }
 
@@ -1080,8 +1172,10 @@ const B_M_S = new BMS()
 
 //Engine Margine 
 const Engine_Marine = new engineSellection()
+
 //alternative fuel
-// const fuel_altern = new alternativeFuel()
-console.log(Engine_Marine)
+ const fuel_property = new fuel_properties()
+
+
 
 

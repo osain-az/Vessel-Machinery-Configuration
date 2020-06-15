@@ -16,6 +16,7 @@
 <script src="https://d3js.org/d3.v5.min.js"></script>
 <script src="./c3-0.7.15/c3.min.js"></script>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 </head>
 <body>
     <style>
@@ -525,16 +526,110 @@ tr:hover {background-color: #ddd;}
        margin-right: 6px;
      }
     .sim_ploting {
-      /* display: grid; */
-      /* grid-template-rows: 1fr; */
-     /* grid-template-columns: 48% 48% ;  */
-    /* grid-auto-flow: column; */
+       display: grid; 
+       grid-template-rows: 1fr; 
+       grid-template-columns: 25% 30% 45%;   
+     grid-auto-flow: column; 
     border: solid green 2px;
-     /* background-color:#051c26;  */
-     /* color: white; */
+    }
+    /* .darshboard_sim{
+      border: solid pink 2px;
+      width : 100%;
+    } */
+    #emission{
+
+      position: relative;
+     margin: auto;
+     
+     width: 100%;
+    }
+    #update_top{
+   margin-bottom: 20px ;
     }
 
-     .addedMachinery{
+    /* .battandemiss{
+      border:pink;
+      width:35%
+    }
+    .darshboard_engines{
+      border:rgb(51, 63, 199);
+      width:25%
+    }
+    .sim_update{
+      border:rgb(186, 194, 41);
+      width:40%
+    } */
+    .darshboard_container{
+      width: 100%;
+      background-color:#072b39; 
+      
+      color: white;
+      padding: 15px;
+    }
+    .c3-axis-y-label,.c3-axis-y,.c3-legend-item-tile  {
+      stroke: #fff !important; 
+    }
+    .add_style{
+      background-color: #f7f7f7;
+      background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e7e7e7));
+      background-image: -webkit-linear-gradient(top, #f7f7f7, #e7e7e7);
+      background-image: -moz-linear-gradient(top, #f7f7f7, #e7e7e7);
+      background-image: -ms-linear-gradient(top, #f7f7f7, #e7e7e7);
+      background-image: -o-linear-gradient(top, #f7f, #e7e7e7);
+      color: #a7a7a7;
+      margin: 36px;
+      width: 144px;
+      height: 144px;
+      position: relative;
+      text-align: center;
+      line-height: 166px;
+      /* border-radius: 50%; */
+      box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+    }
+    .section{
+      margin: 5px;
+      border: solid #aaa 1px;
+      box-shadow: 0px 3px 8px #daf, inset 0px 2px 3px #fff;
+
+    }
+    .span_disp{
+      display: inline-block;
+      margin: 10px;
+      padding: 6px;
+    }
+    .darsh_top span{
+     display: inline-block; 
+      border: solid greenyellow 2px;
+      margin-left: auto;
+      border-radius: 20%;
+      margin-bottom: 10px;
+      padding: 5px;
+      margin-top: 15px;
+      margin-right: auto;
+      text-align: center;
+      box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+    }
+    .span_result{
+      background-color: #092e45;
+      display: inline-block; 
+      color: #a7a7a7;
+      margin: 10px;
+      width: 80px;
+      height: 80px;
+      font-size: 12px;
+      position: relative;
+      text-align: center;
+      border: solid #36e4f4 2px;
+      line-height: 35px;
+       border-radius: 50%;
+      box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
+    }
+    .live_data{
+      color: #3bc140;
+      font-size: 1.3em;
+    }
+
+   .addedMachinery{
          background-color:#051c26;
          width: 100%;
          margin-left: auto;
@@ -1117,7 +1212,7 @@ tr:hover {background-color: #ddd;}
             <span><strong>Charge/discharge power :</strong> </span><span id="charge_power"></span> <br>
 
             <span><strong>DOD :</strong> </span><span id="DOD_pro"></span> <br>  
-            <span><strong>SOC :</strong> </span><span id="SOC_pro"></span> <br> <br> 
+            <span><strong>SOC</strong> </span><span id="SOC_pro"></span> <br> <br> 
           </div>
            <div class="gen_pro">
             <strong><span>General info</span></strong><br><br>
@@ -1239,7 +1334,7 @@ tr:hover {background-color: #ddd;}
                 <button class="powerOn" id="powerOn"><strong>Power On Engine </strong></button>
                 <input type="button" value="Done" class="done" id="done">
               </div>    
-        
+      
           </div>
           </div>
         </div>
@@ -1247,41 +1342,76 @@ tr:hover {background-color: #ddd;}
          <div class="SFOC" id="SFOC">
              <div id="plot" class="plot"></div>
          </div>
+         <div class="darshboard_container">
         <div class="sim_ploting"> 
-          <div class="hide" id="result_darshboard_main">
-            <div class="" id="result_darshboard">
-              <span> Propulsion system<span> <br><br>
-              <div class="emission" id="emission"></div>
+          <div class="darshboard_engines section" >
+          <div class="section" id="result_darshboard_main">  
+             <div class="darsh_top center" > <span>Propulsion system</span></div> 
+             <span class="span_result "><span id="main_install_darsh" class="live_data"></span> <br>Power kW</span> 
+            <span class="span_result"> <span id="main_load_darsh" class="live_data" > </span> <br> load kW </span> <br>
+             <span class="span_result">  <span id="main_no_engines_darsh" class="live_data"> </span> <br> engines</span> 
+             <span class="span_result">  <span id="main_active_engine_darsh" class="live_data"> </span> <br> Active engine</span> <br>
+            <span class="span_result">  <span id="main_FC_darsh" class="live_data"></span> <br>FC tons</span>
+            <span class="span_result">  <span id="main_sfoc_darsh" class="live_data"></span> <br>sfoc g/kWh</span> <br>
+          </div>
+          <div class="section" id="result_darshboard_Aux">
+              <div class="darsh_top center"><span> Auxiliary system</span> </div> <br>
               <div>
-                  <span> install power <span> </span></span> <br>
-                  <span> Load <span> </span></span> <br>
-                  <span> number of engine  <span> </span></span> <br>
-                  <span> number of engine in use <span> </span></span> <br>
-                  <span> fuel consumption tons <span> </span></span> <br>
-              </div>
+                  <span class="span_result">  <span id="aux_install_darsh" class="live_data"> </span> <br> power kW</span> 
+                  <span class="span_result">  <span id="aux_load_darsh" class="live_data"> </span  > <br> Load kW </span> <br>
+                  <span class="span_result">   <span id="aux_no_engines_darsh" class="live_data"></span> <br> engines</span> 
+                  <span class="span_result">  <span id="aux_active_engine_darsh" class="live_data"> </span> <br> active engines </span> <br>
+                  <span class="span_result">  <span id="aux_FC_darsh"  class="live_data"> </span> <br> FC tons</span> 
+                  <span class="span_result">  <span id="aux_sfoc_darsh" class="live_data"> </span> <br> sfoc g/kWh</span> <br>
             </div>
           </div>
-          <div class="hide" id="result_darshboard_Aux">
-            <div class="" id="result_darshboard">
-              <span> Auxiliary system<span> <br><br>
-              <div class="emission" id="emission"></div>
-              <div>
-                  <span> install power <span> </span></span> <br>
-                  <span> Load <span> </span></span> <br>
-                  <span> number of engine  <span> </span></span> <br>
-                  <span> number of engine in use <span> </span></span> <br>
-                  <span> fuel consumption tons <span> </span></span> <br>
-              </div>
+         </div>
+
+        <div class="battandemiss section" >
+          <div class="section" id="">
+            <div class="darsh_top center"><span>Battery pack</span></div>
+            <span class="span_result"> <span id="capacity_darsh" class="live_data"> </span > <br>Capacity kWh </span> 
+            <span class="span_result">  <span id="soc_darsh" class="live_data"></span > <br>SOC kWh</span> <br>
+            <span class="span_result">  <span id="c_rate_darsh" class="live_data"></span > <br>C rate</span> 
+            <span class="span_result">  <span id="c_rate_peak_darsh" class="live_data"></span > <br>C peak</span>
+            <span class="span_result"> <span id="DOD_darsh" class="live_data"></span > <br>DOD </span> <br>
+          </div>
+           <div class="section">
+            <div class="darsh_top center"><span>Emissions Chart</span></div>
+            <div class="emission" id="emission">
+              <canvas id="emission_chart"></canvas>
+            </div>
+           </div>
+           <div class="general section "> 
+            <div>
+              <span class="span_disp span_result">  <span id="ETA" class="live_data"></span > <br> ETA </span>
+              <span class="span_disp span_result"> <span id="speed_show" class="live_data"></span > <br> Speed Knt </span>
+              <span class="span_disp span_result">  <span id="wave_height_show" class="live_data"></span > <br> wave heingt</span>
+              <span class="span_disp span_result"> <span id="distance_Mils" class="live_data"></span ><br> Nautical Mils </span>
             </div>
           </div>
-          <div class="" id="">
-            <div class="battery" id="battery_result"></div>
+        </div>
+
+        <div class="sim_update section">
+          <div class="update section" >
+            <div class="darsh_top center" id="update_top"> <span>Update parameter</span></div>
+            <div class="center">
+           <span> Adjust speed <input type="range" name="" id=""></span> <br><br>
+           <span>wave  
+            <input type="checkbox" name="" id="">
+            <span class="wave" id="wave_update"><span>max Wave height (m) : </span><input type="text" name="" id="wave_height" class="sim" onchange="sim_data(event)">
+          </span> <br><br>
+          <span class="span_disp"> adjust hotel load <input type="range" name="" id=""></span> <br><br>
           </div>
-          <div class="SFOC" id="">
-          
+        </div>
+          <div class=" section" id="">
             <div id="result" class="result"></div>
           </div>
         </div>
+      </div>
+      
+       
+   </div>
     </div>
 
     <div class="addedMachinery">
@@ -1303,7 +1433,7 @@ tr:hover {background-color: #ddd;}
     formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw, Rwave,H,Rfoul,RT_calm,SM,
     Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,No_of_eng,No_of_genset,aux_load,main_inst_power,
     star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type,sellected_genset,sellected_battery,sellected_engine,propulsion_syst,
-    gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,
+    gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,energyChart,
     LNG_emission
 
 
@@ -1450,6 +1580,16 @@ const auxPower = {
 // //   paper_bgcolor: 'purple'
 const datas = [ auxLoad,mainLoad,mainPower,auxPower]
 const layout = {
+  font: {
+    family: 'Courier New, monospace',
+    size: 16,
+    color: '#3bc140'
+  },
+  legend: {
+    x: 0.5,
+    xanchor: 'center',
+    y: 1
+  },
   xaxis:
 	{
         //  range: [0,],
@@ -1463,11 +1603,11 @@ const layout = {
          rangemode:"tozero",
         title: 'Power kW '
     },
-   title: 'Live result  ',
-//   plot_bgcolor: 'yellow',
+   title: 'Energy/power monitor  ',
+   plot_bgcolor: '#3b1c50',
   // width:600,
   // height:600,
-//   paper_bgcolor: 'purple'
+   paper_bgcolor: '#072b39'
 
   };
   const config = {responsive: true}
@@ -1475,56 +1615,124 @@ const layout = {
   Plotly.newPlot('result',datas,layout,config);
 
 }
+let myChart
+ emission()
 function emission(){
-  const data = [{
-  values: [16, 15, 12, 6, 5, 4, 42],
-  labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
-  domain: {column: 0},
-  name: 'GHG Emissions',
-  hoverinfo: 'label+percent+name',
-  hole: .4,
-  type: 'pie'
-},{
-  values: [27, 11, 25, 8, 1, 3, 25],
-  labels: ['US', 'China', 'European Union', 'Russian Federation', 'Brazil', 'India', 'Rest of World' ],
-  text: 'CO2',
-  textposition: 'inside',
-  domain: {column: 1},
-  name: 'CO2 Emissions',
-  hoverinfo: 'label+percent+name',
-  hole: .4,
-  type: 'pie'
-}];
-const config = {responsive: true}
-
-const layout = {
-  title: 'Global Emissions 1990-2011',
-  annotations: [
-    {
-      font: {
-        size: 20
-      },
-      showarrow: false,
-      text: 'GHG',
-      x: 0.17,
-      y: 0.5
+  const ctx = document.getElementById('emission_chart');
+   myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['CO2', 'SOX', 'NOx', 'NMVOC', 'PM'],
+        datasets: [{
+            label: 'Main engines',
+            data: [80, 19, 3, 5, 2],
+            backgroundColor:  'rgba(75, 192, 192, 0.2)',
+            borderColor:'rgba(255, 159, 64, 1)',
+            borderWidth: 1,
+            
+           
+        },
+           {
+            label: 'Hotel engines',
+            data: [150, 30, 16,4 , 2],
+            backgroundColor:  'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 2,
+            
+        }]
     },
-    {
-      font: {
-        size: 20
+    options: {
+      tooltips:{
+      mode: 'index',
       },
-      showarrow: false,
-      text: 'CO2',
-      x: 0.82,
-      y: 0.5
+      legend:{
+        position: 'bottom',
+        align: 'center',
+        labels: {
+                text: "",
+                fontColor: 'rgb(255, 99, 132)'
+            },
+      },
+      title:{
+        display: true,
+        //  text: 'emission '
+       },
+        scales: {
+            yAxes: [{
+              scaleLabel:{
+                    display: true,
+                    labelString: 'tons',
+                    fontColor: '#3bc140'
+                 },
+                ticks: {
+                    beginAtZero: true,
+                    fontColor:'#3bc140',
+                    callback: function(value, index, values) {
+                        return  value;
+                    }
+                }
+            }]
+        }
     }
-  ],
- 
-  showlegend: false,
-  grid: {rows: 1, columns: 2}
-};
+});
 
-Plotly.newPlot('emission', data, layout,config);
+}
+function engery (){
+  
+   const ctx = document.getElementById('emission_chart');
+   energyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['CO2', 'SOX', 'NOx', 'NMVOC', 'PM', 'Orange'],
+        datasets: [{
+            label: 'Main engines',
+            data: [12, 19, 3, 5, 2, 3],
+            backgroundColor:  'rgba(75, 192, 192, 0.2)',
+            borderColor:'rgba(255, 159, 64, 1)',
+            borderWidth: 1
+        },
+           {
+            label: 'Auxiliary engines',
+            data: [22, 30, 16, , 2, 3],
+            backgroundColor:  'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(255, 159, 64, 1)',
+            borderWidth: 2
+        }]
+    },
+    options: {
+      tooltips:{
+      mode: 'index',
+      },
+      legend:{
+        position: 'bottom',
+        align: 'center',
+        labels: {
+                text: "testing wathebv",
+                fontColor: 'rgb(255, 99, 132)'
+            },
+      },
+      title:{
+        display: true,
+         text: 'emission '
+       },
+        scales: {
+            yAxes: [{
+              scaleLabel:{
+                    display: true,
+                    labelString: 'testing',
+                    fontColor: '#894'
+                 },
+                ticks: {
+                    beginAtZero: true,
+                    callback: function(value, index, values) {
+                        return '$' + value;
+                    }
+                }
+            }]
+        }
+    }
+ });
+
 }
 
 function powerDisplay (){
@@ -3328,10 +3536,10 @@ Pb = eventVal // overide the inital calculation and assigned new break power
 display_sim_param()
 }
 
+let eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion
 
 function display_sim_param(){
 
- let eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion
   if(sellected_genset||!sellected_genset){
     if(sellected_genset){
     No_of_genset = parseFloat(sellected_genset.No_of_genset) 
@@ -3361,8 +3569,8 @@ function display_sim_param(){
   
    if(sellected_battery){
     bat_capacity = sellected_battery.capacity
-    bat_SOC = sellected_battery.SOC
-    bat_DOD = sellected_battery.DOD
+    bat_SOC = sellected_battery.SOC  
+     bat_DOD = sellected_battery.DOD
     bat_volt = sellected_battery.nor_Voltage
     bat_C_rated = sellected_battery.c_Rate
     bat_C_rated_peak = sellected_battery.c_Rate_peak
@@ -3510,12 +3718,12 @@ function preview(event){
   main_Simulate()
   display_sim_param()
 }
-let trans_check,standby_check,harbor_check,DP_check,sim_time,end_sim
+let trans_check,standby_check,harbor_check,DP_check,sim_time,end_sim,distance_past,time
 function main_Simulate(event){
   
   
   
-  let type,time, aux_load_perc,max_load_perc
+  let type, aux_load_perc,max_load_perc
    trans_check = document.getElementById("transit").checked
    standby_check = document.getElementById("standby").checked
    DP_check = document.getElementById("DP").checked
@@ -3539,6 +3747,7 @@ function main_Simulate(event){
   time = 0
   FC_ton_aux = 0
   FC_ton = 0
+  distance_past = 0
   LiveResult()// live ploting 
   sim_time = 0 // used to stored time past which correspond to the distance moved 
   function sim() {
@@ -3551,10 +3760,13 @@ function main_Simulate(event){
     console.log("main_enginePower",main_enginePower)
     time +=500
     sim_time +=time_step
+    distance_past  = (shipSpeed*(sim_time*3600))/1852
     
     EngineCal.SFOC(load,main_enginePower,ratedSfoc,supplier,type)
     FC = Pb*(sfoc_cal/1000)*time_step
     FC_ton += FC/1000
+    FC_ton = FC_ton.toFixed(2)*1
+    // fuel_Details (FC_ton)
     //for Auxiliary engine and load 
      type = "auxilary"
      aux_load // hotel laod and other 
@@ -3564,6 +3776,8 @@ function main_Simulate(event){
      EngineCal.SFOC(aux_load,aux_enginePower,aux_ratedsfoc,gen_supplier,type)
      FC_aux = aux_load*(sfoc_cal_aux/1000)*time_step
      FC_ton_aux += FC_aux/1000
+     FC_ton_aux = FC_ton_aux.toFixed(2)*1
+    //  fuel_Details (FC_ton_aux)
     
      console.log("aux_ratesfoc",aux_ratedsfoc)
      console.log("aux engine",aux_enginePower)
@@ -3578,17 +3792,16 @@ function main_Simulate(event){
       time_step = transit_time-sim_time
       FC = Pb*(sfoc_cal/1000)*time_step
       FC_ton += FC/1000
-      fuel_altern = new alternativeFuel(FC_ton,"main")
-      fuel_altern.HFO()
-
-      // fuel_altern(FC_ton,"main")
-
+      FC_ton = FC_ton.toFixed(2)*1
+      // fuel_Details (FC_ton)
+      
+   // "Auxiliary 
       FC_aux = aux_load*(sfoc_cal_aux/1000)*time_step
      FC_ton_aux += FC_aux/1000
-     fuel_altern = new alternativeFuel(FC_ton_aux,"Auxiliary")
-    //  fuel_altern(FC_ton_aux,"Auxiliary")
-    fuel_altern.HFO()
-    LNG_emission
+     FC_ton_aux = FC_ton_aux.toFixed(2)*1
+    //  fuel_altern = new alternativeFuel(FC_ton_aux,"Auxiliary")
+    // fuel_Details (FC_ton_aux)
+   
     }
       
     if (time >=end_sim) {
@@ -3603,13 +3816,15 @@ function main_Simulate(event){
             y: [[aux_load],[Pb],[main_enginePower],[aux_enginePower]]
           }, [0,1,2,3], 1000)
 
-      Plotly.extendTraces('plot', {
-     x: [[max_load_perc],[max_load_perc]],
-    y: [[sfoc_cal],[sfoc_cal_aux]]
-     }, [0,1], 10000)
+    //   Plotly.extendTraces('plot', {
+    //  x: [[max_load_perc],[max_load_perc]],
+    // y: [[sfoc_cal],[sfoc_cal_aux]]
+    //  }, [0,1], 10000)
         
       
     }
+    main_display_darshboard()
+    fuel_Details ()
     
 }
 
@@ -3622,17 +3837,184 @@ function main_Simulate(event){
   // else if(standdy){
    
   // }
+ 
+}
 
 }
-}
-// function start_sim(){
-// //   setTimeout(function() {
+let aux_LNG_cost,aux_LNG_CO2,aux_LNG_NOx,aux_LNG_SOx,aux_LNG_PM,aux_LNG_NMVOC,aux_LNG_volume,
+main_LNG_cost,main_LNG_CO2,main_LNG_NOx,main_LNG_SOx,main_LNG_PM,main_LNG_NMVOC,main_LNG_volume,
+aux_MDO_cost,aux_MDO_CO2,aux_MDO_NOx,aux_MDO_SOx,aux_MDO_PM,aux_MDO_NMVOC,aux_MDO_volume,
+main_MDO_cost,main_MDO_CO2,main_MDO_NOx,main_MDO_SOx,main_MDO_PM,main_MDO_NMVOC,main_MDO_volume,
+aux_MGO_cost,aux_MGO_CO2,aux_MGO_NOx,aux_MGO_SOx,aux_MGO_PM,aux_MGO_NMVOC,aux_MGO_volume,
+main_MGO_cost,main_MGO_CO2,main_MGO_NOx,main_MGO_SOx,main_MGO_PM,main_MGO_NMVOC,main_MGO_volume,
+aux_HFO_cost,aux_HFO_CO2,aux_HFO_NOx,aux_HFO_SOx,aux_HFO_PM,aux_HFO_NMVOC,aux_HFO_volume,
+main_HFO_cost,main_HFO_CO2,main_HFO_NOx,main_HFO_SOx,main_HFO_PM,main_HFO_NMVOC,main_HFO_volume, main_update, aux_update,
 
-// // }, 100 * i);
-// while do {
+main_cost,main_CO2,main_NOx,main_SOx,main_PM,main_NMVOC,main_volume,
+aux_cost,aux_CO2,aux_NOx,aux_SOx,aux_PM,aux_NMVOC,aux_volume,main_engine_fuel, Aaux_engine_fuel
+
+
+
+function fuel_Details (){
   
-// } while (condition);
-// }
+  // getting the currently fuel propert use for main and Auxilairy engine 
+  if(sellected_engine.fuel_type === "LNG"){
+    main_engine_fuel = fuel_property.LNG(FC_ton,"main")
+    main_CO2 = main_engine_fuel.LNG_CO2
+    main_NOx = main_engine_fuel.LNG_NOx
+    main_NMVOC = main_engine_fuel.LNG_NMVOC
+    main_SOx = main_engine_fuel.LNG_Sox
+    main_PM = main_engine_fuel.LNG_PM
+    main_cost = main_engine_fuel.LNG_cost
+    main_volume = main_engine_fuel.LNG_volume
+
+     }
+     else if(sellected_engine.fuel_type === "MGO"){
+    main_engine_fuel = fuel_property.MGO(FC_ton,"main")
+    main_CO2 = main_engine_fuel.MGO_CO2
+    main_NOx = main_engine_fuel.MGO_NOx
+    main_NMVOC = main_engine_fuel.MGO_NMVOC
+    main_SOx = main_engine_fuel.MGO_Sox
+    main_PM = main_engine_fuel.MGO_PM
+    main_cost = main_engine_fuel.MGO_cost
+    main_volume = main_engine_fuel.MGO_volume
+
+     }
+     
+     else if(sellected_engine.fuel_type === "MDO"){
+  
+    main_engine_fuel = fuel_property.MDO(FC_ton,"main")
+    main_CO2 = main_engine_fuel.MDO_CO2
+    main_NOx = main_engine_fuel.MDO_NOx
+    main_NMVOC = main_engine_fuel.MDO_NMVOC
+    main_SOx = main_engine_fuel.MDO_Sox
+    main_PM = main_engine_fuel.MDO_PM
+    main_cost = main_engine_fuel.MDO_cost
+    main_volume = main_engine_fuel.MDO_volume
+    console.log(main_volume)
+
+     }
+    else if(sellected_engine.fuel_type === "HFO"){
+    main_engine_fuel = fuel_property.HFO(FC_ton,"main")
+    main_CO2 = main_engine_fuel.HFO_CO2
+    main_NOx = main_engine_fuel.HFO_NOx
+    main_NMVOC = main_engine_fuel.HFO_NMVOC
+    main_SOx = main_engine_fuel.HFO_Sox
+    main_PM = main_engine_fuel.HFO_PM
+    main_cost = main_engine_fuel.HFO_cost
+    main_volume = main_engine_fuel.HFO_volume
+
+     }
+
+     if(sellected_genset.fuelType === "LNG"){
+    aux_engine_fuel = fuel_property.LNG(FC_ton_aux,"Auxiliary")
+    aux_CO2 = aux_engine_fuel.LNG_CO2_Aux
+    aux_NOx = aux_engine_fuel.LNG_NOx_Aux
+    aux_NMVOC = aux_engine_fuel.LNG_NMVOC_Aux
+    aux_SOx = aux_engine_fuel.LNG_Sox_Aux
+    aux_PM = aux_engine_fuel.LNG_PM_Aux
+    aux_cost = aux_engine_fuel.LNG_cost_Aux
+    aux_volume = aux_engine_fuel.LNG_volume_Aux
+
+     }
+     else if(sellected_genset.fuelType === "MGO"){
+    aux_engine_fuel = fuel_property.MGO(FC_ton_aux,"Auxiliary")
+    aux_CO2 = aux_engine_fuel.MGO_CO2_Aux
+    aux_NOx = aux_engine_fuel.MGO_NOx_Aux
+    aux_NMVOC = aux_engine_fuel.MGO_NMVOC_Aux
+    aux_SOx = aux_engine_fuel.MGO_Sox_Aux
+    aux_PM = aux_engine_fuel.MGO_PM_Aux
+    aux_cost = aux_engine_fuel.MGO_cost_Aux
+    aux_volume = aux_engine_fuel.MGO_volume_Aux
+
+     }
+     else if(sellected_genset.fuelType === "MDO"){
+    aux_engine_fuel = fuel_property.MDO(FC_ton_aux,"Auxiliary")
+    aux_CO2 = aux_engine_fuel.MDO_CO2_Aux
+    aux_NOx = aux_engine_fuel.MDO_NOx_Aux
+    aux_NMVOC = aux_engine_fuel.MDO_NMVOC_Aux
+    aux_SOx = aux_engine_fuel.MDO_Sox_Aux
+    aux_PM = aux_engine_fuel.MDO_PM_Aux
+    aux_cost = aux_engine_fuel.MDO_cost_Aux
+    aux_volume = aux_engine_fuel.MDO_volume_Aux
+    console.log(aux_volume)
+
+     }
+    else if(sellected_genset.fuelType === "HFO"){
+    aux_engine_fuel = fuel_property.HFO(FC_ton_aux,"Auxiliary")
+    aux_CO2 = aux_engine_fuel.HFO_CO2_Aux
+    aux_NOx = aux_engine_fuel.HFO_NOx_Aux
+    aux_NMVOC = aux_engine_fuel.HFO_NMVOC_Aux
+    aux_SOx = aux_engine_fuel.HFO_Sox_Aux
+    aux_PM = aux_engine_fuel.HFO_PM_Aux
+    aux_cost = aux_engine_fuel.HFO_cost_Aux
+    aux_volume = aux_engine_fuel.HFO_volume_Aux
+
+     }
+     
+    
+     main_update = [main_CO2,main_SOx,main_NOx,main_NMVOC]
+      aux_update = [aux_CO2,aux_SOx,aux_NOx,aux_NMVOC]
+      updatChat()
+ function updatChat(){
+   console.log(main_update)
+   console.log(aux_update)
+  myChart.data.datasets[0].data =  main_update;
+  myChart.data.datasets[1].data =aux_update ;
+  myChart.update();
+ }
+}
+
+function main_display_darshboard(){
+ 
+  let wave,distance_N_mils,aux_active,active,ETA
+  distance_N_mils = transit_dis_mils - distance_past //distance covered so far
+   ETA = transit_time - sim_time
+
+  ETA = ETA.toFixed(2)
+  distance_N_mils  = distance_N_mils.toFixed(2)
+
+  if(wave_height){
+    wave = wave_height
+  }else if(!wave_height){
+    wave = 0
+  }
+ 
+  // impliment active engine status TODO:
+  aux_active = " updating...."
+  active = " updating...." // for the main engine 
+  if(aux_no_engines>1 && aux_load>aux_enginePower){
+    // check for the active engine TODO: 
+
+  }
+  document.getElementById("main_install_darsh").innerHTML = main_enginePower * No_of_eng
+  document.getElementById("main_FC_darsh").innerHTML = FC_ton
+  document.getElementById("main_active_engine_darsh").innerHTML = active
+  document.getElementById("main_no_engines_darsh").innerHTML = No_of_eng
+  document.getElementById("main_load_darsh").innerHTML = Pb
+  document.getElementById("main_sfoc_darsh").innerHTML = sfoc_cal
+
+  document.getElementById("aux_install_darsh").innerHTML = aux_enginePower*No_of_genset
+  document.getElementById("aux_FC_darsh").innerHTML = FC_ton_aux
+  document.getElementById("aux_active_engine_darsh").innerHTML = aux_active
+  document.getElementById("aux_no_engines_darsh").innerHTML = No_of_genset
+  document.getElementById("aux_load_darsh").innerHTML = aux_load
+  document.getElementById("aux_sfoc_darsh").innerHTML = sfoc_cal_aux
+
+  
+  document.getElementById("wave_height_show").innerHTML = wave + " m"
+  document.getElementById("ETA").innerHTML = ETA +" Hrs"
+  document.getElementById("distance_Mils").innerHTML = distance_N_mils +" nm"
+  document.getElementById("speed_show").innerHTML = shipSpeedKnots 
+
+  document.getElementById("capacity_darsh").innerHTML = bat_capacity 
+  document.getElementById("soc_darsh").innerHTML = bat_SOC 
+  document.getElementById("DOD_darsh").innerHTML = bat_DOD 
+  document.getElementById("c_rate_peak_darsh").innerHTML = bat_C_rated_peak
+  document.getElementById("c_rate_darsh").innerHTML = bat_C_rated
+
+ 
+}
 
 function end_simulate(){
   simulate = false
