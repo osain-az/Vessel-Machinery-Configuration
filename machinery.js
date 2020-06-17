@@ -112,7 +112,17 @@ function ship(){
         //   //The formulae are valid for 0.48 <= Cb <= 0.85 and 0.14 <=Fn <= 0.32
         //     Cb = (0.14/Fn)*(((Lpp/Bwl)+20)/26)
         // }
-
+        if(lcb_type ==="aft"){
+        lcb  = -(LCB/Lwl)*100
+        
+        }
+        else if(lcb_type ==="forward"){
+            lcb  = (LCB/Lwl)*100
+        }else {
+          //  method by Harvald(1974)
+          lcb = -(0.44*Fn-0.094)
+        }
+         
         if(!T){
             T = 0.5*(Tf + TA)
         }
@@ -329,8 +339,8 @@ function resistance(){
          this.d = -0.9
         
          this.c14 = 1 + 0.011*stern
-         this.lcb
-         this.LR = Lwl*(1-Cp + 0.06*Cp*this.lcb/(4*Cp-1))
+       
+         this.LR = Lwl*(1-Cp + 0.06*Cp*lcb/(4*Cp-1))
 
         this.onePlusk1 = 0.93+0.487118*this.c14*(Bwl/Lwl)**1.06806*(T/Lwl)**0.46106*(Lwl/this.LR)**0.121563*(Lwl**3/shipVolume)**0.36486*(1-Cp)**-0.604247 
         this.c17 = 6919.3*Cm**-1.3346*(shipVolume/Lwl**3)**2.00977*(Lwl/Bwl-2)**1.40692
@@ -609,7 +619,6 @@ function propellerProperties (){
 
  }
 
-
  function PMS(){
     this.ME_sys = function(){
         this.install_pro_power = eng_power // installed power for propulsion 
@@ -862,7 +871,7 @@ function propellerProperties (){
         this.HFO_volume = this.fuel_tonn*1000/parseFloat(this.density)
         return {
 
-            MGO_NMVOC : parseFloat(this.HFO_NMVOC.toFixed(2)) ,
+            HFO_NMVOC : parseFloat(this.HFO_NMVOC.toFixed(2)) ,
             HFO_PM : parseFloat(this.HFO_PM.toFixed(2)),
             HFO_cost : parseFloat(this.HFO_cost.toFixed(2)) ,
             HFO_Sox : parseFloat(this.HFO_Sox.toFixed(2)),

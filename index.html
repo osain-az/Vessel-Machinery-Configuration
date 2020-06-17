@@ -20,6 +20,7 @@
 </head>
 <body>
     <style>
+
     .topnav {
     overflow: hidden;
     background-color: #333;
@@ -559,7 +560,7 @@ tr:hover {background-color: #ddd;}
       border:rgb(186, 194, 41);
       width:40%
     } */
-    .darshboard_container{
+    .darshboard_container,.result_compare{
       width: 100%;
       background-color:#072b39; 
       
@@ -628,6 +629,15 @@ tr:hover {background-color: #ddd;}
       color: #3bc140;
       font-size: 1.3em;
     }
+    .result_button input{
+    background-color: #092e45;
+    color: #3bc140;
+    margin: 20px;
+    padding:6px;
+    border: solid #36e4f4 2px;
+    border-radius: 15px;
+    font-size: 1.3em;
+    }
 
    .addedMachinery{
          background-color:#051c26;
@@ -692,7 +702,12 @@ tr:hover {background-color: #ddd;}
                 <p>CB: <input type="range" name="" class="shipDimension" id="Cb" min="0" value="0.572" max="1" step="0.01"  oninput="shipDimension(event)"><span class="displayCb spanNew"id="displayCb" > </span> </p>
                 <!-- <p>CP: <input type="range" name="" class="shipDimension" id="CP" min="0" value="" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> -->
                 <p>CM: <input type="range" name="" class="shipDimension" id="Cm" min="0" value="0.98" step="0.01" max="1"  oninput="shipDimension(event)"><span class="displayCm spanNew"id="displayCm" > </span> </p>
-                <p>LCB at Lwl (%): <input type="range" name="" class="shipDimension" id="LCB" min="-5" value="1.53" step="0.1" max="6"  oninput="shipDimension(event)"><span class="displayLCB spanNew"id="displayLCB" > </span> </p>
+                <p>LCB at (Lwl/2) 
+                  <select name="" id="lcb_type" > 
+                    <option value="">lcb reference</option>
+                   <option value="aft" selected>Aft</option>
+                   <option value="forward">Forward</option>
+                </select> : <input type="range" name="" class="shipDimension" id="LCB" min="-5" value="1.53" step="0.1" max="6"  oninput="shipDimension(event)"><span class="displayLCB spanNew"id="displayLCB" > </span> </p>
                 </div>
                <form action="" onchange="appendageCal(event)" class="">
                <h3>Appendage</h3>
@@ -742,10 +757,6 @@ tr:hover {background-color: #ddd;}
                    <input type="checkbox" id="StrutBossingsAreaCheck" name="bulbous bow" value="">
                     <label for="Strut Bossings Area"> Strut Bossings  Area: </label>
                  <input type="range" name="" class="inputArea" id="StrutBossingsArea" min="0" value="0" step="0.1" max="50"><span class="displayStrutBossings spanNew"id="displayStrutBossings"> </span> <br> <br>
-
-                 <!-- <input type="checkbox" id="ShaftsAreaCheck" name="bulbous bow" value="">
-                    <label for="Shafts Area"> Shafts  Area: </label>
-                <input type="range" name="" class="inputArea" id="ShaftsArea" min="0" value="0" step="0.1" max="50"><span class="displayShafts"id="displayShafts"> </span> <br> -->
 
                 <input type="checkbox" id="StabilizerFinsCheck" name="bulbous bow" value="">
                     <label for="Stabilizer Fins Area"> Stabilizer Fins  Area: </label>
@@ -1219,7 +1230,7 @@ tr:hover {background-color: #ddd;}
              <strong><span>Propulsion type : </span> </strong> <span id="chose_propulsion"></span><br>
              <strong> <span>Total installed power</span> </strong><span id="Total_inst_power"></span> <br>
              <strong><span>Simulation time : </span ></strong><span id="simulate_time"></span> <br>
-             <span><input type="button" value="Start Simulation" class="start_sim" id="start_sim" disabled></span>
+             <span><input type="button" value="Start Simulation" class="start_sim" id="start_sim" onclick="preview(event)" ></span>
 
            </div>
          </div > 
@@ -1342,7 +1353,7 @@ tr:hover {background-color: #ddd;}
          <div class="SFOC" id="SFOC">
              <div id="plot" class="plot"></div>
          </div>
-         <div class="darshboard_container">
+         <div class="darshboard_container hide" id="darshboard_container">
         <div class="sim_ploting"> 
           <div class="darshboard_engines section" >
           <div class="section" id="result_darshboard_main">  
@@ -1401,19 +1412,30 @@ tr:hover {background-color: #ddd;}
             <input type="checkbox" name="" id="">
             <span class="wave" id="wave_update"><span>max Wave height (m) : </span><input type="text" name="" id="wave_height" class="sim" onchange="sim_data(event)">
           </span> <br><br>
-          <span class="span_disp"> adjust hotel load <input type="range" name="" id=""></span> <br><br>
+          <span class="span_disp"> adjust hotel load <input type="range" name="" min="1000" max="10000" step="500" id="adjust_load" onclick="sim_data(event)"></span> <br><br>
           </div>
         </div>
           <div class=" section" id="">
             <div id="result" class="result"></div>
           </div>
+          <div class="center result_button"  onclick="compare_result(event)"><input type="button" value="check other result " id="other_result"></div>
         </div>
       </div>
-      
-       
    </div>
     </div>
-
+    <div class="result_compare hide" id="result_compare" onclick="compare_result(event)">
+      <div class="center result_button">
+        <span class=""><strong> </strong></span><br><br>
+        <span><input type="button" value="emission" id="show_emission"></span>
+        <span><input type="button" value="Cost" id="show_cost"></span>
+        <span><input type="button" value="volume" id="show_volume"></span>
+        <span><input type="button" value="tonnes" id="show_FC"></span>
+        <span><input type="button" value="show darshboard" id="show_dasrhboard"></span>
+      </div>
+     <div class="result_canvas" id="result_canvas">
+       <canvas id="comparison_chart"></canvas>
+     </div>
+    </div>
     <div class="addedMachinery">
       <h2>The chose machinery will be dispplay here  </h2>
        <div class="ship_move" id="ship_move">
@@ -1429,11 +1451,11 @@ tr:hover {background-color: #ddd;}
     enginePower,engine_loadPercent, LHV,fuelType,ratedPower,ratedSfoc, rpm_min, rpm_max, torque,load,supplier,ratedSpeed,
     minLoad, minPower,T, TA, Tf, Bwl, Lwl, shipSpeed, shipSpeedKnots, rudderBehindSkeg, rudderBehindStern, bilgeKeel, dome, stabilizerFins, shafts,
     hullBossings, strutBossings, skeg, shaftBracket, TwinScrewBalaRudder, Fn, Rn, Cb, Cm, Cp, Cwp, g, shipVolume, Cf, density, hB, ABT, AT, stern,inputShipVolume,
-    Am, Awl,Rw,bulbous, sternId, lcb, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
+    Am, Awl,Rw,bulbous, sternId, lcb,LCB,lcb_type, Lpp, LOA,iE,Rw_A, Rw_B, Rb, Rtr, RA, Rf, Rbt,Rapp, Sa,domeCheck,StaFins,shaftsCheck,sBossings,sBracket,bKeel,thruster,K2,dt,Sapp,
     formFactor,intervalResis,D,Z,J,AeAo,PD,W, KQ,KT,thrust,Ca,Pe,Pt,NH,NR, nShafts, No, NB,ND,NT,Cv,Cth,Va,TFactor,n, RAA,Av,roughness,screw, Rwave,H,Rfoul,RT_calm,SM,
     Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,No_of_eng,No_of_genset,aux_load,main_inst_power,
     star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type,sellected_genset,sellected_battery,sellected_engine,propulsion_syst,
-    gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,energyChart,
+    gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,emission_comparison,
     LNG_emission
 
 
@@ -1484,8 +1506,6 @@ var layout = {
 const config = {responsive: true}
 Plotly.newPlot('resistanceGraph',resistData,layout,config);
 
- 
-
 // const  interval = setInterval(function() {
   
 //   Plotly.extendTraces('resistanceGraph', {
@@ -1532,7 +1552,6 @@ const layout = {
           range: [150,220],
         rangemode:"tozero",
         title: 'SFOC'
-
     },
    title: 'Live SFOC Vs engine load % ',
 //   plot_bgcolor: 'yellow',
@@ -1625,16 +1644,15 @@ function emission(){
         labels: ['CO2', 'SOX', 'NOx', 'NMVOC', 'PM'],
         datasets: [{
             label: 'Main engines',
-            data: [80, 19, 3, 5, 2],
+            data: [],
             backgroundColor:  'rgba(75, 192, 192, 0.2)',
             borderColor:'rgba(255, 159, 64, 1)',
             borderWidth: 1,
-            
-           
+  
         },
            {
             label: 'Hotel engines',
-            data: [150, 30, 16,4 , 2],
+            data: [],
             backgroundColor:  'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 159, 64, 1)',
             borderWidth: 2,
@@ -1677,27 +1695,42 @@ function emission(){
 });
 
 }
-function engery (){
+fuel_comparison()
+function fuel_comparison(){
   
-   const ctx = document.getElementById('emission_chart');
-   energyChart = new Chart(ctx, {
+   const ctx = document.getElementById('comparison_chart');
+   emission_comparison = new Chart(ctx, {
     type: 'bar',
     data: {
-        labels: ['CO2', 'SOX', 'NOx', 'NMVOC', 'PM', 'Orange'],
+        labels: [],
         datasets: [{
-            label: 'Main engines',
-            data: [12, 19, 3, 5, 2, 3],
+            label: 'LNG',
+            data: [],
             backgroundColor:  'rgba(75, 192, 192, 0.2)',
             borderColor:'rgba(255, 159, 64, 1)',
             borderWidth: 1
         },
            {
-            label: 'Auxiliary engines',
-            data: [22, 30, 16, , 2, 3],
-            backgroundColor:  'rgba(255, 99, 132, 0.2)',
+            label: 'MGO',
+            data: [],
+            backgroundColor:  'rgba(25, 99, 132, 56)',
+            borderColor: 'rgba(5, 19, 64, 1)',
+            borderWidth: 2
+        },
+         {
+        label: 'MDO',
+            data: [],
+            backgroundColor:  'rgba(28, 29, 132, 29)',
             borderColor: 'rgba(255, 159, 64, 1)',
             borderWidth: 2
-        }]
+        },
+        {
+        label: 'HFO',
+            data: [],
+            backgroundColor:  'rgba(255, 99, 132, 0.2)',
+            borderColor: 'rgba(90, 190, 94, 200)',
+            borderWidth: 2
+        },]
     },
     options: {
       tooltips:{
@@ -1706,26 +1739,25 @@ function engery (){
       legend:{
         position: 'bottom',
         align: 'center',
-        labels: {
-                text: "testing wathebv",
-                fontColor: 'rgb(255, 99, 132)'
-            },
       },
       title:{
         display: true,
-         text: 'emission '
+         text: 'Alternative Fuel comparison ',
+         fontColor: 'rgb(255, 9, 132)',
+          fontSize: 23
        },
         scales: {
             yAxes: [{
               scaleLabel:{
                     display: true,
-                    labelString: 'testing',
-                    fontColor: '#894'
+                    labelString: 'Tonnes',
+                    fontColor:'#3bc140',
                  },
                 ticks: {
                     beginAtZero: true,
+                    fontColor:'#3bc140',
                     callback: function(value, index, values) {
-                        return '$' + value;
+                        return '' + value;
                     }
                 }
             }]
@@ -2392,10 +2424,6 @@ function currentSfocDisplay (){
  AT = AT*1
  document.getElementById('displayAT').innerHTML= AT + " m^2"
 
- //Angle of entrance
-//  iE = document.getElementById('iE').value
-//  document.getElementById('displayiE').innerHTML= iE + " Degree"
-
  Cb = document.getElementById('Cb').value
  Cb = Cb*1
  document.getElementById('displayCb').innerHTML= Cb
@@ -2403,10 +2431,11 @@ function currentSfocDisplay (){
  Cm = document.getElementById('Cm').value
  Cm = Cm*1
  document.getElementById('displayCm').innerHTML= Cm
- //
- lcb = document.getElementById('LCB').value
- lcb = lcb*1
- document.getElementById('displayLCB').innerHTML= lcb
+ //lcb
+ LCB = document.getElementById('LCB').value
+ LCB = LCB*1
+ lcb_type = document.getElementById("lcb_type").value
+ document.getElementById('displayLCB').innerHTML= LCB
 
  Av = document.getElementById('AirArea').value
  Av = Av*1
@@ -3489,6 +3518,7 @@ if(eventcheck === false){
   document.getElementById("DP_time").required = false
  }
  
+ 
 }
 
 else if (eventcheck ===true){
@@ -3524,7 +3554,7 @@ else if (eventcheck ===true){
  }
  
 }
-i
+
 // alert(eventID)
 if(eventID==="transit_dis"){
   transit_dis_mils = eventVal
@@ -3532,6 +3562,10 @@ if(eventID==="transit_dis"){
 else if(eventID==="main_load"){
 Pb = eventVal // overide the inital calculation and assigned new break power 
 }
+else if(eventID==="adjust_load"){
+  aux_load = eventVal
+}
+
 
 display_sim_param()
 }
@@ -3539,7 +3573,7 @@ display_sim_param()
 let eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion
 
 function display_sim_param(){
-
+//getting the properties of teh sellected engines 
   if(sellected_genset||!sellected_genset){
     if(sellected_genset){
     No_of_genset = parseFloat(sellected_genset.No_of_genset) 
@@ -3713,10 +3747,18 @@ function preview(event){
   
   if(eventID ==="view_data"){
     document.getElementById("sellected_disp").classList.remove("hide")
+    document.getElementById("sim_environment").classList.add("hide")
+    display_sim_param()
+  }
+  else if (eventID ==="start_sim"){
+    document.getElementById("sellected_disp").classList.add("hide")
+    document.getElementById("darshboard_container").classList.remove("hide")
+
+    main_Simulate()
   }
   
-  main_Simulate()
-  display_sim_param()
+ 
+  
 }
 let trans_check,standby_check,harbor_check,DP_check,sim_time,end_sim,distance_past,time
 function main_Simulate(event){
@@ -4016,8 +4058,158 @@ function main_display_darshboard(){
  
 }
 
-function end_simulate(){
-  simulate = false
+function compare_result(event){
+ const eventID = event.target.id
+ if(eventID ==="other_result"){
+   document.getElementById("darshboard_container").classList.add("hide")
+   document.getElementById("result_compare").classList.remove("hide")
+
+ }
+ else if(eventID ==="show_dasrhboard"){
+  document.getElementById("darshboard_container").classList.remove("hide")
+   document.getElementById("result_compare").classList.add("hide")
+   document.getElementById("result_canvas").classList.add("hide")
+
+ }
+let lng_compare_aux,lng_compare_main,mgo_compare_aux,mgo_compare_main,mdo_compare_main,mdo_compare_aux,hfo_compare_main,hfo_compare_aux,
+update_lng_main,update_lng_aux,update_mgo_main,update_mgo_aux,update_hfo_aux, update_hfo_main,update_mdo_aux, update_mdo_main
+ if(eventID){
+  
+
+  lng_compare_main = fuel_property.LNG(FC_ton,"main")
+  mgo_compare_aux = fuel_property.MGO(FC_ton_aux,"Auxiliary")
+
+  hfo_compare_aux = fuel_property.HFO(FC_ton_aux,"Auxiliary")
+
+ 
+  mdo_compare_aux = fuel_property.MDO(FC_ton_aux,"Auxiliary")
+
+  hfo_compare_main = fuel_property.HFO(FC_ton,"main")
+  mgo_compare_main = fuel_property.MGO(FC_ton,"main")
+
+  mdo_compare_main = fuel_property.MDO(FC_ton,"main")
+  lng_compare_aux = fuel_property.LNG(FC_ton_aux,"Auxiliary")
+
+ 
+ update_lng_main = [lng_compare_main.LNG_CO2,lng_compare_main.LNG_NOx,lng_compare_main.LNG_NMVOC,lng_compare_main.LNG_Sox,lng_compare_main.LNG_PM]
+ 
+ update_lng_aux =[lng_compare_aux.LNG_CO2_Aux,lng_compare_aux.LNG_NOx_Aux,lng_compare_aux.LNG_NMVOC_Aux,lng_compare_aux.LNG_Sox_Aux,lng_compare_aux.LNG_PM_Aux]
+
+ update_mgo_main =[mgo_compare_main.MGO_CO2,mgo_compare_main.MGO_NOx,mgo_compare_main.MGO_NMVOC,mgo_compare_main.MGO_Sox,mgo_compare_main.MGO_PM]
+ update_mgo_aux =[mgo_compare_aux.MGO_CO2_Aux,mgo_compare_aux.MGO_NOx_Aux,mgo_compare_aux.MGO_NMVOC_Aux,mgo_compare_aux.MGO_Sox_Aux,mgo_compare_aux.MGO_PM_Aux]
+
+ update_mdo_main =[mdo_compare_main.MDO_CO2,mdo_compare_main.MDO_NOx,mdo_compare_main.MDO_NMVOC,mdo_compare_main.MDO_Sox,mdo_compare_main.MDO_PM]
+ update_mdo_aux =[mdo_compare_aux.MDO_CO2_Aux,mdo_compare_aux.MDO_NOx_Aux,mdo_compare_aux.MDO_NMVOC_Aux,mdo_compare_aux.MDO_Sox_Aux,mdo_compare_aux.MDO_PM_Aux]
+
+ update_hfo_main =[hfo_compare_main.HFO_CO2,hfo_compare_main.HFO_NOx,hfo_compare_main.HFO_NMVOC,hfo_compare_main.HFO_Sox,hfo_compare_main.HFO_PM]
+ update_hfo_aux =[hfo_compare_aux.HFO_CO2_Aux,hfo_compare_aux.HFO_NOx_Aux,hfo_compare_aux.HFO_NMVOC_Aux,hfo_compare_aux.HFO_Sox_Aux,hfo_compare_aux.HFO_PM_Aux]
+document.getElementById("result_canvas").classList.remove("hide")
+
+ }
+if(eventID ==="show_emission"){
+  emission_comparison.data.labels =  ['CO2','NOX','NMVOC','SOX','PM'];
+  emission_comparison.data.datasets[0].data =  update_lng_main;
+   emission_comparison.data.datasets[1].data =  update_mgo_main;
+  emission_comparison.data.datasets[2].data =  update_mdo_main;
+  emission_comparison.data.datasets[3].data =  update_hfo_main;
+  emission_comparison.update();
+}
+else if(eventID ==="show_cost"){
+   emission_comparison.data.labels =  [];
+   emission_comparison.data.datasets[0]={
+    label: 'LNG',
+    backgroundColor:'green',
+    borderColor: 'rgba(255, 159, 64, 1)',
+     data:[lng_compare_main.LNG_cost]}
+  emission_comparison.data.datasets[1]= {
+    label: 'MGO',
+    backgroundColor:'pink',
+    borderColor: 'rgba(255, 159, 64, 1)',
+    borderWidth: 2,
+    data: [mgo_compare_main.MGO_cost]}
+  emission_comparison.data.datasets[2] = {
+    label: 'MDO',
+    backgroundColor:'blue',
+    borderColor: 'rgba(255, 159, 64, 1)',
+    borderWidth: 2,
+    data: [mdo_compare_main.MDO_cost]}
+
+  emission_comparison.data.datasets[3]={
+    label: 'HFO',
+    backgroundColor:'pink',
+    borderColor: 'rgba(255, 159, 64, 1)',
+    borderWidth: 2,
+    data :[hfo_compare_main.HFO_cost]};
+   
+   emission_comparison.options.scales.yAxes.ticks= 
+
+  option_update(eventID)
+  
+  emission_comparison.update();
+}
+function option_update(type){
+  let chart_name, tooltip,tick,tons
+  if(type ==="show_cost"){
+      tooltip = 'mode';
+      tick = '$';
+      tons = '';
+   }
+    else if (type ==="show_emission"){
+      tooltip =  'index'
+      tons = 'Tonns'
+      tick = ''
+    }
+    else if (type ==="show_volume"){
+      tooltip ='mode'
+    }
+    else if (type ==="show_FC"){
+      tooltip = 'mode'
+    }
+    emission_comparison.options={
+
+    tooltips:{
+      
+        mode: tooltip
+     },
+     title:{
+       display: true,
+       display: true,
+       text: 'Alternative Fuel comparison ',
+      fontColor: 'rgb(255, 9, 132)',
+       fontSize: 23
+     },
+    legend:{
+        position: 'bottom',
+        align: 'center',
+      },
+    scales:{
+    yAxes:[{
+      scaleLabel:{
+              display: true,
+                  labelString: tons,
+                  fontColor:'#3bc140',
+                 },
+      
+      ticks:{
+        beginAtZero: true,
+      display: true,
+        fontColor:'#3bc140',
+
+       callback: function(value, index, values) {
+                 return tick + value;
+            }
+      }
+    }]
+    }
+  }
+}
+//  updatChat()
+ function updatChat(){
+
+  // emission_comparison.data.datasets[0].data =  main_update;
+  // emission_comparison.data.datasets[1].data =aux_update ;
+  emission_comparison.update();
+ }
 }
 
 
