@@ -207,7 +207,7 @@ tr:hover {background-color: #ddd;}
       vertical-align: middle;
       text-align: center;
 		}
-    .input_div .span_name{
+    .input_div .span_name,.sizing_input span, .size_result span{
 		 width: auto;
 			height:20px;
 			background:#f2f2f2;
@@ -219,7 +219,7 @@ tr:hover {background-color: #ddd;}
       vertical-align: middle;
       text-align: center;
 		}
-		.input_div input{
+		.input_div input,.sizing_input input{
 			height:34px;
       width: 100px;
       text-align: center;
@@ -260,9 +260,7 @@ tr:hover {background-color: #ddd;}
       clear: both;
       padding: 2px;
     }
-    .added_resistance{
-      
-    }
+
     .header span{
       display: block !important;
       text-align: center;
@@ -276,7 +274,7 @@ tr:hover {background-color: #ddd;}
       border: solid pink 2px;
       margin-top: 15px;
       margin-bottom: 15px;
-      
+
     }
     .spanNew{
       border: solid#ddd 2px;
@@ -447,6 +445,20 @@ tr:hover {background-color: #ddd;}
     .propulsion_type span:first-child{
       margin-left: 4%;
     }
+     .battery_sizing,.size_resul{
+      border: solid#ddd 2px;
+      width: 100%;
+      padding: 15px;
+
+     }
+    .size_result,.sizing_info,.sizing_input{
+      border: solid#ddd 2px;
+      /* margin-right:; */
+      padding: 15px;
+      margin-left: 20px;
+      margin-bottom: 10px;
+      margin-top:10px;
+    }
 
 
     .simulation{
@@ -500,6 +512,7 @@ tr:hover {background-color: #ddd;}
     margin: auto;
 
     }
+    
     .engine_perf,.close {
       padding: 12px;
       border: solid rgb(46, 117, 98) 2px;
@@ -507,6 +520,21 @@ tr:hover {background-color: #ddd;}
      border-radius: 6px;
      font-size: 20px;
      margin:15px;
+    }
+   .battery_sizing{
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 33% 33% 33%;
+    grid-auto-flow: column;
+    margin: auto;
+    
+   }
+     .size_result{
+  
+    }
+    .sizing_input{
+ 
     }
 
    .sim{
@@ -597,9 +625,7 @@ tr:hover {background-color: #ddd;}
     display: flex;
 
      }
-     #loadWattChart{
 
-     }
      .powerOn{
        border: solid rgb(7, 7, 7) 5px;
        padding: 4px;
@@ -620,12 +646,8 @@ tr:hover {background-color: #ddd;}
      grid-auto-flow: column;
     border: solid green 2px;
     }
-    /* .darshboard_sim{
-      border: solid pink 2px;
-      width : 100%;
-    } */
-    #emission{
 
+    #emission{
       position: relative;
      margin: auto;
 
@@ -769,7 +791,7 @@ tr:hover {background-color: #ddd;}
             <h2>Hull dimensions  and resistance display </h2>
          <div class="resistance_hull_container">
              <div class="resistance_parameters">
-              <form action="" oninput="shipDimension(event)" onclick="handle_inputs(event)">
+              <form action="" onchange="shipDimension(event)" onclick="handle_inputs(event)">
                 <div class="input_div align">
                   <span class="span_name">speed</span>
                    <span data-name=" kn" id="shipSpeed_minus">--</span>
@@ -809,9 +831,9 @@ tr:hover {background-color: #ddd;}
                 </div>
                 <div class="input_div align">
                  <span class="span_name">ABT</span>
-                 <span data-name=" m" id="ABT_minus">--</span>
+                 <span data-name=" m^2" id="ABT_minus">--</span>
                  <input type="text" id="ABT" min="5" value="13.4848" max="30" step="0.1">
-                 <span  data-name=" m" id="ABT_plus">+</span>
+                 <span  data-name=" m^2" id="ABT_plus">+</span>
                 </div>
                 <div class="input_div align_right">
                  <span class="span_name">hB</span>
@@ -821,14 +843,14 @@ tr:hover {background-color: #ddd;}
                 </div>
                 <div class="input_div align">
                  <span class="span_name">Transom AT</span>
-                 <span data-name=" m" id="AT_minus">--</span>
+                 <span data-name=" m^2" id="AT_minus">--</span>
                  <input type="text" id="AT" min="3" value="16" max="30" step="0.1">
-                 <span  data-name=" m" id="AT_plus">+</span>
+                 <span  data-name=" m^2" id="AT_plus">+</span>
                 </div>
                 <div class="input_div coefficient align_right">
                  <span class="span_name">CB</span>
                  <span data-name=" " id="Cb_minus">--</span>
-                 <input type="text" id="Cb" min="0" value="0.572" max="1" step="0.01">
+                 <input type="text" id="Cb" min="0" value="0.572" max="1" step="0.1">
                  <span  data-name=" " id="Cb_plus">+</span>
                 </div>
                 <div class="input_div coefficient align">
@@ -850,9 +872,9 @@ tr:hover {background-color: #ddd;}
                 </div>
               </form>
 
-              <form action="" onchange="appendageCal(event)">
+              <form action="" onchange="appendageCal(event)" onclick="handle_inputs(event)">
             <div class="">
-           
+               <div  class="header"><span><strong>Appendages </strong></span></div>
             <div class="input_div align">
               <input type="checkbox" id="BilgeKeelAreaCheck" name="" value="" class="input_check">
               <label for="Bilge Keel"> Bilge Keel  Area: </label>
@@ -954,8 +976,25 @@ tr:hover {background-color: #ddd;}
             </div>
      </div>
 
-   </form>
 
+   </form>
+   <div class="SternBulbous">
+    <div class="stern "  >
+      <strong>choose Stern Shape</strong>
+    <select class="" onchange= "sternType(event)" id="stern">
+      <option value="U&Hogner" selected>U with Hogner</option>
+     <option value="V"> V</option>
+     <option value="Normal"> Normal</option>
+     <option value="PramWithGondola">Pram With Gondola</option>
+     </select>
+  </div>
+</div>
+<div class="">
+  <form action=""onchange="appendageCal(event)">
+     <input type="checkbox" id="bulbous" name="bulbous bow" value="bulbous">
+     <label for="bulbous bow"> Bulbous bow</label><br>
+   </form>
+ </div>
 
  <div class="header"><span >Added resistance </span></div>
    <div class="added_resistance">
@@ -967,10 +1006,19 @@ tr:hover {background-color: #ddd;}
          <span>projection Area </span>
         <input type="text" name="" class="" id="AirArea" min="0" value="0" step="0.1" max="30" oninput="shipDimension(event)">
       </div>
-        <div onchange="appendageCal(event)" class="input_div align_right">
+        <div onchange="appendageCal(event)"  onclick="handle_inputs(event)"class="input_div align_right">
            <span>max wave height :</span> 
-            <input type="text" name="" class="" id="H" min="0" value="0" step="0.01" max="15" oninput="shipDimension(event)">
+           <span  data-name=" m^2" id="H_minus">--</span>
+            <input type="text" name="" class="" id="H" min="0" value="4" step="0.01" max="15" oninput="shipDimension(event)">
+            <span  data-name=" m^2" id="H_plus">+</span>
+
       </div>
+      <div onchange="appendageCal(event)"  onclick="handle_inputs(event)" class="input_div align">
+         <span>max wind speed :</span>
+        <span  data-name=" m^2" id="windSpeed_minus">--</span>
+         <input type="text" name="" class="" id="windSpeed" min="0" value="15.7" step="0.1" max="15" oninput="shipDimension(event)">
+         <span  data-name=" m^2" id="windSpeed_plus">+</span>
+   </div>
     </div>
 
     <div class="propeller" onchange="propellers(event)">
@@ -984,12 +1032,7 @@ tr:hover {background-color: #ddd;}
       Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
     </form>
    </div>
-   <div class="cavitation center">
-    <span><strong>cavitation analysis </strong></span> <br><br>
-    <span> updating....<input type="text" name="" id=""></span> <br>
-    <span>updatin....<input type="text" name="" id=""></span><br><br>
 
- </div>
    </div>
    <div>
       <div class="resistance">
@@ -1037,6 +1080,10 @@ tr:hover {background-color: #ddd;}
             <tr>
               <td>Air resistance</td>
               <td><span id="RAA">0</span></td>
+            </tr>
+            <tr>
+              <td>Wind resistance</td>
+              <td><span id="RAA_wind">0</span></td>
             </tr>
             <tr>
               <td>Fouling Resistance </td>
@@ -1146,32 +1193,36 @@ tr:hover {background-color: #ddd;}
             </tr>  -->
             </table>
           </div>
-  </div>
+          
+     </div>
 
     </div>
+    <div class="cavitation center">
+      <span><strong>cavitation analysis </strong></span> <br><br>
+      <span> updating.... <input type="text" name="" id=""></span> <br>
+      <span>updatin.... <input type="text" name="" id=""></span><br><br>
+  
+   </div>
    </div>
 </div>
 
-        <div class="hull" id="hull">
+        <!-- <div class="hull" id="hull">
 
-            <div class="hullDimension" id="hullDimension">
-                Speed : <span class="hull_input_span center"><input type="range" name="" class="shipDimension" id="shipSpeed" min="5" value="10.69" max="30" step="0.1" oninput="shipDimension(event)" ></span><span class="displayShipSpeed spanNew"id="displayShipSpeed"> </span>
+            <div class="hullDimension" id="hullDimension"> -->
+                <!-- Speed : <span class="hull_input_span center"><input type="range" name="" class="shipDimension" id="shipSpeed" min="5" value="10.69" max="30" step="0.1" oninput="shipDimension(event)" ></span><span class="displayShipSpeed spanNew"id="displayShipSpeed"> </span>
                <p>Waterline length Lwl: <input type="range" name="Lwl" class="shipDimension" id="Lwl" min="10" value="205" max="600" oninput="shipDimension(event)"><span class="displayLwl spanNew"id="displayLwl"> </span>
-               <!-- <p>length btw perpendicular: Lpp: <input type="range" name="" class="shipDimension" id="" min="" value="" max=""><span class="inputValue"id="displayRPM"> </span></p> -->
-               <!-- <p> Overall length: LoA: <input type="range" name="" class="shipDimension" id="" min="10" value="205" max=""> <span class="inputValue"id="displayRPM"> </span></p> -->
                 <p> Breath: Bwl: <input type="range" name="" class="shipDimension" id="Bwl" min="5" value="32" max="50"oninput="shipDimension(event)" > <span class="displayBwl spanNew" id="displayBwl"> </span></p>
                 <p>Draught T: <input type="range" name="" class="shipDimension" id="T" min="5" value="10" max="30"  oninput="shipDimension(event)"> <span class="displayT spanNew"id="displayT"> </span></p>
                <p> aft Draught TA <input type="range" name="" class="shipDimension" id="TA" min="5" value="10" max="20"  oninput="shipDimension(event)"> <span class="displayTA spanNew"id="displayTA"> </span> </p>
-               <p>fmost Draught Tf: <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf spanNew"id="displayTf" > </span> </p> <br>
+               <p>fmost Draught Tf: <input type="range" name="" class="shipDimension" id="Tf" min="5" value="10" max="20"  oninput="shipDimension(event)"><span class="displayTf spanNew"id="displayTf" > </span> </p> <br> -->
 
 
-               <div>
+               <!-- <div>
                 ABT <input type="range" name="" class="shipDimension" id="ABT" min=10 value="13.4848" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayABT spanNew"id="displayABT"  > </span >
                <p>hB <input type="range" name="" class="shipDimension hull_input" id="hB" min="0" value="4" step="0.1" max="20"  oninput="shipDimension(event)"><span class="displayhB  spanNew"id="displayhB"> </span> </p>
                <p>Transom AT <input type="range" name="" class="shipDimension" id="AT" min="3" value="16" step="0.1" max="30"  oninput="shipDimension(event)"><span class="displayAT spanNew"id="displayAT"> </span> </p>
                <div class="coefficient">
                 <p>CB: <input type="range" name="" class="shipDimension" id="Cb" min="0" value="0.572" max="1" step="0.01"  oninput="shipDimension(event)"><span class="displayCb spanNew"id="displayCb" > </span> </p>
-                <!-- <p>CP: <input type="range" name="" class="shipDimension" id="CP" min="0" value="" max="20"  oninput="shipDimension(event)"><span class="displayTf"id="displayTf" > </span> </p> -->
                 <p>CM: <input type="range" name="" class="shipDimension" id="Cm" min="0" value="0.98" step="0.01" max="1"  oninput="shipDimension(event)"><span class="displayCm spanNew"id="displayCm" > </span> </p>
                 <p>LCB at (Lwl/2)
                   <select name="" id="lcb_type" >
@@ -1179,8 +1230,8 @@ tr:hover {background-color: #ddd;}
                    <option value="aft" selected>Aft</option>
                    <option value="forward">Forward</option>
                 </select> : <input type="range" name="" class="shipDimension" id="LCB" min="-5" value="1.53" step="0.1" max="6"  oninput="shipDimension(event)"><span class="displayLCB spanNew"id="displayLCB" > </span> </p>
-                </div>
-               <form action="" onchange="appendageCal(event)" class="">
+                </div> -->
+               <!-- <form action="" onchange="appendageCal(event)" class="">
                <h3>Appendage</h3>
                  <div class="appendage">
                  <div class="area">
@@ -1210,9 +1261,9 @@ tr:hover {background-color: #ddd;}
                       <input type="range" name="" class="shipDimension" id="Shafts" min="2" value="2" step="0.1" max="4"><span class="displayShafts spanNew"id="displayShafts"> </span> </p>
                     Area <input type="range" name="" class="inputArea" id="ShaftsArea" min="0" value="0" step="0.1" max="60"><span class="displayShafts spanNew"id="displayShaftsArea"> </span>
                  </div>
-            </form>
+            </form> -->
 
-                <form action="" onchange="appendageCal(event)" class="area11">
+                <!-- <form action="" onchange="appendageCal(event)" class="area11">
                     <input type="checkbox" id="BilgeKeelAreaCheck" name="Bilge Keel" value="">
                     <label for="Bilge Keel"> Bilge Keel  Area: </label>
                     <input type="range" name="" class="inputArea" id="BilgeKeelArea" min="0" value="0" step="0.1" max="50"><span class="displayBilgeKeel spanNew"id="displayBilgeKeel"> </span> <br><br>
@@ -1241,15 +1292,14 @@ tr:hover {background-color: #ddd;}
                 <label for="Thruster"> Thruster </label>
                 diameter : <input type="range" name="" class="inputArea" id="thrusterDiameter" min="0" value="0" step="0.1" max="15"><span class="displaythrusterDiameter spanNew"id="displaythrusterDiameter"> </span> <br> <br>
                 numbers of thruster : <input type="range" name="" class="inputArea" id="thrusterNO" min="1" value="2" step="" max="10"><span class="displayHullBossings spanNew"id="displaythrusterNO"> </span> <br>
-                  </form>
-                </div>
+                  </form> -->
+                <!-- </div>
                 <div class="SternBulbous">
                   <div class="stern "  >
                     <strong>choose Stern Shape</strong>
                   <select class="" onchange= "sternType(event)" id="stern">
                     <option value="U&Hogner" selected>U with Hogner</option>
 
-                   <!-- <option value="" ><strong>Choose engine</strong> </option> -->
                    <option value="V"> V</option>
                    <option value="Normal"> Normal</option>
                    <option value="PramWithGondola">Pram With Gondola</option>
@@ -1289,8 +1339,8 @@ tr:hover {background-color: #ddd;}
               </div>
 
             </div>
-        </div>
-        <div class="resistance">
+           </div> -->
+        <!-- <div class="resistance">
           <div id="resistanceGraph"> </div>
           <div  id="resistanceTable" class="">
             <table id="resisTable" class="Table">
@@ -1342,12 +1392,12 @@ tr:hover {background-color: #ddd;}
               </tr>
               <tr>
                 <td>Wave resistance  </td>
-                <td><span id="Rwave">0</span></td>
+                <td><span id="Rwave">0</span></td> -->
               <!-- </tr>
               <td>Wave m </td>
               <td><span id="Rwave">0</span></td>
             </tr> -->
-              <tr>
+              <!-- <tr>
                 <td>Total Calm water resistance</td>
                 <td><span id="RT_calm">0</span></td>
               </tr>
@@ -1426,10 +1476,7 @@ tr:hover {background-color: #ddd;}
                   <td>propeller speed n  rpm </td>
                   <td><span id="propeller_speed">0</span></td>
                 </tr>
-                <!-- <tr>
-                  <td>Thrust loading Cth</td>
-                  <td><span id="Cth">0</span></td>
-                </tr> -->
+  
                 <tr>
                   <td>Thrust T</td>
                   <td><span id="thrust">0</span></td>
@@ -1452,15 +1499,12 @@ tr:hover {background-color: #ddd;}
                   <td>Break  Power </td>
                   <td><span id="pb">0</span></td>
                 </tr>
-                <!-- <tr>
-                <td>SMCR  Power </td>
-                <td><span id="smcr">0</span></td>
-              </tr>  -->
+       
               </table>
             </div>
     </div>
       </div>
-    </div>
+    </div> -->
     <div  class="EEDI_main hide">
       <h2>EED1 Emission index calculation </h2>
       <p class="center"> <strong >To calculate the emission index of the vessel/ship according to EEDI, the Main and Auxiliary engine parameter are needed. Choose which to start with: </strong>
@@ -1592,8 +1636,8 @@ tr:hover {background-color: #ddd;}
             <!-- <option value="kongsberg">Kongsberg</option> -->
             <option value="Orca_Energy">corvus Orca Engergy </option>
             <option value="Blue_Whale">Corvus Blue Whale</option>
-            <!-- <option value=""></option>
-            <option value=""></option> -->
+             <option value="battery_sizing">new battery dimensioning</option>
+            <!-- <option value=""></option>  -->
             </select>
           </div>
 
@@ -1615,6 +1659,32 @@ tr:hover {background-color: #ddd;}
              <span><input type="radio" name="use_result" id="define_result"><strong>Define new propulsion power</strong></span> <br>
            </div>
         </div>
+       </div>
+       <div class="battery_sizing hide" id="battery_sizing"  >
+        <div class="sizing_info">
+              <H3>Tips for sizing </H3>
+              <ul>
+                <li>DNV-GL requires two seperate battery pack for <br> battery only system</li>
+                <li>3 C rate or less is a typical reconmended for <br> a better life span  </li>
+
+              </ul>
+        </div>
+         <div class="sizing_input" onchange="battery_sizing(event)" >
+            <span>max power kW : </span>  <input type="text" name="" id="max_power" required><br><br>
+            <span> max_time munites </span>  <input type="text" id="max_time" required><br><br>
+            <span>DOD </span> <input type="text" id="size_DOD" required><br><br>
+            <span>C rate </span>  <input type="text" id="size_c_rate" required> <br><br>
+            <span>C rate peak </span> <input type="text" id="size_c_rate_peak"><br><br>
+            <span>Life span </span> <input type="text" id="life_span"><br><br>
+         </div>
+         <div class="size_result">
+            <span>battery min capacity : </span> <span id="size_capacity" class="" ></span><br><br>
+            <span>C rate  : </span> <span id="size_result_crate"></span><br> <br>
+            <span>C rate peak : </span> <span id="size_result_crate_peak"></span><br> <br>
+            <span>SOC : </span> <span id="size_result_SOC"></span><br><br>
+            <span>cont discharge/charge power  : </span> <span id="cont_dischargeCharge"></span><br> <br>
+            <span>peak discharge/charge power : </span> <span id="cont_dischargeCharge_peak"></span><br><br>
+         </div>
        </div>
         <div class="sim_environment hide" id="sim_environment">
               <h3 class="center">Simulation inputs and parameters configuration</h3>
@@ -1875,7 +1945,7 @@ tr:hover {background-color: #ddd;}
           <div class="update section" >
             <div class="darsh_top center" id="update_top"> <span>Update parameter</span></div>
             <div class="center">
-           <span> Adjust speed <input type="range" name="" id=""></span> <br><br>
+           <span> Adjust speed <input type="range" name="" id="shipSpeed" onchange="shipDimension(event)"></span> <br><br>
            <span>wave
             <input type="checkbox" name="" id="">
             <span class="wave" id="wave_update"><span>max Wave height (m) : </span><input type="text" name="" id="wave_height" class="sim" onchange="sim_data(event)">
@@ -1924,7 +1994,7 @@ tr:hover {background-color: #ddd;}
     Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,No_of_eng,No_of_genset,aux_load,main_inst_power,
     star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type,sellected_genset,sellected_battery,sellected_engine,propulsion_syst,
     gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,emission_comparison,
-    LNG_emission
+    LNG_emission,wind_speed,RAA_wind
 
 
  // Major constant
@@ -2667,58 +2737,63 @@ function currentSfocDisplay (){
          thrustersCheck = document.getElementById("thrustercheck").checked
 
          RBSArea= document.getElementById('ArearudderBehindSkeg').value
+         RBSArea = parseFloat(RBSArea)
          RBSternArea= document.getElementById('rudderBehindSternArea').value
+         RBSternArea = parseFloat(RBSternArea)
          SkegArea= document.getElementById('SkegArea').value
+         SkegArea = parseFloat(SkegArea)
          domeCheckVal = document.getElementById('DomeArea').value
+         domeCheckVal = parseFloat(domeCheckVal)
          StaFinsVal = document.getElementById('StabilizerFins').value
+         StaFinsVal = parseFloat(StaFinsVal)
           shaftsCheckVal = document.getElementById('ShaftsArea').value
+          shaftsCheckVal = parseFloat(shaftsCheckVal)
          bKeelVal = document.getElementById('BilgeKeelArea').value
+         bKeelVal = parseFloat(bKeelVal)
          sBracketVal = document.getElementById('ShaftBracketArea').value
+         sBracketVal = parseFloat(sBracketVal)
          hullBossingsVal = document.getElementById('hullBossings').value
+         hullBossingsVal = parseFloat(hullBossingsVal)
          sBossingsVal = document.getElementById('StrutBossingsArea').value
+         sBossingsVal = parseFloat(sBossingsVal)
+      //  document.getElementById('displayStabilizerFins').innerHTML= StaFinsVal + " m^2"
 
-      //  StaFinsVal = document.getElementById('StabilizerFins').value
-       document.getElementById('displayStabilizerFins').innerHTML= StaFinsVal + " m^2"
+      //  document.getElementById('displayBilgeKeel').innerHTML= bKeelVal + " m^2"
 
-      //  bKeelVal = document.getElementById('BilgeKeelArea').value
-       document.getElementById('displayBilgeKeel').innerHTML= bKeelVal + " m^2"
+      //  document.getElementById('displayDome').innerHTML= domeCheckVal + " m^2"
 
-      //  domeCheckVal = document.getElementById('DomeArea').value
-       document.getElementById('displayDome').innerHTML= domeCheckVal + " m^2"
+      //  document.getElementById('displayShaftBracket').innerHTML= sBracketVal + " m^2"
 
-      //  sBracketVal = document.getElementById('ShaftBracketArea').value
-       document.getElementById('displayShaftBracket').innerHTML= sBracketVal + " m^2"
+      //  document.getElementById('displayStrutBossings').innerHTML= sBossingsVal + " m^2"
 
-      //  sBossingsVal = document.getElementById('StrutBossingsArea').value
-       document.getElementById('displayStrutBossings').innerHTML= sBossingsVal + " m^2"
-
-         document.getElementById('displayHullBossings').innerHTML= hullBossingsVal + ""
+      //    document.getElementById('displayHullBossings').innerHTML= hullBossingsVal + ""
 
          thrusterD = document.getElementById('thrusterDiameter').value
+         thrusterD = parseFloat(thrusterD)
         thrustersNO = document.getElementById('thrusterNO').value
-   document.getElementById('displaythrusterDiameter').innerHTML= thrusterD + " m"
-  document.getElementById('displaythrusterNO').innerHTML= thrustersNO
+  //  document.getElementById('displaythrusterDiameter').innerHTML= thrusterD + " m"
+  // document.getElementById('displaythrusterNO').innerHTML= thrustersNO
 
 
      RBS= document.getElementById('rudderBehindSkeg').value
-  document.getElementById('displayRudderBehindSkeg').innerHTML=RBS +" "
-//  RBSArea= document.getElementById('ArearudderBehindSkeg').value
-  document.getElementById('RudderBehindSkegArea').innerHTML= RBSArea + " m^2"
+     RBS = parseFloat(RBS)
+  // document.getElementById('displayRudderBehindSkeg').innerHTML=RBS +" "
+  // document.getElementById('RudderBehindSkegArea').innerHTML= RBSArea + " m^2"
 
   RBStern= document.getElementById('rudderBehindStern').value
-  document.getElementById('displayRudderBehindStern').innerHTML= RBStern +" "
-//  RBSternArea= document.getElementById('rudderBehindStern').value
- document.getElementById('AreaRudderBehindStern').innerHTML= RBSternArea
+  RBStern = parseFloat(RBStern)
+//   document.getElementById('displayRudderBehindStern').innerHTML= RBStern +" "
+//  document.getElementById('AreaRudderBehindStern').innerHTML= RBSternArea
 
   Skeg= document.getElementById('Skeg').value
-  document.getElementById('displaySkeg').innerHTML= Skeg +" "
-//  SkegArea= document.getElementById('SkegArea').value
-  document.getElementById('displaySkegArea').innerHTML= SkegArea
+  Skeg = parseFloat(Skeg)
+  // document.getElementById('displaySkeg').innerHTML= Skeg +" "
+  // document.getElementById('displaySkegArea').innerHTML= SkegArea
 
-//  shaftsCheckVal = document.getElementById('ShaftsArea').value
-  document.getElementById('displayShaftsArea').innerHTML= shaftsCheckVal
+  // document.getElementById('displayShaftsArea').innerHTML= shaftsCheckVal
   shafts = document.getElementById('Shafts').value
-  document.getElementById('displayShafts').innerHTML= shafts
+  shafts = parseFloat(shafts)
+  // document.getElementById('displayShafts').innerHTML= shafts
 
         //  let s1, s2, s3, s4, s5, s6, s7, s8, s9, s10,Sapp
         //  s1 to to s10 represent the weted area of the individual appenadge
@@ -2726,6 +2801,7 @@ function currentSfocDisplay (){
 
         if(RBSkegCheck=== true && RBSArea > 0){
          RBS= document.getElementById('rudderBehindSkeg').value
+         RBS = parseFloat(RBS)
          k2_1 = (RBSArea * RBS)/RBSArea
          s1 = RBSArea *1
          i = 1
@@ -2735,6 +2811,7 @@ function currentSfocDisplay (){
         }
         if(RBSCheck=== true && RBSternArea > 0){
             RBStern= document.getElementById('rudderBehindStern').value
+            RBStern = parseFloat(RBStern)
             k2_2 = (RBSternArea * RBStern)/RBSternArea
             s2 = RBSternArea*1
             i = 1
@@ -2745,6 +2822,7 @@ function currentSfocDisplay (){
 
         if(SkegCheck===true && SkegArea > 0){
           Skeg= document.getElementById('Skeg').value
+           Skeg = parseFloat(Skeg)
             k2_3 = (SkegArea * Skeg)/SkegArea
             s3 = SkegArea*1
             i = 1
@@ -2771,6 +2849,7 @@ function currentSfocDisplay (){
         }
         if(shaftsCheck === true && shaftsCheckVal > 0 ){
             shafts = document.getElementById('Shafts').value
+            shafts = parseFloat(shafts)
             k2_6 = (shafts * shaftsCheckVal)/shaftsCheckVal
             s6 = shaftsCheckVal*1
             i = 1
@@ -2859,22 +2938,22 @@ function currentSfocDisplay (){
    let newVal,curentID,oldVal,step,unit,eventVal,eventID,incri_ID
     eventID = event.target.id
     eventVal = event.target.value
-
+     alert(eventID)
+     alert(eventVal)
    unit = event.target.getAttribute("data-name")
     curentID =  eventID
    curentID = curentID.split("_")//split of the plus or minus id to get the coresponding input ID
-   incri_ID =  curentID
+   incri_ID =  curentID   //incremental sign adding or substracting
    if(curentID.length >1){
        curentID  =  curentID[0] // this will match every input id that corespond to either minus or plus
       incri_ID = incri_ID[1] // checking the ID to determine if to increase or decrese value
-
+      
       step = document.getElementById(curentID).step
-
       oldVal = document.getElementById(curentID).value
       oldVal = parseFloat(oldVal)
       step = parseFloat(step)
-      alert(step)
       alert(oldVal)
+      alert(step)
       if(incri_ID ==="plus"){
          newVal = oldVal + step
 
@@ -2883,75 +2962,75 @@ function currentSfocDisplay (){
          newVal = oldVal - step
 
         }
-        alert("testinfg")
+        newVal = newVal.toFixed(2)
         document.getElementById(curentID).value = newVal + unit
    }else{
      return "value input"
    }
 
-
+   shipDimension(event)
  }
 
  function shipDimension(event){
 
  shipSpeedKnots = document.getElementById('shipSpeed').value
- document.getElementById('displayShipSpeed').innerHTML= shipSpeedKnots + " knots"
+ shipSpeedKnots = parseFloat(shipSpeedKnots)
+//  document.getElementById('displayShipSpeed').innerHTML= shipSpeedKnots + " knots"
  shipSpeed = shipSpeedKnots* 0.5144
  Lwl = document.getElementById('Lwl').value
- Lwl = Lwl*1
- document.getElementById('displayLwl').innerHTML= Lwl + " m"
+ Lwl = parseFloat(Lwl)
+//  document.getElementById('displayLwl').innerHTML= Lwl + " m"
 
  Bwl = document.getElementById('Bwl').value
- document.getElementById('displayBwl').innerHTML= Bwl + " m"
- Bwl = Bwl*1
+//  document.getElementById('displayBwl').innerHTML= Bwl + " m"
+ Bwl =  parseFloat(Bwl)
  T = document.getElementById('T').value
- T = T*1
- document.getElementById('displayT').innerHTML= T + " m"
+ T = parseFloat(T)
+//  document.getElementById('displayT').innerHTML= T + " m"
 
 
  TA = document.getElementById('TA').value
- TA = TA*1
- document.getElementById('displayTA').innerHTML= TA + " m"
+ TA = parseFloat(TA)
+//  document.getElementById('displayTA').innerHTML= TA + " m"
 
  Tf = document.getElementById('Tf').value
- Tf = Tf*1
- document.getElementById('displayTf').innerHTML= Tf + " m"
+ Tf = parseFloat(Tf)
+//  document.getElementById('displayTf').innerHTML= Tf + " m"
 
  ABT = document.getElementById('ABT').value
- ABT = ABT*1
- document.getElementById('displayABT').innerHTML= ABT + " m^2"
+ ABT = parseFloat(ABT)
+//  document.getElementById('displayABT').innerHTML= ABT + " m^2"
 
+wind_speed = document.getElementById('windSpeed').value
+wind_speed  = parseFloat(wind_speed)
  hB = document.getElementById('hB').value
- hB= hB*1
- document.getElementById('displayhB').innerHTML= hB + " m"
-//Immersed part area of the Transverse transom
+ hB= parseFloat(hB)
+//  document.getElementById('displayhB').innerHTML= hB + " m"
  AT = document.getElementById('AT').value
- AT = AT*1
- document.getElementById('displayAT').innerHTML= AT + " m^2"
+ AT = parseFloat(AT)
+//  document.getElementById('displayAT').innerHTML= AT + " m^2"
 
  Cb = document.getElementById('Cb').value
- Cb = Cb*1
- document.getElementById('displayCb').innerHTML= Cb
+ Cb = parseFloat(Cb)
+//  document.getElementById('displayCb').innerHTML= Cb
 
  Cm = document.getElementById('Cm').value
- Cm = Cm*1
- document.getElementById('displayCm').innerHTML= Cm
+ Cm =  parseFloat(Cm)
+//  document.getElementById('displayCm').innerHTML= Cm
  //lcb
  LCB = document.getElementById('LCB').value
- LCB = LCB*1
+ LCB = parseFloat(LCB) 
  lcb_type = document.getElementById("lcb_type").value
- document.getElementById('displayLCB').innerHTML= LCB
+//  document.getElementById('displayLCB').innerHTML= LCB
 
  Av = document.getElementById('AirArea').value
- Av = Av*1
+ 
+ Av =  parseFloat(Av) 
 
- document.getElementById('displayAirArea').innerHTML= Av + " m^2"
+//  document.getElementById('displayAirArea').innerHTML= Av + " m^2"
 
  H = document.getElementById('H').value
- document.getElementById('displayH').innerHTML= H + " "
-
-
-
+//  document.getElementById('displayH').innerHTML= H + " "
 
  updateResistance()
 }
@@ -2984,6 +3063,8 @@ function displayResistance(){
   document.getElementById('Rtr').innerHTML=  Rtr+ " "
   document.getElementById('RA').innerHTML=  RA+ " "
   document.getElementById('RAA').innerHTML=  RAA+ " "
+  document.getElementById('RAA_wind').innerHTML=  RAA_wind + " "
+
   document.getElementById('Rb').innerHTML=  Rb + " "
   document.getElementById('Rwave').innerHTML=  Rwave + " "
   document.getElementById('Rfouling').innerHTML=  Rfoul + " "
@@ -3024,9 +3105,6 @@ function propellers(event){
   }else{
     Ns = 0.98
   }
-  // if(!nShafts){
-  //   nShafts= document.getElementById('singleSaft').value
-  // }
 
   document.getElementById('displayD').innerHTML=  D + " "
   document.getElementById('displayZ').innerHTML=  Z+ " "
@@ -3042,7 +3120,7 @@ function propellers(event){
 
   // propeller.efficiencies()
   propeller.power()
-  Engine_Marine.Margin()
+  // Engine_Marine.Margin()
 
   if(!KT){
     KT = 0
@@ -3246,6 +3324,79 @@ function showEngineDashbaord (){
   document.getElementById("SFOC").classList.add("SFOC");
 
 }
+let size_capacity,size_Crate,size_Crate_peak,life_span,size_DOD, max_time,max_power,chargeDischarge,cal_rate,result_info,size_SOC,chargeDischarge_peak
+function battery_sizing(event){
+const eventID = event.target.id
+const eventVal = event.target.value
+const size_margin = 0.1
+size_SOC = "updating .... "
+if(eventID ==="max_time"){
+  max_time = eventVal 
+  max_time = parseFloat(max_time)
+}
+else if(eventID==="max_power"){
+ max_power = eventVal
+ max_power = parseFloat(max_power)
+}
+else if(eventID==="size_DOD"){
+  size_DOD = eventVal
+  size_DOD = parseFloat(size_DOD)
+}
+else if(eventID==="size_c_rate"){
+  size_Crate = eventVal
+  size_Crate = parseFloat(size_Crate)
+}
+else if(eventID==="size_c_rate_peak"){
+  size_Crate_peak = eventVal
+  size_Crate_peak = parseFloat(size_Crate_peak)
+  alert(size_Crate_peak)
+}
+else if(eventID==="life_span"){
+  life_span = eventVal
+}
+
+if(max_power){
+
+ size_capacity = (max_power*(max_time/60)).toFixed(1)
+ cal_rate = (max_power/size_capacity).toFixed(1)
+
+ if(size_Crate){
+   size_capacity = ((cal_rate/size_Crate)*size_capacity).toFixed(1)
+   size_capacity =  (size_capacity*size_margin)+  size_capacity*1
+   chargeDischarge = (size_capacity*size_Crate).toFixed(1) 
+   size_SOC = size_capacity
+   if(size_Crate_peak){
+     
+   chargeDischarge_peak = (size_capacity*size_Crate_peak).toFixed(1)
+   alert(chargeDischarge_peak)
+  }
+
+   if(size_DOD){
+    size_capacity = size_capacity*1 + (size_capacity*(1-(size_DOD/100)))
+    size_capacity = size_capacity.toFixed(1) 
+   }
+
+ }
+
+if(!max_time){
+  size_capacity = 0
+}
+
+document.getElementById("size_capacity").innerHTML  = size_capacity + " kWh "
+document.getElementById("size_result_crate").innerHTML = size_Crate + " C"
+document.getElementById("size_result_SOC").innerHTML = size_SOC + " kWh"
+document.getElementById("cont_dischargeCharge").innerHTML  =  chargeDischarge + "kW"
+document.getElementById("cont_dischargeCharge_peak").innerHTML  = chargeDischarge_peak + " kW"
+
+}
+
+
+
+// document.getElementById("size_capacity").innerHTML 
+// document.getElementById("size_capacity").innerHTML 
+// document.getElementById("size_capacity").innerHTML 
+
+}
 
   // using to assign either for engine or genset
   let engineDetail
@@ -3258,6 +3409,7 @@ function displayEngineType(event) {
   document.getElementById("custo_genset").classList.add("hide");
   document.getElementById("custom_engine").classList.remove("hide");
   document.getElementById("select_message").classList.add("hide");
+  document.getElementById("battery_sizing").classList.add("hide");
 
   const table = document.getElementById("Table");
   let i = 0
@@ -3429,6 +3581,7 @@ function displayGenSetType(event) {
    document.getElementById("select_message").classList.remove("hide");
   document.getElementById("select_message_butt").value = "Generator set has been successfully added to the mechinery"
   // document.getElementById("gensetTable").classList.add("hide");
+  document.getElementById("battery_sizing").classList.add("hide");
 
   throw "testing the"
  }
@@ -3567,6 +3720,7 @@ function displayBatteryType(event) {
   document.getElementById("mainDashboard").classList.add("hide");
   document.getElementById("gensetTable").classList.add("hide");
   document.getElementById("select_message").classList.add("hide");
+  document.getElementById("battery_sizing").classList.add("hide");
 
   const table = document.getElementById("bat_Table");
   let i = 0
@@ -3574,8 +3728,10 @@ function displayBatteryType(event) {
 
   const EventVa = event.target.value
   const EventID = event.target.id
-
- if(EventID==="choose_sys"){
+ if(EventIVal ="battery_sizing"){
+  document.getElementById("battery_sizing").classList.remove("hide");
+ }
+ else if(EventID==="choose_sys"){
   if(!propulsion_syst){
     alert("choose propulsion system first")
     throw "propulsion system unknow"
@@ -3615,6 +3771,7 @@ else if(EventID ==="custo_confirm"){
   batteryDetail = created_battery
 }
 }
+
  capacity = parseFloat(batteryDetail.capacity)
  c_rate = parseFloat(batteryDetail.c_Rate)
   c_rate_peak = parseFloat(batteryDetail.c_Rate_peak)
@@ -3622,8 +3779,8 @@ else if(EventID ==="custo_confirm"){
   if(!c_rate_peak){
     c_rate_peak = c_rate;
   }
-  batteryDetail.cont_charging_power = (capacity/(c_rate*60/60)).toFixed(1)
-    batteryDetail.peak_charging_power = (capacity/(c_rate_peak*60/60)).toFixed(1)
+  batteryDetail.cont_charging_power = (capacity*c_rate).toFixed(1)
+    batteryDetail.peak_charging_power = (capacity*c_rate_peak).toFixed(1)
     batteryDetail.SOC = capacity*0.2
   // loop over the object of the battery details and display them on the table
   for (let [key, value] of Object.entries(batteryDetail)) {
@@ -4270,7 +4427,7 @@ function main_Simulate(event){
 
 
 
-  let type, aux_load_perc,max_load_perc
+  let type, aux_load_perc,max_load_perc, remain_distance,current_time,new_distance_m 
    trans_check = document.getElementById("transit").checked
    standby_check = document.getElementById("standby").checked
    DP_check = document.getElementById("DP").checked
@@ -4287,6 +4444,7 @@ function main_Simulate(event){
  if (trans_check === true){
     transit_dis = transit_dis_mils*1852 // meters
     transit_time = (transit_dis/shipSpeed)/3600 //time for transit in seconds
+    remain_distance = transit_time 
     end_sim = sim_time*60*1000 // convert the input time to milli seconds
     time_step = (transit_time*3600*1000/(end_sim /500)) //time step for every 0.5 seconds
   const sim_interv = setInterval(sim, 500);
@@ -4297,14 +4455,25 @@ function main_Simulate(event){
   distance_past = 0
   LiveResult()// live ploting
   sim_time = 0 // used to stored time past which correspond to the distance moved
+  let new_distance_mils,distance
+  distance = 0
   function sim() {
+    
+     current_time = remain_distance/shipSpeed // recalculating the remaining voyage time 
+     step = current_time/(end_sim-time)  //calculation updated time step 
+     time_step = step/3600*1000  //converting milliseconds to hours 
+   
     load = Pb // break power
     type = "main" // the type is only important when it is auxilary calculation
-
     time +=500
     sim_time +=time_step
-    distance_past  = (shipSpeed*(sim_time*3600))/1852
-
+    // distance_past  = (shipSpeed*(sim_time*3600))/1852
+    new_distance_mils = (shipSpeed*(time_step*3600))/1852 // updated distance in mils 
+    new_distance_m = (shipSpeed*(time_step*3600)) // updated distance in meters
+    distance += new_distance_mils
+    distance_past = distance
+    remain_distance = transit_dis- (distance_past*1852)
+    console.log("dist past", distance_past)
     EngineCal.SFOC(load,main_enginePower,ratedSfoc,supplier,type)
     FC = Pb*(sfoc_cal/1000)*time_step
     FC_ton += FC/1000
@@ -4314,7 +4483,7 @@ function main_Simulate(event){
      type = "auxilary"
      aux_load // hotel laod and other
      aux_enginePower
-
+     
      gen_supplier
      EngineCal.SFOC(aux_load,aux_enginePower,aux_ratedsfoc,gen_supplier,type)
      FC_aux = aux_load*(sfoc_cal_aux/1000)*time_step
