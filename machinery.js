@@ -546,7 +546,7 @@ function propellerProperties (){
         No = No.toFixed(3)
         KT = KT.toFixed(3)
         KQ = KQ.toFixed(3)
-        propel_speed = (1-W)*shipSpeed/D*J
+        propel_speed = (1-W)*shipSpeed/(D*J)
         propel_speed = (propel_speed.toFixed(2))*1
         
     }
@@ -564,17 +564,21 @@ function propellerProperties (){
         
       }else{
         Pe = RT_calm*shipSpeed // effective power
+        Pe = Pe.toFixed(2)*1
         Pt  = RT_calm*shipSpeed*((1-W)/(1-TFactor))
+        Pt = Pt.toFixed(2)*1
         Pd = Pt/NB   //deliver power to the propeller 
+        Pd =Pd.toFixed(2)
         ND = Pe/Pd
         Ps = Pd/NT
+        Ps = Ps.toFixed(2)*1
         Pb = ((Pd/Ns).toFixed(2))*1
         Pb_calm =Pb
         engine_torgue = Pb/(2*Math.PI*propel_speed)
         propel_torque = Pd/(2*Math.PI*propel_speed)
       }
-       speedRPM = propel_speed *60//for low speed engine 
-       
+       speedRPM = (propel_speed *60).toFixed(1)*1//for low speed engine  
+       torque =   engine_torgue.toFixed(1) 
    }
     
 }
@@ -600,7 +604,6 @@ function propellerProperties (){
 //     }
 
 //  }
-
  function PMS(){
     this.ME_sys = function(){
         this.install_pro_power = eng_power // installed power for propulsion 
@@ -622,40 +625,89 @@ function propellerProperties (){
       this.battery_sizing = function(max_time){
         this.max_operation_tme  = max_time // maximum operation time or voyage time
       };
-      
-     this.charge_battery = function (c_rate,capacity,SOC,charge_power){
-        this.charging = true;
+     this.charge_battery = function (c_rate,capacity,DOD){
+         //note: this charging is assuming to start from 100% DOD each time the charging start
+        this.time_past = 0  // total time that the pack has been charging in milli seconds 
+        this.time_past_min = 0  // total time that the pack has been charging in minutes 
+        const pack_DOD =DOD
+        let time = 0
+        bat_SOC = 0  // 
+        this.capacity = parseFloat(capacity);
+        this.charge_capacity = 0 // this holds the stored energy at this point
         this.c_rate = parseFloat(c_rate);
-        this.charge_time = this.c_rate*60/60; // 
-        this.b_capacity = parseFloat(capacity);
-        this.charge_power = charge_power;
-        this.SOC =SOC
-        do {
-           this.charged_SOC = this.charging_power* this.charge_time*parseFloat(DOD);
-            this.SOC += this.charged_SOC
-        } while (this.SOC < this.capacity);
+        this.charging_power = this.capacity*this.c_rate
+        this.charge_time = (60/this.c_rate) *60*1000// in seconds (real charging time )
+
+        // scale every thing down to complete every given charging in 2 minutes 
+        this.scaled_charging_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes
+        const scaled_time =  this.scaled_charging_time;
+        this.scaled_charge_power = ((this.capacity)-((1-(pack_DOD/100))*this.capacity))*30*2// the scaled charging power
+        this.charging_step = (this.scaled_charge_power)/(this.scaled_charging_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second   
+        let charging_step = this.charging_step;
+
+        const start_charging = setInterval(charging,500)
+        function charging(){
+            this.charge_capacity += charging_step;
+            time += 500;
+             bat_SOC = (charging_step*time/60) //in kwh
+             if(bat_SOC < 0){
+                // avoid showing a negatvate value as the SOC while charging 
+                bat_SOC = 0
+             }
+             this.time_past += 500
+             this.time_past_min = (this.time_past/(60*1000))
+            if(time >= scaled_time){
+                
+                clearInterval(start_charging)
+           }
+           console.log("time",time/(60*1000))
+           console.log("capacity", bat_SOC)
+           console.log("bad", this.charge_capacity)
+           console.log("step", charging_step)              
+           console.log("t m", time ) 
+           console.log("t s", scaled_time ) 
+        }
      
     };
-    this.discharge_battery = function (DOD,dis_power,capacity,SOC,c_rate){
-        this.b_capacity = parseFloat(capacity);
-        this.disc_power = dis_power
+    this.discharge_battery = function (DOD,capacity,SOC,c_rate){
+        this.capacity = parseFloat(capacity);
         this.c_rate = parseFloat(c_rate);
-        this.charge_time = this.c_rate*60/60; // 
+        this.disCharge_power = this.capacity*this.c_rate
+        this.disCharge_time = (60/this.c_rate) *60*1000// in seconds (real charging time )
+        const pack_DOD =DOD
+
+        bat_SOC = capacity
+       //Scaled paramters 
+       this.scaled_disCharge_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes 
+       const scaled_time = this.scaled_disCharge_time
+        this.scaled_disCharge_power = ((this.capacity)-((1-(pack_DOD/100))*this.capacity))*30*2// the scaled charging power
+        this.disCharge_step = (this.scaled_disCharge_power)/(this.scaled_disCharge_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second   
+        let discharge_step = this.disCharge_step;
          this.DOD = parseFloat(DOD)/100;
          this.SOC =SOC
-       
-       do {
-       this.discharged_SOC = this.disc_power*this.charge_time* this.DOD;
-       this.SOC -= this.charged_SOC
-           
-       } while (this.discharged_SOC > this.b_capacity*this.DOD );
+         const start_disCharge = setInterval(disCharging,500)
 
+         function disCharging(){
+            this.charge_capacity += charging_step;
+            time += 500;
+             bat_SOC = -(charging_step*time/60) //in kwh
+             this.time_past += 500
+             this.time_past_min = (this.time_past/(60*1000))
+            if(time >=scaled_time){
+                clearInterval(start_disCharge)
+           }
+           console.log("time",time/(60*1000))
+           console.log("capacity", bat_SOC)
+           console.log("bad", this.charge_capacity)
+           console.log("step", charging_step)              
+           console.log("test", (1-(pack_DOD/100))*this.capacity) 
+
+        }
     }; 
     // this.BMS = function(){
 
     // }
   }
-
   function fuel_properties() {
   
       this.LNG = function(fuel_tonn,type) {
@@ -866,7 +918,6 @@ function propellerProperties (){
     }
 
     }
-
  
  let batteries_properties = {
    supplier:{
@@ -876,7 +927,7 @@ function propellerProperties (){
          batteryType:"Lithoum-ion",
          c_Rate: `0.5 C`,
           c_Rate_peak : "1 C", // peak
-         DOD:  "",
+         DOD:  "80%",
         // example
         capacity: `2400 kWh`,
           SOC : "",//parseFloat(capacity)*0.2, // SOC cant be less than 20%
@@ -888,7 +939,6 @@ function propellerProperties (){
         depth: `2000 mm`,
         width:   `1200  mm`,
         length: `8600  mm`,
-
       },
 
       corvus2:{
@@ -931,7 +981,6 @@ function propellerProperties (){
         height: ` mm <input type="text" name="" id="heigh" class="custom_input" required >`,
         width:` mm <input type="text" name="" id="width" class="custom_input" required >`,
         depth: ` mm <input type="text" name="" id="depth" class="custom_input" >`,
-
       },
       custom_created:{
     // empty object for storing the new created battery pack by the user.
@@ -1128,7 +1177,6 @@ const Generator_sets = {
  // height:"4365 mm",
  // length: "10075 mm",
  // width: "3060 mm",
-
 },
 custom_created:{
 
@@ -1160,7 +1208,7 @@ const battery = batteries_properties.supplier
 const custom_battery = batteries_properties.supplier.customize
 const created_battery = batteries_properties.supplier.custom_created
 //power management system
-// const B_M_S = new BMS() 
+const charge_battery = new battery_system
 
 //Engine Margin 
 // const Engine_Marine = new engineSellection()

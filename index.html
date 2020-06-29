@@ -1158,7 +1158,7 @@ tr:hover {background-color: #ddd;}
                 <td><span id="Va">0</span></td>
               </tr>
               <tr>
-                <td>propeller speed n  rpm </td>
+                <td>propeller speed rps </td>
                 <td><span id="propeller_speed">0</span></td>
               </tr>
               <!-- <tr>
@@ -3143,7 +3143,7 @@ function propellers(event){
 
    document.getElementById('Va').innerHTML=  Va + " m/s"
   //  document.getElementById('smcr').innerHTML=  SMCR + " kW"
-   document.getElementById('propeller_speed').innerHTML=  propel_speed + " rad/s"
+   document.getElementById('propeller_speed').innerHTML=  propel_speed + "s^-1"
 }
 
 
@@ -3483,7 +3483,7 @@ ratedPower = parseFloat(engineDetail.power)
  enginePower = main_enginePower
 EngineCal.torque(engineStrokes,ratedSpeed,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
-engine.Margin()
+// engine.Margin()
  torqueDisplay ()
  powerDisplay()
  rpmDisplay()
@@ -3650,7 +3650,7 @@ aux_meanPressure = parseFloat(gensetDetail.mean_Presure)
 
 EngineCal.torque(aux_enginePower,aux_ratedSpeed,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
-engine.Margin()
+// engine.Margin()
  torqueDisplay ()
  powerDisplay()
  rpmDisplay()
@@ -3710,7 +3710,6 @@ engine.Margin()
      const x = document.getElementsByClassName("custom")[2]
     x.id="choose_sys"
     }
-
 }
 let batteryDetail
 function displayBatteryType(event) {
@@ -3721,14 +3720,15 @@ function displayBatteryType(event) {
   document.getElementById("gensetTable").classList.add("hide");
   document.getElementById("select_message").classList.add("hide");
   document.getElementById("battery_sizing").classList.add("hide");
-
   const table = document.getElementById("bat_Table");
   let i = 0
+  let DOD;
   let row,c_ratec_rate,custom_batteryDetail ;
 
   const EventVa = event.target.value
   const EventID = event.target.id
- if(EventIVal ="battery_sizing"){
+ 
+ if(EventVa ==="battery_sizing"){
   document.getElementById("battery_sizing").classList.remove("hide");
  }
  else if(EventID==="choose_sys"){
@@ -3771,22 +3771,21 @@ else if(EventID ==="custo_confirm"){
   batteryDetail = created_battery
 }
 }
-
  capacity = parseFloat(batteryDetail.capacity)
  c_rate = parseFloat(batteryDetail.c_Rate)
   c_rate_peak = parseFloat(batteryDetail.c_Rate_peak)
-
+  DOD = parseFloat(batteryDetail.DOD)
+  
   if(!c_rate_peak){
     c_rate_peak = c_rate;
   }
   batteryDetail.cont_charging_power = (capacity*c_rate).toFixed(1)
     batteryDetail.peak_charging_power = (capacity*c_rate_peak).toFixed(1)
-    batteryDetail.SOC = capacity*0.2
+    batteryDetail.SOC = capacity-capacity*(1-(DOD/100)) + " kWh"
   // loop over the object of the battery details and display them on the table
   for (let [key, value] of Object.entries(batteryDetail)) {
     console.log(`${key}: ${value}`);
     document.getElementById("batteryTable").classList.remove("hide");
-
       let table = document.getElementById("bat_Table");
     //   table.classList.remove("hide")
        row = table.insertRow(i)
@@ -4097,7 +4096,7 @@ else if (sim_check ===false){
  if(eventID ==="engine_perf"){
   document.getElementById("mainDashboard").classList.remove("hide");
   // document.getElementById("mainDashboard").classList.add("hide")
-  engine.Margin()
+  // engine.Margin()
  torqueDisplay ()
  powerDisplay()
  rpmDisplay()
@@ -4179,25 +4178,20 @@ if(eventcheck === false){
   document.getElementById("DP_time_span").classList.add("hide")
   document.getElementById("DP_time").required = false
  }
-
-
 }
-
 else if (eventcheck ===true){
-
   if(eventID ==="opera_time"){
    //display operation time when simulating for DP, Harbor
   document.getElementById("opera_time_span").classList.remove("hide")
   document.getElementById("opera_time").required = true
  }
-
  else if(eventID ==="None_calm_sim"){
-   //display input fieled for in inputing wave height when simulating in wave environment
+   //display input fieled for wave height when simulating in wave environment
   document.getElementById("wave").classList.remove("hide")
   document.getElementById("wave_height").required = true
  }
  else if(eventID ==="transit"){
-   //display input fieled for in inputing wave height when simulating in wave environment
+   //display input fieled for voyage distance when simulating
   document.getElementById("transit_span").classList.remove("hide")
   document.getElementById("transit_dis").required = true
  }
@@ -4212,7 +4206,6 @@ else if (eventcheck ===true){
  else if(eventID ==="DP"){
   document.getElementById("DP_time_span").classList.remove("hide")
   document.getElementById("DP_time").required = true
-
  }
 
 }
@@ -4271,7 +4264,7 @@ function display_sim_param(){
     bat_C_rated = sellected_battery.c_Rate
     bat_C_rated_peak = sellected_battery.c_Rate_peak
     bat_charge_power = sellected_battery.cont_charging_power
-
+    console.log(bat_capacity)
   }else if(!sellected_battery) {
     bat_capacity = 0
     bat_SOC = 0
