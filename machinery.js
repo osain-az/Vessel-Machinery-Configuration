@@ -2,7 +2,7 @@
 function engineAnalysis (){
  //methods for different diesel engine property
 this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumber,pistonStroke){
-    this.mean_p = mean_Presure;// bar 
+    this.mean_p = mean_Presure;// bar
     this.cylinderBore = cylinderBore*0.001;//m
     this.pistonStroke = pistonStroke *0.001;//m
     this.speedRPM = speedRPM;
@@ -13,30 +13,30 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     }
     else if((this.engineStroke === "2 Stroke")) {
         this.cranshaftRev = 1
-    }   
-    // this.pistonSpeed = 
+    }
+    // this.pistonSpeed =
     this.cylinderNumber = cylinderNumber,
     this.area = (3.1413*this.cylinderBore*this.cylinderBore)/4
     this.shipVolume = this.area*this.pistonStroke*this.cylinderNumber
     this.force = this.area*this.mean_p*100000;
     this.Torque = ((this.mean_p*100000*this.shipVolume)/(2*3.143*this.cranshaftRev))/1000
     // this.power = ((this.Torque*1000*2*3.143*this.speedRPM)/60)/1000
-    // load = this.power  
+    // load = this.power
 },
 
-//NOTE: SFOC is use of the baseline for the engine since the supplier dont provided the engine baseline   
+//NOTE: SFOC is use of the baseline for the engine since the supplier dont provided the engine baseline
  this.SFOC = function(load, enginePower, SFOC,supplier,type) {
     this.supplier = supplier
     this.load = load
-    this.type = type // used to determine weather is auxilary engine or main engine 
+    this.type = type // used to determine weather is auxilary engine or main engine
     this.enginePower = enginePower
     this.EL = this.load/this.enginePower
-    this.sfocBase = SFOC // used as the baseline for the engine if not provided 
+    this.sfocBase = SFOC // used as the baseline for the engine if not provided
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
     this.sfocBase = 170;
     engine_loadPercent = parseFloat((this.EL*100).toFixed(1))
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-   
+
     if (this.supplier === "wartsila") {
     //   this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
     this.sfocRelative = 0.455*this.EL *this.EL-0.71*this.EL + 1.28; // general
@@ -49,69 +49,67 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
         sfoc_cal = parseFloat(this.SFOC_main);
 
       }
-      
-    } 
+ 
+    }
     else if (this.supplier === "Cat") {
         this.sfocRelative = 0.7024*this.EL *this.EL-0.97728*this.EL + 1.35;
         sfoc_cal = this.SFOC_main;
-    } 
+    }
     else if (this.supplier === "MAN") {
         this.sfocRelative = 0.2933*this.EL *this.EL-0.432*this.EL + 1.1565;
         sfoc_cal = this.SFOC_main;
-    } 
+    }
     // this.SFOC_main = this.sfocBase*this.sfocRelative;
     // sfoc_cal = this.SFOC_main;
-   console.log(sfoc_cal)  
+    return {
+      sfoc_cal_aux : sfoc_cal_aux,
+      sfoc_cal : sfoc_cal
+    }
 }
+
 
 }
 
 function ship(){
  // ship resistance  component estimation
     this.coefficient = function(){
-        // All different coefficient and areas 
-         Cb     
+        // All different coefficient and areas
+         Cb
          Cm
          shipVolume = (Lwl * Bwl * T *Cb )
         if(!Cm || Cm <= 0){
             Cm = 1.006 -0.0056*(Cb**3.56)// MidShip section coefficient using  Kerlen (1970)
-             
+
         }else{
-            Cm 
+            Cm
         }
-        Cp = shipVolume/(Cm * Bwl * T * Lwl)  // Prismatic coefficient 
+        Cp = shipVolume/(Cm * Bwl * T * Lwl)  // Prismatic coefficient
         Cwp  =  Cb/(0.471 + 0.55*Cb)     // waterline plane area coefficient using " Parson (2003)"
-        Cf = 0.075/(Math.log10(Rn)-2)**2 
-       
-        // Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)*(0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp) + 2.38*(ABT/Cb) // Surface weted area 
+        Cf = 0.075/(Math.log10(Rn)-2)**2
+
+        // Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)*(0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp) + 2.38*(ABT/Cb) // Surface weted area
         this.c23 = (0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp)
-        Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)* (0.615989*this.c23 + 0.111439*Cm**3 +0.000571111*stern + 
-        0.245357*(this.c23/Cm)) + 3.45538*AT + (ABT/Cb)*(1.4660538 + 0.5839497/Cm) // Surface weted area 
+        Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)* (0.615989*this.c23 + 0.111439*Cm**3 +0.000571111*stern +
+        0.245357*(this.c23/Cm)) + 3.45538*AT + (ABT/Cb)*(1.4660538 + 0.5839497/Cm) // Surface weted area
      }
 
     this.hull = function(){
          Lwl; // Lenght on waterLine
-        AT     //Immersed of the transverse sectional area of the transomat AP zero speed 
+        AT     //Immersed of the transverse sectional area of the transomat AP zero speed
         hB      //
         ABT     // transverse section area of teh bulb at the position where the still water surface intersect the stern
-        Lpp   // Lenght between perpendicular 
-        LOA // Overall lenght 
+        Lpp   // Lenght between perpendicular
+        LOA // Overall lenght
         Bwl  // Breath of waterLine
         Fn = shipSpeed/(g*Lwl)**0.5 // froude number
-        Rn = (shipSpeed*Lwl)/viscosity   //reynolds number 
+        Rn = (shipSpeed*Lwl)/viscosity   //reynolds number
         // if(fn >= 0.14 && Fn <= 0.32){
             ////Schneekluth formular
 
-        //     if(Fn > 0.30){
-        //         this.FnNew = 0.3
-        //         Cb = (0.14/this.FnNew)*(((Lpp/Bwl)+20)/26)
-        //     }
-        //   //The formulae are valid for 0.48 <= Cb <= 0.85 and 0.14 <=Fn <= 0.32
-        //     Cb = (0.14/Fn)*(((Lpp/Bwl)+20)/26)
-        // }
+
         if(lcb_type ==="aft"){
         lcb  = -(LCB/Lwl)*100
-        
+
         }
         else if(lcb_type ==="forward"){
             lcb  = (LCB/Lwl)*100
@@ -119,11 +117,11 @@ function ship(){
           //  method by Harvald(1974)
           lcb = -(0.44*Fn-0.094)
         }
-         
+
         if(!T){
             T = 0.5*(Tf + TA)
         }
-        // this.Sa =1.025*((shipVolume/this.T)+1.7*this.Lpp*this.T) // Surface weted area 
+        // this.Sa =1.025*((shipVolume/this.T)+1.7*this.Lpp*this.T) // Surface weted area
     }
 }
 
@@ -143,18 +141,18 @@ function resistance(){
         }
         this.c14 = 1 + 0.011*stern
 
-        //formFactor = this.c13*(0.93+this.c12*(Bwl/this.LR)**0.92497*(0.95-Cp)**-0.521448*(1+Cp+0.022*lcb)**0.6906)        
+        //formFactor = this.c13*(0.93+this.c12*(Bwl/this.LR)**0.92497*(0.95-Cp)**-0.521448*(1+Cp+0.022*lcb)**0.6906)
          formFactor = 0.93+0.487118*this.c14*(Bwl/Lwl)**1.06806*(T/Lwl)**0.46106*(Lwl/this.LR)**0.121563*(Lwl**3/shipVolume)**0.36486*(1-Cp)**-0.604247
         formFactor = (formFactor.toFixed(3))*1
          console.log("rform",formFactor)
-         console.log("stern", stern)    
+         console.log("stern", stern)
     }
     this.appendageResistance = function(){
         K2 // caculated at the other file (index.html)
         dt // caculated at the other file (index.html)
         Sapp  // caculated at the other file (index.html)
       if(thruster){
-        //if thruster are fitted in the vessels, they are put into consideration 
+        //if thruster are fitted in the vessels, they are put into consideration
         this.Ctbo = 0.003
         Rbt = Math.PI*density*shipSpeed**2*dt**2*this.Ctbo
         Rbt= Rbt/1000
@@ -163,9 +161,9 @@ function resistance(){
     }else(
         Rbt = 0
     )
-   
+
      Rapp= (0.5*density*Cf*Sapp*shipSpeed**2*K2) //+ Rbt
-      
+
      Rapp = Rapp/1000
      Rapp = (Rapp.toFixed(3))*1
 
@@ -177,23 +175,20 @@ function resistance(){
             // if no bulbus c2 = 1
             this.c2 = 1
         }else{
-            
             this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
-            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
+            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous
         }
-
        if(Tf/Lwl <=0.04){
            this.c4 = Tf/Lwl
        }else if(Tf/Lwl > 0.04){
-
-           this.c4 = 0.04
+           this.c4 = 0.04;
        }
        Ca = 0.006*(Lwl + 100)**-0.16-0.00205 + 0.003*Math.sqrt(Lwl/7.5)*Cb**4 * this.c2*(0.04 -this.c4)
        if(roughness === true){
-           this.ks = 0.00015
+           this.ks = 0.00015;
            this.Ca = (0.105*this.ks**(1/3)-0.005579)/Lwl**(1/3)
        }else{
-           this.Ca = 0
+           this.Ca = 0;
        }
         RA =   0.5*density*shipSpeed**2*Sa*(Ca+this.Ca)
         RA =  RA/1000
@@ -210,19 +205,16 @@ function resistance(){
         }else if(this.Fnt >= 5){
             this.c6 = 0
         }
-        
+
         Rtr = 0.5*density*shipSpeed**2*AT*this.c6
         Rtr = Rtr/1000
         Rtr= (Rtr.toFixed(3))*1
         console.log("Rtr",Rtr)
-
-
     }
 
     this.bulbousResistance = function(){
         // this.Pb = 0.56*Math.sqrt(ABT/(Tf-1.5*hB))
          // this.Fni = shipSpeed/Math.sqrt(g*(Tf-hB-0.25*Math.sqrt(ABT))+0.15*shipSpeed**2)
-
         this.hf = Cp*Cm*(Bwl*T/Lwl)*(136-316*Fn)*Fn**3
         if(this.hf < -0.01*Lwl){
             this.hf = -0.01*Lwl
@@ -233,16 +225,14 @@ function resistance(){
         }
 
         this.Pb = 0.56*Math.sqrt(ABT)/(Tf-1.5*hB+this.hf)
-        
-        this.Fni = shipSpeed/Math.sqrt(g*(Tf-hB-0.25*Math.sqrt(ABT))+this.hf+this.hw)
 
+        this.Fni = shipSpeed/Math.sqrt(g*(Tf-hB-0.25*Math.sqrt(ABT))+this.hf+this.hw)
 
         // Rb =0.11*Math.exp((-13)*this.Pb**-2)*this.Fni**3*ABT**1.5*g*density/(1+this.Fni**2)
         Rb = 0.11*density*g*(Math.sqrt(ABT))**3*((this.Fni**3)/(1+this.Fni**2))*Math.exp(-3.0*this.Pb**-2)
         Rb = Rb/1000
         Rb = (Rb.toFixed(3))*1
     }
-
     this.AirResistace = function(){
         this.Cda = 0.8
         RAA = 0.5*density_air * shipSpeed**2*this.Cda*Av
@@ -251,35 +241,35 @@ function resistance(){
     this.wind_resistance = function(){
       RAA_wind = (( 0.5*density_air * wind_speed**2*this.Cda*Av)/1000) - RAA
       RAA_wind = RAA_wind.toFixed(2)
+      //AV
     }
-    
+
     this.waveResistance = function(){
-      
         // this.lcb = 0.0101*Lwl
         this.LR =Lwl*(1-Cp+0.06*Cp*lcb)/(4*Cp-1)
         this.d = -0.9
-         iE = 1+89*Math.exp((-1*(Lwl/Bwl)**0.80856)*(1-Cwp)**0.30484*(1-Cp-0.0225*(lcb))**0.6367*(this.LR/Bwl)**0.34574*((100*shipVolume)/Lwl**3)**0.16302) // (original equation)  //halfe angle entrance of teh waterline 
+         iE = 1+89*Math.exp((-1*(Lwl/Bwl)**0.80856)*(1-Cwp)**0.30484*(1-Cp-0.0225*(lcb))**0.6367*(this.LR/Bwl)**0.34574*((100*shipVolume)/Lwl**3)**0.16302) // (original equation)  //halfe angle entrance of teh waterline
          if(Bwl/Lwl < 0.11){
             this.c7 = 0.229577*(Bwl/Lwl)**0.33333
         }
          else if(Bwl/Lwl >= 0.11 && Bwl/Lwl < 0.25  ){
              this.c7 = (Bwl/Lwl)
-             
+
          }
          else if(Bwl/Lwl >= 0.25){
              this.c7 = 0.5- 0.0625*(Bwl/Lwl)
             }
-            
+
         this.c1 = 2223105*this.c7**3.78613*(T/Bwl)**1.07961*(90-iE)**-1.37565
-       
+
         if(bulbous===false){
             // if no bulbus c2 = 1
             this.c2 = 1
-            
+
         }else{
-            
+
             this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
-            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
+            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous
         }
         if(Tf/Lwl <= 0.04){
             this.c4 = Tf/Lwl
@@ -287,7 +277,7 @@ function resistance(){
         else if(Tf/Lwl > 0.4){
             this.c4 = 0.04
         }
-        
+
         this.c5 = 1-0.8*AT/(Bwl*T*Cm)
         // this.c6
 
@@ -306,7 +296,7 @@ function resistance(){
             this.c16 = 8.07981 *Cp -13.8673*Cp**2 + 6.984388*Cp**3
         }
         else if(Cp > 0.80){
-            this.c16 = 1.73014 - 0.7067 *Cp 
+            this.c16 = 1.73014 - 0.7067 *Cp
         }
         this.c17 = 69193.2*this.Cm**-1.3346*this.shipVolume
 
@@ -331,16 +321,16 @@ function resistance(){
 
      this.RwHighSped = function(){
          this.d = -0.9
-        
+
          this.c14 = 1 + 0.011*stern
-       
+
          this.LR = Lwl*(1-Cp + 0.06*Cp*lcb/(4*Cp-1))
 
-        this.onePlusk1 = 0.93+0.487118*this.c14*(Bwl/Lwl)**1.06806*(T/Lwl)**0.46106*(Lwl/this.LR)**0.121563*(Lwl**3/shipVolume)**0.36486*(1-Cp)**-0.604247 
+        this.onePlusk1 = 0.93+0.487118*this.c14*(Bwl/Lwl)**1.06806*(T/Lwl)**0.46106*(Lwl/this.LR)**0.121563*(Lwl**3/shipVolume)**0.36486*(1-Cp)**-0.604247
         this.c17 = 6919.3*Cm**-1.3346*(shipVolume/Lwl**3)**2.00977*(Lwl/Bwl-2)**1.40692
         this.m3 = -7.2035*(Bwl/Lwl)**0.326869*(T/Bwl)**0.605375
         this.c5 = 1-0.8*AT/(Bwl*T*Cm)
-        
+
         if(Lwl**3/shipVolume < 512){
             this.c15 = -1.69385
         }
@@ -369,7 +359,7 @@ function resistance(){
         }else{
             this.c3 = (0.56*(ABT)**1.5)/(Bwl*T*(0.31*Math.sqrt(ABT)+Tf-hB))
             console.log("new c",this.c3)
-            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous 
+            this.c2 = Math.exp((-1.89)*Math.sqrt(this.c3))  // accounting for the reduction of wave due to bulbous
         }
         Rw_B = this.c17*this.c2*this.c5*shipVolume*density*g*Math.exp(this.m3*Fn**this.d+this.m4*Math.cos(this.phi*Fn**-2))
         Rw_B = (Rw_B.toFixed(3))*1
@@ -382,7 +372,7 @@ function resistance(){
          console.log("Rf",Rf)
     }
     this.finalWaveResistance = function(){
-       // resolving of wave for high froud number and low froud number 
+       // resolving of wave for high froud number and low froud number
         if(Fn < 0.4){
             calResistnace.waveResistance()
             Rw = Rw_A
@@ -393,12 +383,13 @@ function resistance(){
         }
     }
     this.additionalResistance = function (){
-        // Wave  resistance 
-        this.Lbw = 0.95*Bwl  // confirm this 
-        Rwave =  (1/6)*density_air*g*H**2*Bwl*Math.sqrt(Bwl/this.Lbw)
+        // Wave  resistance
+        Lb //  Distance of the bow to 95% of maximum beam on the waterline [m]
+        Rwave =  (1/6)*density*g*H**2*Bwl*Math.sqrt(Bwl/Lb) //Note TODO: this formula sholdnt use this.lwl
         Rwave = ((Rwave/1000).toFixed(2))*1
-        // Fouling resistance 
-        Rfoul = 10*RT_calm 
+
+        // Fouling resistance
+        Rfoul = 10*RT_calm  //// TODO: Confirm this again
         Rfoul = ((Rfoul/1000).toFixed(2))*1
     }
 
@@ -420,13 +411,12 @@ function resistance(){
          RT_calm = Rf*formFactor+Rapp+Rw+RA+Rtr+Rbt+Rb + RAA
          RT_calm = (RT_calm.toFixed(3))*1
          calResistnace.additionalResistance()
-           //Total resistnace 
+           //Total resistnace
         RT = RT_calm +  Rfoul + Rwave
 
         // SM = ((RT*shipSpeed/RT_calm*shipSpeed)-1)
         // alert(SM)
     }
-  
 }
 
 function propellerProperties (){
@@ -447,15 +437,15 @@ function propellerProperties (){
         }
         // TFactor = 0.01979*Lwl/(Bwl-Bwl*this.Cpi)+1.0585*this.c10-0.00524-0.1418*D**2/(Bwl*T) + 0.0015*stern
         thrust = RT/(1-TFactor)
-        thrust = thrust.toFixed(3)
-        TFactor = TFactor.toFixed(3)
+        thrust = thrust.toFixed(2)
+        TFactor = TFactor.toFixed(2)
     }
 
     this.wake = function(){
-      
+
         // Cv = (formFactor*this.Rf+ this.Rapp + this.RA)/0.5*density*shipSpeed**2*(Sa+Sapp)
         Cv = formFactor*Cf+Ca
-        
+
         // Single screw ship
         if(Bwl/TA < 5){
             this.c8 = (Bwl*Sa)/(Lwl*D*TA)
@@ -489,29 +479,33 @@ function propellerProperties (){
         // W = (Cv*Lwl*this.c9/TA)*((0.0661875)+(1.21756*this.c11*(Cv/(1-this.Cpi))))+0.24558*Math.sqrt(Bwl/(Lwl*(1-this.Cpi)))-(0.09726/(0.95-Cp))+(0.11434/(0.95-Cb))+0.75*stern*Cv+0.002*stern
         if(screw ==="singleScrew"){
              W = this.c9*this.c20*Cv*(Lwl/TA)*(0.050776 + 0.93405*(this.c11*Cv/(1-this.Cpi))) + 0.27915*this.c20*Math.sqrt(Bwl/(Lwl*(1-this.Cpi))) + this.c19*this.c20
-             NR = 0.9922 - 0.05908*AeAo + 0.07424*(Cp - 0.0225*lcb)       
+             NR = 0.9922 - 0.05908*AeAo + 0.07424*(Cp - 0.0225*lcb)
         }
         else if(screw ==="TwinScrew"){
            W = 0.3095*Cb + 10*Cv*Cb - 0.23*D/Math.sqrt(Bwl*T)
            NR =  0.9737 +0.111*(Cp - 0.0225*lcb) - 0.06325*PD
         }
         Va = shipSpeed*(1-W)
-       
+
         Va = Va.toFixed(2)
         Cth = thrust/(density*Va**2*D**2*(Math.PI/8))
         W = W.toFixed(3)
         Cth = Cth.toFixed(3)
         NR = NR.toFixed(3)
+
+        //For Dp Operation
+        this.DP_speed = 3*0.51 // Dp speed is assumed to be 3 knot according to the literatures (tranvser speed)
+        DP_Va = this.DP_speed*(1-W)
     }
 
-    this.KTandKQ = function(){ 
+    this.KTandKQ = function(){
         this.Co7r = 2.073*AeAo *D/Z
         this.Rno = (this.Co7r*Math.sqrt(Va**2 + (0.75*Math.PI*n*D)**2))/viscosity
         if(n && this.Rno > 2*10**6){
- 
+
         KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.log(this.Rno)-0.301)**2*AeAo*J**2+0.0000643192*(Math.log(this.Rno)-0.301)*PD**6*J**2
         - 0.0000110636*(Math.log(this.Rno)-0.301)**2*PD**6*J**2- 0.0000276305**(Math.log(this.Rno)-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.log(this.Rno)-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.log(this.Rno)-0.301)*Z**2*AeAo*PD**3*J
-        
+
         KQ = -0.000591412+0.00696898*PD-0.0000666654*Z*PD**6+0.0160818*AeAo**2-0.000938091*(Math.log(this.Rno)-0.301)*PD-0.00059593*(Math.log(this.Rno)-0.301)*PD**2+0.0000782099*(Math.log(this.Rno)-0.301)**2*PD**2
         +0.0000052199*(Math.log(this.Rno)-0.301)*Z*AeAo*J**2-0.00000088528*(Math.log(this.Rno)-0.301)**2*Z*AeAo*PD*J+0.0000230171*(Math.log(this.Rno)-0.301)*Z*PD**6-0.00000184341*(Math.log(this.Rno)-0.301)**2*Z*PD**6-0.00400252*(Math.log(this.Rno)-0.301)*AeAo**2
         +0.000220915*(Math.log(this.Rno)-0.301)**2*AeAo**2
@@ -523,7 +517,7 @@ function propellerProperties (){
              0.0109689*J**1*PD**0*AeAo**1*Z**1 - 0.133698*J**0*PD**3*AeAo**0*Z**0 + 0.00638407*J**0*PD**6*AeAo**0*Z**0 - 0.00132718*J**2*PD**6*AeAo**0*Z**0 + 0.168496*J**3*PD**0*AeAo**1*Z**0 - 0.0507214*J**0*PD**0*AeAo**2*Z**0 +
              0.0854559*J**2*PD**0*AeAo**2*Z**0 - 0.0504475*J**3*PD**0*AeAo**2*Z**0 + 0.010465*J**1*PD**6*AeAo**2*Z**0 - 0.00648272*J**2*PD**6*AeAo**2*Z**0 - 0.00841728*J**0*PD**3*AeAo**0*Z**1 + 0.0168424*J**1*PD**3*AeAo**0*Z**1 -
              0.00102296*J**3*PD**3*AeAo**0*Z**1 - 0.0317791*J**0*PD**3*AeAo**1*Z**1 + 0.018604*J**1*PD**0*AeAo**2*Z**1  - 0.00410798*J**0*PD**2*AeAo**2*Z**1 - 0.000606848*J**0*PD**0*AeAo**0*Z**2 - 0.0049819*J**1*PD**0*AeAo**0*Z**2 +
-             0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 + 
+             0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 +
              0.00421749*J**0*PD**3*AeAo**1*Z**2 + 0.0000565229*J**3*PD**6*AeAo**1*Z**2 - 0.00146564*J**0*PD**3*AeAo**2*Z**2
 
              KQ = 0.00379368*J**0*PD**0*AeAo**0*Z**0 + 0.00886523*J**2*PD**0*AeAo**0*Z**0 - 0.032241*J**1*PD**1*AeAo**0*Z**0 - 0.00344778*J**0*PD**2*AeAo**0*Z**0 - 0.0408811*J**0*PD**1*AeAo**1*Z**0 - 0.108009*J**1*PD**1*AeAo**1*Z**0 -
@@ -531,15 +525,15 @@ function propellerProperties (){
              0.00723408*J**2*PD**0*AeAo**1*Z**1 + 0.00438388*J**1*PD**1*AeAo**1*Z**1 - 0.0269403*J**0*PD**2*AeAo**1*Z**1 + 0.0558082*J**3*PD**0*AeAo**1*Z**0 + 0.0161886*J**0*PD**3*AeAo**1*Z**0 + 0.00318086*J**1*PD**3*AeAo**1*Z**0 +
              0.015896*J**0*PD**0*AeAo**2*Z**0 + 0.0471729*J**1*PD**0*AeAo**2*Z**0 + 0.0196283*J**3*PD**0*AeAo**2*Z**0 - 0.0502782*J**0*PD**1*AeAo**2*Z**0 - 0.030055*J**3*PD**1*AeAo**2*Z**0 + 0.0417122*J**2*PD**2*AeAo**2*Z**0 -
              0.0397722*J**0*PD**3*AeAo**2*Z**0 - 0.00350024*J**0*PD**6*AeAo**2*Z**0 - 0.0106854*J**3*PD**0*AeAo**0*Z**1  + 0.00110903*J**3*PD**3*AeAo**0*Z**1 - 0.000313912*J**0*PD**6*AeAo**0*Z**1 + 0.0035985*J**3*PD**0*AeAo**1*Z**1 -
-             0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 + 
+             0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 +
 
              0.000112451*J**3*PD**2*AeAo**0*Z**2 - 0.0000297228*J**3*PD**6*AeAo**0*Z**2 + 0.000269551*J**1*PD**0*AeAo**1*Z**2 + 0.00083265*J**2*PD**0*AeAo**1*Z**2 + 0.00155334*J**0*PD**2*AeAo**1*Z**2 + 0.000302683*J**0*PD**6*AeAo**1*Z**2 -
              0.0001843*J**0*PD**0*AeAo**2*Z**2 - 0.000425399*J**0*PD**3*AeAo**2*Z**2 + 0.0000869243*J**3*PD**3*AeAo**2*Z**2 - 0.0004659*J**0*PD**6*AeAo**2*Z**2 + 0.0000554194*J**1*PD**6*AeAo**2*Z**2
         }
 
-        NH = (1- TFactor)/(1-W) // Hull efficiency 
+        NH = (1- TFactor)/(1-W) // Hull efficiency
          No = (KT*J)/(KQ*2*3.14)
-         
+
         NB = No * NR
         NT = 0.97  // (Assumed value
         NH = NH.toFixed(3)
@@ -548,26 +542,26 @@ function propellerProperties (){
         KQ = KQ.toFixed(3)
         propel_speed = (1-W)*shipSpeed/(D*J)
         propel_speed = (propel_speed.toFixed(2))*1
-        
+
     }
- 
+
    this.power = function(){
       if(calm_simulate === true){
         Pe = RT*shipSpeed // effective power
         Pt  = RT*shipSpeed*((1-W)/(1-TFactor))
-        Pd = Pt/NB   //deliver power to the propeller 
+        Pd = Pt/NB   //deliver power to the propeller
         ND = Pe/Pd
         Ps = Pd/NT
         Pb = ((Pd/Ns).toFixed(2))*1
         engine_torgue = Pb/(2*Math.PI*propel_speed)
         propel_torque = Pd/(2*Math.PI*propel_speed)
-        
+
       }else{
         Pe = RT_calm*shipSpeed // effective power
         Pe = Pe.toFixed(2)*1
         Pt  = RT_calm*shipSpeed*((1-W)/(1-TFactor))
         Pt = Pt.toFixed(2)*1
-        Pd = Pt/NB   //deliver power to the propeller 
+        Pd = Pt/NB   //deliver power to the propeller
         Pd =Pd.toFixed(2)
         ND = Pe/Pd
         Ps = Pd/NT
@@ -577,72 +571,270 @@ function propellerProperties (){
         engine_torgue = Pb/(2*Math.PI*propel_speed)
         propel_torque = Pd/(2*Math.PI*propel_speed)
       }
-       speedRPM = (propel_speed *60).toFixed(1)*1//for low speed engine  
-       torque =   engine_torgue.toFixed(1) 
+       speedRPM = (propel_speed *60).toFixed(1)*1//for low speed engine
+       torque =   engine_torgue.toFixed(1)
    }
-    
+
 }
 
 //  function engineSellection(){
-  
+
 //     this.Margin = function(){
 //         this.sm = (Rfoul+Rwave)*shipSpeed
-        
+
 //         if(this.sm /Pd < 0.15){
-            
+
 //             SM = 15  //%
 //             Ptotal = (((Pb*(SM/100))+Pb).toFixed(2))*1
 //         }else{
-           
+
 //             SM = this.sm*100
 //             Ptotal = (((Pb*(SM/100))+Pb).toFixed(2))*1
 //         }
-//         this.EM = 20//*ratedPower  assumed value      
+//         this.EM = 20//*ratedPower  assumed value
 //         SMCR = Pd*1+ ((100+SM)/100)/((100-this.EM)/100)
 //         SMCR = (SMCR.toFixed(2))*1
-        
+
 //     }
 
 //  }
- function PMS(){
-    this.ME_sys = function(){
-        this.install_pro_power = eng_power // installed power for propulsion 
-        this.break_power = Pb    //power need to propel the vessel
-        this.Auxilary_load  = Aux_load
-        this.install_Aux_power = Aux_power
-        // this.N0_Aux_eng = 
-        // this.N0_main_eng = 
-        // this.PTO_Power = PTO
-        // if(this.PTO_Power && this.install_Aux_power ){
+//  function PMS(){
+//     this.ME_sys = function(){
+//         this.install_pro_power = eng_power // installed power for propulsion
+//         this.break_power = Pb    //power need to propel the vessel
+//         this.Auxilary_load  = Aux_load
+//         this.install_Aux_power = Aux_power
+//         // this.N0_Aux_eng =
+//         // this.N0_main_eng =
+//         // this.PTO_Power = PTO
+//         // if(this.PTO_Power && this.install_Aux_power ){
 
-        // }
-    }
-    this.ME_sys = function(){
+//         // }
+//     }
+//     this.ME_sys = function(){
+
+//     }
+
+//   }4
+
+  function environment_load (){
+    // update wave height and wind Speed, to have a dynamic laod
+    this.stotre_initial_data = function(H,wind_speed){
+      this.new_wave = H; // store max input wave wave_height
+      this.new_wind_speed = wind_speed;  //  stored the max wind speed
+    };
+    this.update_param = function(){
+      //generate new evenvironmnet wave and wind speed and recalculating the dynamic load
+      H = Math.floor()* (this.new_wave -1)+1; // new wave height but it will never exceed the max input y the user
+      wind_speed = Math.floor()* (this.new_wind_speed -1)+1 ; // new wind speed but it will never exceed the max input y the user
+      calResistnace.wind_resistance(); // calling wind resistance fcntion
+      Rwave =  (1/6)*density*g*H**2*Bwl*Math.sqrt(Bwl/Lb) // calclation the wave resistance
+      this.dynamic_thrust = (Rwave+RAA_wind)/(1-TFactor)
+      this.dynamic_load  = (2*Math.PI*this.DP_KQ*this.dynamic_thrust**(3/2))/(density**0.5*D*this.DP_KT);
+      dynamic_load = this.dynamic_load; 
+    };
+    this.thrusters_details = function(){
+      this.propeller_diam = D ;// diamter is assume as the input diameters
+      this.DP_KT  = KT ;  // this is for DP , Va = 0
+      this.PD_KQ  = KQ ;  // this is for DP , Va = 0
+      this.KT = KT;  // this is for transit Va not zero 
+      this.KQ  = KQ; // this is for transit Va not zero 
+      this.Thrust_factor = TFactor;
+      this.Dp_propel_speed = 2*Math.PI*DP_Va/J*D;
+      this.DP_thruster =  (density*D**4*this.PD_KT*this.Dp_propel_speed**2)/4*Math.PI**2;
+      this.DP_torque =  (density*D**5*this.PD_KQ*this.Dp_propel_speed**2)/4*Math.PI**2;
+    //  this.Dp_propel_speed = Math.sqrt(this.DP_torque*(Math.PI)**2/(this.DP_KQ *density *D**5))
+      this.DP_power = Dp_propel_speed*this.DP_torque;
+      DP_break_power = this.DP_power; 
+     
+    };
+
+   }
+
+
+  class PMS {
+      constructor(){
+           this.engine_nums = engine_nums; // numbers of engine installed
+           this.engine_power = engine_power; // each installed power
+           this.dynamic_load = 0;  // dynamic load in calm water
+           this.Aux_load = Aux_load;  // Hotel and auxilary load combine as one
+           this.break_power = Pb; // Break power during transit
+           this.operation = operation; // type of operation e.g transit, Harbor and DP operation
       
-    }
-  }
+           if(this.engine_nums > 4){
+             // only 4 engines are allow to be installed at this stage
+              alert( `maximum accepted numers of installed  generator set  is 4, but you installed ${this.engine_nums}`)
+              
+              //Stop the simulation from running since the PMS can only handle 4 genset TODO:
+              return  
+            }
+            else if(this.engine_nums <2){
+             // Minimum mber of engine allow to be installed is 2
+             alert( `minimum accepted numers of installed  generator set  is 2, but you installed ${this.engine_nums}`)
+              return
+            }
+            if(this.operation === "DP"){
+              // when DP operation things change like Load
+                this.break_power = DP_break_power; //constant power from the open propeller 
+                if(bat_SOC){
+                  // if battery pack is installed 
+                  this.battery_SOC = bat_SOC; 
+                  this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
+                }else {
+                  this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
+      
+                }
+            }else{
+              if(bat_SOC){
+                // if battery pack is installed 
+                this.battery_SOC = bat_SOC; 
+                this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
+              // }else {
+              //   this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
+    
+               }
+            }
+            this.combine_load = this.dynamic_load + this.Aux_load + this.break_power;
+
+           this.required_engines  = this.combine_load/this.engine_normal_load ;// allow 80 % of load on engine during normal operation
+           if(this.required_engines <= 1){
+            this.required_engines= 1;
+            this.engine_online_obj = {
+               one : 0,
+            } 
+           }
+           else if (this.required_engines >1 && this.required_engines<= 2){
+            this.required_engines= 2;
+            this.engine_online_obj = {
+              one : 0,
+              two : 0,
+           }
+           }
+           else if (this.required_engines >2 && this.required_engines<= 3){
+            this.required_engines= 3;
+            this.engine_online_obj = {
+              one : 0,
+              two : 0,
+              three : 0,
+           }
+           }
+           else if (this.required_engines >3){
+            this.required_engines= 4;
+            this.engine_online_obj = {
+              one : 0,
+              two : 0,
+              three : 0,
+              fourth : 0,
+           }
+           }
+        //    start_off_engine();
+      }
+      start_off_engine(){
+          //this for the intial starting of the engine
+          this.online_engine = this.required_engines; // numbers of engine online 
+          this.load_on_each_eng = this.combine_load/this.online_engine; 
+          this.engine_power ;  // 
+
+          // TODO:
+           }
+      
+      FLR(added_load,){
+          //fast load reducer
+           // TODO:
+      }
+      share_load(fuelType){
+        // optimizing the energy consumption by sharing the load among the engines 
+        this.fuel_type = fuelType; 
+
+        EngineCal.SFOC()
+      
+
+        // TODO:
+      }
+      BlackOut_prevention(){
+
+      } 
+      optimized_engine_load(){
+        //this is the proposed algrithym  for sharing load,
+        this.online_engine =online_engine;
+        this.engine_normal_load = engin_norm_load
+        this.combine_load 
+        this.engine_online_obj // object of the individual engine online 
+         this.load_on_each_eng
+        this.fuel_SFOC = EngineCal.SFOC(this.load_on_each_eng,this.engine_power,SFOC,supplier,"auxilary")
+        this.fuel_SFOC_cal = this.fuel_SFOC.sfoc_cal_aux;
+         let i,j ;
+         i = 0 ;
+        j = 0;
+        Object.entries(this.engine_online_obj).forEach(entry => {
+           if(i ===0 || j === 1){
+            this.assigned_load = this.engine_normal_load
+            this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
+            if(this.check_load < 0.3 && j=== 0 ){
+               this.assigned_load = this.combine_load/2
+               j = 1
+            }
+            else if(j = 1){
+              this.assigned_load = this.combine_load/2
+            }else{
+              this.combine_load  = this.combine_load - this.assigned_load
+            }
+            // this.assigned_load = this.engine_normal_load
+           
+            entry[1] =  this.assigned_load // update the engine load
+            //TODO: check the remaining load before assigning to the engine 
+
+           }
+
+           else if(i > 0){
+            this.assigned_load = this.engine_normal_load
+             this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
+             if(this.check_load < 0.3){
+              this.assigned_load = this.combine_load/2
+                 j = 2;
+             }
+             else if(j ===2){
+              this.assigned_load = this.combine_load/2
+             } else{
+
+               this.combine_load = this.combine_load- this.assigned_load
+             }
+            // this.assigned_load = Math.min(this.combine_load, this.engine_normal_load)
+            entry[1] =  this.assigned_load
+           }
+          //use key and value here
+          i++
+         
+        });
+      }
+      Monitor_system(){
+        //TODO: this monitor the entire systems to ensure every thing is ok, if rise alarm or take action 
+      }
+
+}
+
   function battery_system(){
       this.battery_sizing = function(max_time){
         this.max_operation_tme  = max_time // maximum operation time or voyage time
       };
      this.charge_battery = function (c_rate,capacity,DOD){
          //note: this charging is assuming to start from 100% DOD each time the charging start
-        this.time_past = 0  // total time that the pack has been charging in milli seconds 
-        this.time_past_min = 0  // total time that the pack has been charging in minutes 
+        this.time_past = 0  // total time that the pack has been charging in milli seconds
+        this.time_past_min = 0  // total time that the pack has been charging in minutes
         const pack_DOD =DOD
         let time = 0
-        bat_SOC = 0  // 
+        bat_SOC = 0  //
         this.capacity = parseFloat(capacity);
         this.charge_capacity = 0 // this holds the stored energy at this point
         this.c_rate = parseFloat(c_rate);
         this.charging_power = this.capacity*this.c_rate
         this.charge_time = (60/this.c_rate) *60*1000// in seconds (real charging time )
 
-        // scale every thing down to complete every given charging in 2 minutes 
+        // scale every thing down to complete every given charging in 2 minutes
         this.scaled_charging_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes
         const scaled_time =  this.scaled_charging_time;
         this.scaled_charge_power = ((this.capacity)-((1-(pack_DOD/100))*this.capacity))*30*2// the scaled charging power
-        this.charging_step = (this.scaled_charge_power)/(this.scaled_charging_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second   
+        this.charging_step = (this.scaled_charge_power)/(this.scaled_charging_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second
         let charging_step = this.charging_step;
 
         const start_charging = setInterval(charging,500)
@@ -651,23 +843,23 @@ function propellerProperties (){
             time += 500;
              bat_SOC = (charging_step*time/60) //in kwh
              if(bat_SOC < 0){
-                // avoid showing a negatvate value as the SOC while charging 
+                // avoid showing a negatvate value as the SOC while charging
                 bat_SOC = 0
              }
              this.time_past += 500
              this.time_past_min = (this.time_past/(60*1000))
             if(time >= scaled_time){
-                
+
                 clearInterval(start_charging)
            }
            console.log("time",time/(60*1000))
            console.log("capacity", bat_SOC)
            console.log("bad", this.charge_capacity)
-           console.log("step", charging_step)              
-           console.log("t m", time ) 
-           console.log("t s", scaled_time ) 
+           console.log("step", charging_step)
+           console.log("t m", time )
+           console.log("t s", scaled_time )
         }
-     
+
     };
     this.discharge_battery = function (DOD,capacity,SOC,c_rate){
         this.capacity = parseFloat(capacity);
@@ -677,11 +869,11 @@ function propellerProperties (){
         const pack_DOD =DOD
 
         bat_SOC = capacity
-       //Scaled paramters 
-       this.scaled_disCharge_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes 
+       //Scaled paramters
+       this.scaled_disCharge_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes
        const scaled_time = this.scaled_disCharge_time
         this.scaled_disCharge_power = ((this.capacity)-((1-(pack_DOD/100))*this.capacity))*30*2// the scaled charging power
-        this.disCharge_step = (this.scaled_disCharge_power)/(this.scaled_disCharge_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second   
+        this.disCharge_step = (this.scaled_disCharge_power)/(this.scaled_disCharge_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second
         let discharge_step = this.disCharge_step;
          this.DOD = parseFloat(DOD)/100;
          this.SOC =SOC
@@ -698,18 +890,18 @@ function propellerProperties (){
            }
            console.log("time",time/(60*1000))
            console.log("capacity", bat_SOC)
-           console.log("bad", this.charge_capacity)
-           console.log("step", charging_step)              
-           console.log("test", (1-(pack_DOD/100))*this.capacity) 
+
+           console.log("step", charging_step)
+           console.log("test", (1-(pack_DOD/100))*this.capacity)
 
         }
-    }; 
+    };
     // this.BMS = function(){
 
     // }
   }
   function fuel_properties() {
-  
+
       this.LNG = function(fuel_tonn,type) {
         this.fuel_tonn = fuel_tonn;
         this.type = type
@@ -737,10 +929,10 @@ function propellerProperties (){
         LNG_Sox_Aux : parseFloat(this.LNG_Sox_Aux.toFixed(2)),
         LNG_NOx_Aux :  parseFloat(this.LNG_NOx_Aux.toFixed(2)),
         LNG_CO2_Aux : parseFloat(this.LNG_CO2_Aux.toFixed(2)),
-        LNG_volume_Aux : parseFloat(this.LNG_volume_Aux.toFixed(2)) 
+        LNG_volume_Aux : parseFloat(this.LNG_volume_Aux.toFixed(2))
       }
     }else{
-        
+
       this.LNG_cost = parseFloat(this.price)*this.fuel_tonn
       this.LNG_NMVOC = this.NMVOC*this.fuel_tonn
       this.LNG_PM = this.PM*this.fuel_tonn
@@ -755,14 +947,14 @@ function propellerProperties (){
         LNG_Sox : parseFloat(this.LNG_Sox.toFixed(2)),
         LNG_NOx :  parseFloat(this.LNG_NOx.toFixed(2)),
         LNG_CO2 : parseFloat(this.LNG_CO2.toFixed(2)),
-        LNG_volume : parseFloat(this.LNG_volume.toFixed(2)) 
+        LNG_volume : parseFloat(this.LNG_volume.toFixed(2))
       }
     }
       }
       this.MDO = function (fuel_tonn,type){
-          // check to eliminate different calculation by using just one calculation 
+          // check to eliminate different calculation by using just one calculation
           //for both main engine and auxiliary engine TODO:
-         
+
         this.fuel_tonn = fuel_tonn;
         this.type = type
         this.LHV ="42700 kJ/kg";
@@ -790,7 +982,7 @@ function propellerProperties (){
         MDO_Sox_Aux : parseFloat(this.MDO_Sox_Aux.toFixed(2)),
         MDO_NOx_Aux :  parseFloat(this.MDO_NOx_Aux.toFixed(2)),
         MDO_CO2_Aux : parseFloat(this.MDO_CO2_Aux.toFixed(2)),
-        MDO_volume_Aux : parseFloat(this.MDO_volume_Aux.toFixed(2)) 
+        MDO_volume_Aux : parseFloat(this.MDO_volume_Aux.toFixed(2))
       }
 
     }
@@ -803,18 +995,18 @@ function propellerProperties (){
       this.MDO_CO2 = this.Cf*this.fuel_tonn
       this.MDO_volume = this.fuel_tonn*1000/parseFloat(this.density)
       return {
-   
+
         MDO_NMVOC : parseFloat(this.MDO_NMVOC.toFixed(2)) ,
         MDO_PM : parseFloat(this.MDO_PM.toFixed(2)),
         MDO_cost : parseFloat(this.MDO_cost.toFixed(2)) ,
         MDO_Sox : parseFloat(this.MDO_Sox.toFixed(2)),
         MDO_NOx :  parseFloat(this.MDO_NOx.toFixed(2)),
         MDO_CO2 : parseFloat(this.MDO_CO2.toFixed(2)),
-        MDO_volume : parseFloat(this.MDO_volume.toFixed(2)) 
+        MDO_volume : parseFloat(this.MDO_volume.toFixed(2))
       }
     }
-   
-      
+
+
     }
     this.MGO = function (fuel_tonn,type){
         this.fuel_tonn = fuel_tonn;
@@ -827,7 +1019,7 @@ function propellerProperties (){
        this.Nox = 0.0961;
        this.PM = 0.00097;
        this.NMVOC = 0.00308
-        
+
       if(this.type ==="Auxiliary"){
         // Calculation for Auxiliary engine
       this.MGO_cost_Aux = parseFloat(this.price)*this.fuel_tonn
@@ -844,7 +1036,7 @@ function propellerProperties (){
         MGO_Sox_Aux : parseFloat(this.MGO_Sox_Aux.toFixed(2)),
         MGO_NOx_Aux :  parseFloat(this.MGO_NOx_Aux.toFixed(2)),
         MGO_CO2_Aux : parseFloat(this.MGO_CO2_Aux.toFixed(2)),
-        MGO_volume_Aux : parseFloat(this.MGO_volume_Aux.toFixed(2)) 
+        MGO_volume_Aux : parseFloat(this.MGO_volume_Aux.toFixed(2))
       }
     }else{
       this.MGO_cost = parseFloat(this.price)*this.fuel_tonn
@@ -861,7 +1053,7 @@ function propellerProperties (){
         MGO_Sox : parseFloat(this.MGO_Sox.toFixed(2)),
         MGO_NOx :  parseFloat(this.MGO_NOx.toFixed(2)),
         MGO_CO2 : parseFloat(this.MGO_CO2.toFixed(2)),
-        MGO_volume : parseFloat(this.MGO_volume.toFixed(2)) 
+        MGO_volume : parseFloat(this.MGO_volume.toFixed(2))
 
       }
     }
@@ -877,7 +1069,7 @@ function propellerProperties (){
        this.Nox = 0.0903;
        this.PM = 0.00728;
       this. NMVOC = 0.00308
-       
+
       if(this.type ==="Auxiliary"){
           // Calculation for Auxiliary engine
         this.HFO_cost_Aux = parseFloat(this.price)*this.fuel_tonn
@@ -894,7 +1086,7 @@ function propellerProperties (){
             HFO_Sox_Aux : parseFloat(this.HFO_Sox_Aux.toFixed(2)),
             HFO_NOx_Aux :  parseFloat(this.HFO_NOx_Aux.toFixed(2)),
             HFO_CO2_Aux : parseFloat(this.HFO_CO2_Aux.toFixed(2)),
-            HFO_volume_Aux : parseFloat(this.HFO_volume_Aux.toFixed(2)) 
+            HFO_volume_Aux : parseFloat(this.HFO_volume_Aux.toFixed(2))
           }
       }else{
         this.HFO_cost = parseFloat(this.price)*this.fuel_tonn
@@ -912,13 +1104,13 @@ function propellerProperties (){
             HFO_Sox : parseFloat(this.HFO_Sox.toFixed(2)),
             HFO_NOx :  parseFloat(this.HFO_NOx.toFixed(2)),
             HFO_CO2 : parseFloat(this.HFO_CO2.toFixed(2)),
-            HFO_volume : parseFloat(this.HFO_volume.toFixed(2)) 
+            HFO_volume : parseFloat(this.HFO_volume.toFixed(2))
           }
       }
     }
 
     }
- 
+
  let batteries_properties = {
    supplier:{
       corvus1:{
@@ -986,7 +1178,7 @@ function propellerProperties (){
     // empty object for storing the new created battery pack by the user.
     }
     }
- 
+
   }
 
 let engineData ={
@@ -1035,7 +1227,7 @@ let engineData ={
         heigh: "3940 mm",
       },
       customize:{
-          // this used to allow user to customized engine 
+          // this used to allow user to customized engine
         supplier: ` <select name="" id="supplier" class="custom_input" required>
                     <option value="">Choose supplier</option>
                     <option value="wartsila">wartsila</option>
@@ -1071,16 +1263,16 @@ let engineData ={
         mean_Presure :` bar <input type="text" name="" id="mean_Presure" class="custom_input" required>`,
         // cylinders: 8,
         // cylinder_output: "1200 kW/cyl",
-     
+
       },
       custom_created:{
-    
+
     }
 }
 
 const Generator_sets = {
     Wärtsilä:{
-      
+
         GenSet1:{
           supplier:"wartsila",
           GenSET_type: "Wärtsilä 34DF",
@@ -1133,7 +1325,7 @@ const Generator_sets = {
        }
    },
    customize:{
-    // this used to allow user to customized engine 
+    // this used to allow user to customized engine
  supplier: `<select name="genset" id="supplier" class="custom_input" required>
          <option value="">Choose suppler</option>
          <option value="wartsila">wartsila</option>
@@ -1184,38 +1376,35 @@ custom_created:{
 
 }
 
-//engine 
+//engine
 let wartsila32 = engineData.wartsila2
 let wartsila46 = engineData.wartsila3
 let custom_engine = engineData.customize
 let created_engine = engineData.custom_created
 
 
-//Generator set 
+//Generator set
 let genset = Generator_sets.Wärtsilä
 let custom_genset =Generator_sets.customize
 let created_genset =Generator_sets.custom_created
 
-//Ship hull and resistance 
+//Ship hull and resistance
 let shipHull = new ship()
 let calResistnace = new resistance()
-let EngineCal = new engineAnalysis()
+
 let propeller = new propellerProperties()
 // let engine = new engineSellection()
 
-//Battery 
+//Battery
 const battery = batteries_properties.supplier
 const custom_battery = batteries_properties.supplier.customize
 const created_battery = batteries_properties.supplier.custom_created
 //power management system
 const charge_battery = new battery_system
 
-//Engine Margin 
+//Engine Margin
 // const Engine_Marine = new engineSellection()
+const EngineCal = new engineAnalysis()
 
 //alternative fuel
  const fuel_property = new fuel_properties()
-
-
-
-

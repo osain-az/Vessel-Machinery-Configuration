@@ -194,7 +194,7 @@ tr:hover {background-color: #ddd;}
       display:inline-block;
      width:80%;
     }
- 
+
     .input_div span {cursor:pointer; }
 		.input_div span{
 			width: auto;
@@ -232,7 +232,7 @@ tr:hover {background-color: #ddd;}
     .resistance_hull_container{
          display: grid;
          grid-template-rows: 1fr;
-         grid-template-columns:  60% 40%;
+         grid-template-columns:  55% 45%;
         grid-auto-flow: column;
         margin: 15px;
         margin-left: 0;
@@ -260,7 +260,19 @@ tr:hover {background-color: #ddd;}
       clear: both;
       padding: 2px;
     }
+     .sta_wave{
+       border: solid #ddd 2px;
+       margin-top:10px;
+       margin-left: 10px;
+       margin-right: 10px;
+       padding: 10px;
+     }
+     .sta_wave_center{
+        display:block !important;
+        text-align: center;
+        padding: 5px;
 
+     }
     .header span{
       display: block !important;
       text-align: center;
@@ -319,7 +331,6 @@ tr:hover {background-color: #ddd;}
     .appendage{
       width: 100%;
     grid-template-rows: 1fr;
-
     grid-auto-flow: column;
 
     }
@@ -330,99 +341,7 @@ tr:hover {background-color: #ddd;}
       margin-left: 15px;
     }
 
-     .area {
-        /* border:  solid plum 2px; */
-        grid-row: 1;
-      grid-column: 1;
-      margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area1 {
-    /* display: grid; */
-    grid-row: 2;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-      /* padding-left: 10px;; */
-    }
-    .area2 {
-    /* display: grid; */
-    grid-row: 3;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area3 {
-    /* display: grid; */
-    grid-row: 4;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area4 {
-    /* display: grid; */
-    grid-row: 5;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area5{
-    /* display: grid; */
-    grid-row: 6;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area6{
-    /* display: grid; */
-    grid-row: 7;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area7{
-    /* display: grid; */
-    grid-row: 8;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area8{
-    /* display: grid; */
-    grid-row: 9;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area9{
-    /* display: grid; */
-    grid-row: 10;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area10{
-    /* display: grid; */
-    grid-row: 11;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .area11{
-    /* display: grid; */
-    grid-row: 11;
-    grid-column: 1;
-    margin-top: 10px;
-      margin-bottom: 10px;
-    }
-    .AirArea{
-      margin: 15px;
-      border: solid peachpuff 2px;
-    }
-    .airArea{
-      width: 70%;
-    }
-
+    
     /* //Propeller */
 
     .propeller{
@@ -482,9 +401,7 @@ tr:hover {background-color: #ddd;}
       border :solid rgb(110, 100, 4) 2px;
       border-radius: 10px;
     }
-    /* .start_sim.main{
-      text-align: ce;
-    } */
+ 
     .create_custo_bat,.create_custo_genset,.create_custo_engine
     {
      float: right;
@@ -512,7 +429,7 @@ tr:hover {background-color: #ddd;}
     margin: auto;
 
     }
-    
+
     .engine_perf,.close {
       padding: 12px;
       border: solid rgb(46, 117, 98) 2px;
@@ -528,14 +445,9 @@ tr:hover {background-color: #ddd;}
     grid-template-columns: 33% 33% 33%;
     grid-auto-flow: column;
     margin: auto;
-    
+
    }
-     .size_result{
   
-    }
-    .sizing_input{
- 
-    }
 
    .sim{
      width: 60px;
@@ -657,18 +569,7 @@ tr:hover {background-color: #ddd;}
    margin-bottom: 20px ;
     }
 
-    /* .battandemiss{
-      border:pink;
-      width:35%
-    }
-    .darshboard_engines{
-      border:rgb(51, 63, 199);
-      width:25%
-    }
-    .sim_update{
-      border:rgb(186, 194, 41);
-      width:40%
-    } */
+  
     .darshboard_container,.result_compare{
       width: 100%;
       background-color:#072b39;
@@ -679,7 +580,7 @@ tr:hover {background-color: #ddd;}
     .c3-axis-y-label,.c3-axis-y,.c3-legend-item-tile  {
       stroke: #fff !important;
     }
-    .add_style{
+    /* .add_style{
       background-color: #f7f7f7;
       background-image: -webkit-gradient(linear, left top, left bottom, from(#f7f7f7), to(#e7e7e7));
       background-image: -webkit-linear-gradient(top, #f7f7f7, #e7e7e7);
@@ -693,9 +594,9 @@ tr:hover {background-color: #ddd;}
       position: relative;
       text-align: center;
       line-height: 166px;
-      /* border-radius: 50%; */
+       border-radius: 50%; 
       box-shadow: 0px 3px 8px #aaa, inset 0px 2px 3px #fff;
-    }
+    } */
     .section{
       margin: 5px;
       border: solid #aaa 1px;
@@ -783,7 +684,7 @@ tr:hover {background-color: #ddd;}
 
     this:<input type="range" step="5" oninput="myFunction(this.value)">
     <p id="demo"></p> -->
-       <h1 class="status">Note: Site still under development, UI will be the last thing  </h1>
+       <h1 class="status">Note: Site still under development, UI will be the last thing to be designed   </h1>
 
     <div class="main">
         <h1>Ship Machinery Configuration and Simulation</h1>
@@ -795,56 +696,60 @@ tr:hover {background-color: #ddd;}
                 <div class="input_div align">
                   <span class="span_name">speed</span>
                    <span data-name=" kn" id="shipSpeed_minus">--</span>
-                   <input type="text" name="" class="" id="shipSpeed" min="5" value="10.69" max="30" step="0.1" >
+                   <input type="text" name="" class="" id="shipSpeed" min="5" value="10.69 kn" max="30" step="0.1" >
                    <span  data-name=" kn" id="shipSpeed_plus">+</span>
 
                 </div>
                 <div class="input_div align_right " >
                 <span class="span_name">Waterline length Lwl</span>
                 <span data-name=" m" id="Lwl_minus">--</span>
-                <input type="text" id="Lwl" min="10" value="205" max="600" step="5" >
+                <input type="text" id="Lwl" min="10" value="205 m" max="600" step="5" >
                 <span  data-name=" m" id="Lwl_plus">+</span>
+                <br>
                </div>
-               <div class="input_div align_right">
+               <div class="input_div align">
                  <span class="span_name">Breath: Bwl:</span>
                  <span data-name=" m" id="Bwl_minus">--</span>
-                 <input type="text" id="Bwl" min="5" value="32" max="50" step="2" >
+                 <input type="text" id="Bwl" min="5" value="32 m" max="50" step="2" >
                  <span  data-name=" m" id="Bwl_plus">+</span>
                 </div>
                 <div class="input_div align_right">
                  <span class="span_name">Draught T:</span>
                  <span data-name=" m" id="T_minus">--</span>
-                 <input type="text" id="T" min="5" value="10" max="30" step="1" >
+                 <input type="text" id="T" min="5" value="10 m" max="30" step="1" >
                  <span  data-name=" m" id="T_plus">+</span>
+                 <br>
                 </div>
                 <div class="input_div align">
                  <span class="span_name">aft Draught TA</span>
                  <span data-name=" m" id="TA_minus">--</span>
-                 <input type="text" id="TA" min="5" value="10" max="30" step="1" >
+                 <input type="text" id="TA" min="5" value="10 m" max="30" step="1" >
                  <span  data-name=" m" id="TA_plus">+</span>
                 </div>
                 <div class="input_div align_right">
                  <span class="span_name">fmost Draught Tf</span>
                  <span data-name=" m" id="Tf_minus">--</span>
-                 <input type="text" id="Tf" min="5" value="10" max="30" step="1" >
+                 <input type="text" id="Tf" min="5" value="10 m" max="30" step="1" >
                  <span  data-name=" m" id="Tf_plus">+</span>
+                 <br>
                 </div>
                 <div class="input_div align">
                  <span class="span_name">ABT</span>
                  <span data-name=" m^2" id="ABT_minus">--</span>
-                 <input type="text" id="ABT" min="5" value="13.4848" max="30" step="0.1">
+                 <input type="text" id="ABT" min="5" value="13.4848 m^2" max="30" step="0.1">
                  <span  data-name=" m^2" id="ABT_plus">+</span>
                 </div>
                 <div class="input_div align_right">
                  <span class="span_name">hB</span>
                  <span data-name=" m" id="hB_minus">--</span>
-                 <input type="text" id="hB" min="0" value="4" max="20" step="0.1">
+                 <input type="text" id="hB" min="0" value="4 m" max="20" step="0.1">
                  <span  data-name=" m" id="hB_plus">+</span>
-                </div>
+                 <br>
+               </div> <br>
                 <div class="input_div align">
                  <span class="span_name">Transom AT</span>
                  <span data-name=" m^2" id="AT_minus">--</span>
-                 <input type="text" id="AT" min="3" value="16" max="30" step="0.1">
+                 <input type="text" id="AT" min="3" value="16 m^2" max="30" step="0.1">
                  <span  data-name=" m^2" id="AT_plus">+</span>
                 </div>
                 <div class="input_div coefficient align_right">
@@ -852,14 +757,15 @@ tr:hover {background-color: #ddd;}
                  <span data-name=" " id="Cb_minus">--</span>
                  <input type="text" id="Cb" min="0" value="0.572" max="1" step="0.1">
                  <span  data-name=" " id="Cb_plus">+</span>
-                </div>
+
+               </div> <br>
                 <div class="input_div coefficient align">
                  <span class="span_name">CM</span>
                  <span data-name=" " id="Cm_minus">--</span>
                  <input type="text" id="Cm" min="0" value="0.98" max="1" step="0.01">
                  <span  data-name=" " id="Cm_plus">+</span>
                 </div>
-                <div class="input_div coefficient align">
+                <div class="input_div coefficient align_right">
                  <span class="span_name">LCB</span>
                  <select name="" id="lcb_type" >
                    <option value="">lcb reference</option>
@@ -869,7 +775,8 @@ tr:hover {background-color: #ddd;}
                  <span data-name=" " id="LCB_minus">--</span>
                  <input type="text" id="LCB" min="-10" value="1.53 " max="10" step="0.01">
                  <span  data-name=" " id="LCB_plus">+</span>
-                </div>
+
+               </div> <br>
               </form>
 
               <form action="" onchange="appendageCal(event)" onclick="handle_inputs(event)">
@@ -879,42 +786,42 @@ tr:hover {background-color: #ddd;}
               <input type="checkbox" id="BilgeKeelAreaCheck" name="" value="" class="input_check">
               <label for="Bilge Keel"> Bilge Keel  Area: </label>
             <span data-name=" m^2" id="BilgeKeelArea_minus">--</span>
-              <input type="text" name="" class="" id="BilgeKeelArea" min="0" value="0" step="0.1" max="60">
+              <input type="text" name="" class="" id="BilgeKeelArea" min="0" value="0 m^2" step="0.1" max="60">
             <span  data-name=" m^2" id="BilgeKeelArea_plus">+</span>
             </div>
             <div class="input_div align_right">
               <input type="checkbox" id="DomeAreaCheck" name="bulbous bow" value="" class="input_check">
               <label for="Dome Area"> Dome Area: </label>
             <span data-name=" m^2" id="DomeArea_minus">--</span>
-              <input type="text" name="" class="" id="DomeArea" min="0" value="0" step="0.1" max="60">
+              <input type="text" name="" class="" id="DomeArea" min="0" value="0 m^2" step="0.1" max="60">
             <span  data-name=" m^2" id="DomeArea_plus">+</span>
             </div>
             <div class="input_div align_right">
               <input type="checkbox" id="ShaftBracketAreaCheck" name="bulbous bow" value="" class="input_check">
               <label for="Shafts Area"> Shafts Bracket  Area: </label>
             <span data-name=" m^2" id="ShaftBracketArea_minus">--</span>
-              <input type="text" name="" class="" id="ShaftBracketArea" min="0" value="0" step="0.1" max="60">
+              <input type="text" name="" class="" id="ShaftBracketArea" min="0" value="0 m^2" step="0.1" max="60">
             <span  data-name=" m^2" id="ShaftBracketArea_plus">+</span>
             </div>
             <div class="input_div align">
               <input type="checkbox" id="StrutBossingsAreaCheck" name="bulbous bow" value="" class="input_check">
               <label for="Strut Bossings Area"> Strut Bossings  Area: </label>
             <span data-name=" m^2" id="StrutBossingsArea_minus">--</span>
-              <input type="text" name="" class="" id="StrutBossingsArea" min="0" value="0" step="0.1" max="60">
+              <input type="text" name="" class="" id="StrutBossingsArea" min="0" value="0 m^2" step="0.1" max="60">
             <span  data-name=" m^2" id="StrutBossingsArea_plus">+</span>
             </div>
             <div class="input_div align_right">
               <input type="checkbox" id="StabilizerFinsCheck" name="bulbous bow" value="" class="input_check">
               <label for="Stabilizer Fins Area">Stabilizer Fins  Area: </label>
             <span data-name=" m^2" id="StabilizerFins_minus">--</span>
-              <input type="text" name="" class="" id="StabilizerFins" min="0" value="0" step="0.1" max="60">
+              <input type="text" name="" class="" id="StabilizerFins" min="0" value="0 m^2" step="0.1" max="60">
             <span  data-name=" m^2" id="StabilizerFins_plus">+</span>
             </div>
             <div class="input_div align">
               <input type="checkbox" id="hullbossingCheck" name="Hull Bossings" value="" class="input_check">
               <label for="Hull Bossings">Hull Bossings: </label>
             <span data-name=" m^2" id="hullBossings_minus">--</span>
-              <input type="text" name="" class="" id="hullBossings" min="0" value="0" step="0.1" max="60">
+              <input type="text" name="" class="" id="hullBossings" min="0" value="0 m^2" step="0.1" max="60">
             <span  data-name=" m^2" id="hullBossings_plus">+</span>
             </div>
             <div class="input_div align">
@@ -923,9 +830,9 @@ tr:hover {background-color: #ddd;}
                  <span data-name=" " id="rudderBehindSkeg_minus">--</span>
                <input type="text" name="" class="" id="rudderBehindSkeg" min="1.5" value="1.5" step="0.1" max="2">
                <span  data-name=" " id="rudderBehindSkeg_plus">+</span>
-  
+
                Area : <span data-name=" m^2" id="ArearudderBehindSkeg_minus">--</span>
-                <input type="text" name="" class="" id="ArearudderBehindSkeg" min="0" value="0" step="0.1" max="60">
+                <input type="text" name="" class="" id="ArearudderBehindSkeg" min="0" value="0 m^2" step="0.1" max="60">
              <span  data-name=" m^2" id="ArearudderBehindSkeg_plus">+</span> <br>
            </div>
            <div class="input_div align">
@@ -934,9 +841,9 @@ tr:hover {background-color: #ddd;}
                <span data-name=" " id="rudderBehindStern_minus">--</span>
              <input type="text" name="" class="" id="rudderBehindStern" min="1.3" value="1.3" step="0.1" max="1.5">
              <span  data-name=" " id="rudderBehindStern_plus">+</span>
-  
+
              Area : <span data-name=" m^2" id="rudderBehindSternArea_minus">--</span>
-              <input type="text" name="" class="" id="rudderBehindSternArea" min="0" value="0" step="0.1" max="60">
+              <input type="text" name="" class="" id="rudderBehindSternArea" min="0" value="0 m^2" step="0.1" max="60">
            <span  data-name=" m^2" id="rudderBehindSternArea_plus">+</span> <br>
          </div>
          <div class="input_div align">
@@ -945,10 +852,10 @@ tr:hover {background-color: #ddd;}
              <span data-name=" " id="Skeg_minus">--</span>
            <input type="text" name="" class="" id="Skeg" min="1.5" value="1.5" step="0.1" max="2">
            <span  data-name=" " id="Skeg_plus">+</span>
-  
+
            Area : <span data-name=" m^2" id="SkegArea_minus">--</span>
-            <input type="text" name="" class="" id="SkegArea" min="0" value="0" step="0.1" max="60">
-           <span  data-name=" m^2" id="SkegArea_plus">+</span> 
+            <input type="text" name="" class="" id="SkegArea" min="0" value="0 m^2" step="0.1" max="60">
+           <span  data-name=" m^2" id="SkegArea_plus">+</span>
        </div>
        <div class="input_div align">
           <input type="checkbox" id="ShaftsCheck" name="Shafts" value="" class="input_check">
@@ -956,9 +863,9 @@ tr:hover {background-color: #ddd;}
             <span data-name=" " id="Shafts_minus">--</span>
           <input type="text" name="" class="" id="Shafts" min="2" value="2" step="0.1" max="4">
           <span  data-name=" " id="Shafts_plus">+</span>
-  
+
           Area : <span data-name=" m^2" id="ShaftsArea_minus">--</span>
-          <input type="text" name="" class="" id="ShaftsArea" min="0" value="0" step="0.1" max="60">
+          <input type="text" name="" class="" id="ShaftsArea" min="0" value="0 m^2" step="0.1" max="60">
         <span  data-name=" m^2" id="ShaftsArea_plus">+</span>
        </div>
       </div>
@@ -967,11 +874,11 @@ tr:hover {background-color: #ddd;}
               <input type="checkbox" id="thrustercheck" name="thruster" value="thruster" class="input_check">
               <label for="Thruster">Thruster diameter: </label>
             <span data-name=" m" id="thrusterDiameter_minus">--</span>
-              <input type="text" name="" class="" id="thrusterDiameter" min="0" value="0" step="0.1" max="15">
+              <input type="text" name="" class="" id="thrusterDiameter" min="0" value="0 m" step="0.1" max="15">
             <span  data-name=" m" id="thrusterDiameter_plus">+</span>
             <label for="Thruster">Numbers: </label>
             <span data-name=" m" id="thrusterNO_minus">--</span>
-            <input type="text" name="" class="" id="thrusterNO" min="0" value="0" step="0.1" max="10">
+            <input type="text" name="" class="" id="thrusterNO" min="0" value="0 m" step="0.1" max="10">
           <span  data-name=" m" id="thrusterNO_plus">+</span>
             </div>
      </div>
@@ -1002,36 +909,41 @@ tr:hover {background-color: #ddd;}
           <input type="checkbox" id="Roughness" name="Roughness" value="Roughness" class="input_check">
           <label for="Roughness"> Roughness above 150 μm</label><br>
       </div>
-       <div onchange="appendageCal(event)" class="input_div align">
-         <span>projection Area </span>
-        <input type="text" name="" class="" id="AirArea" min="0" value="0" step="0.1" max="30" oninput="shipDimension(event)">
-      </div>
-        <div onchange="appendageCal(event)"  onclick="handle_inputs(event)"class="input_div align_right">
-           <span>max wave height :</span> 
-           <span  data-name=" m^2" id="H_minus">--</span>
-            <input type="text" name="" class="" id="H" min="0" value="4" step="0.01" max="15" oninput="shipDimension(event)">
-            <span  data-name=" m^2" id="H_plus">+</span>
+      <div class="input_div sta_wave" >
+        <div class="">
+        <span class="sta_wave_center">STA wave-1  model </span>
+        </div>
 
+
+        <div onchange="appendageCal(event)"  onclick="handle_inputs(event)"class="input_div align_right">
+           <span>max wave height :</span>
+           <span  data-name=" m^2" id="H_minus">--</span>
+            <input type="text" name="" class="" id="H" min="0" value="4 m^2" step="0.01" max="15" oninput="shipDimension(event)">
+            <span  data-name=" m^2" id="H_plus">+</span>
       </div>
-      <div onchange="appendageCal(event)"  onclick="handle_inputs(event)" class="input_div align">
+      <div onchange="appendageCal(event)"  onclick="handle_inputs(event)"class="input_div align">
+         <span> Bow to 95% beam Lb:</span>
+         <span  data-name=" m" id="Lb_minus">--</span>
+          <input type="text" name="" class="" id="Lb" min="0" value="20 m" step="0.1" max="200" oninput="shipDimension(event)">
+          <span  data-name=" m" id="Lb_plus">+</span>
+    </div>
+    </div>
+    <div class="sta_wave">
+    <div class=" sta_wave_center input_div">
+    <span class="sta_wave_center"> Wind Resistance parameters </span>
+    </div>
+    <div onchange="appendageCal(event)"  onclick="handle_inputs(event)" class="input_div align_right">
          <span>max wind speed :</span>
         <span  data-name=" m^2" id="windSpeed_minus">--</span>
          <input type="text" name="" class="" id="windSpeed" min="0" value="15.7" step="0.1" max="15" oninput="shipDimension(event)">
          <span  data-name=" m^2" id="windSpeed_plus">+</span>
    </div>
-    </div>
-
-    <div class="propeller" onchange="propellers(event)">
-      <h2>Propeller dimension and parameters</h2>
-      <h2></h2>
-      <form action="" >
-      Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
-      N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
-      Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.70" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
-      P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
-      Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
-    </form>
-   </div>
+   <div onchange="appendageCal(event)" class="input_div align">
+     <span>projection Area </span>
+    <input type="text" name="" class="" id="AirArea" min="0" value="0 m^2" step="0.1" max="30" oninput="shipDimension(event)">
+  </div>
+</div>
+</div>
 
    </div>
    <div>
@@ -1118,82 +1030,19 @@ tr:hover {background-color: #ddd;}
               </select>
             </div>
           </div>
-          <div class="propellerTable">
-            <table id="propellerTable" class="Table">
-              <thead>
-                <th colspan="12">Propeller parameters using  Wageningen B-Screw Series  </th>
-              </thead>
-              <thead>
-
-                <th colspan="">Parameters</th>
-                <th colspan=""> Values</th>
-              </thead>
-
-              <tr>
-                <td>Wake </td>
-                <td><span id="wake">0</span></td>
-              </tr>
-              <tr>
-                <td>KT</td>
-                <td><span id="KT">0</span></td>
-              </tr>
-              <tr>
-                <td>KQ</td>
-                <td><span id="KQ">0</span></td>
-              </tr>
-              <tr>
-                <td>Hull efficiency </td>
-                <td><span id="NH">0</span></td>
-              </tr>
-              <tr>
-                <td>Open water efficiency  </td>
-                <td><span id="No">0</span></td>
-              </tr>
-              <tr>
-                <td>Thrust factor</td>
-                <td><span id="thrustFactor">0</span></td>
-              </tr>
-              <tr>
-                <td>advance propeller speed </td>
-                <td><span id="Va">0</span></td>
-              </tr>
-              <tr>
-                <td>propeller speed rps </td>
-                <td><span id="propeller_speed">0</span></td>
-              </tr>
-              <!-- <tr>
-                <td>Thrust loading Cth</td>
-                <td><span id="Cth">0</span></td>
-              </tr> -->
-              <tr>
-                <td>Thrust T</td>
-                <td><span id="thrust">0</span></td>
-              </tr>
-
-              <tr>
-                <td>Thrust Power</td>
-                <td><span id="thrustP">0</span></td>
-              </tr>
-
-            <tr>
-                <td> Power delivered to propeller </td>
-                <td><span id="Pd">0</span></td>
-              </tr>
-             <tr>
-                <td>Effective power </td>
-                <td><span id="Pe">0</span></td>
-              </tr>
-              <tr>
-                <td>Break  Power </td>
-                <td><span id="pb">0</span></td>
-              </tr>
-              <!-- <tr>
-              <td>SMCR  Power </td>
-              <td><span id="smcr">0</span></td>
-            </tr>  -->
-            </table>
-          </div>
           
+    <div class="propeller" onchange="propellers(event)">
+      <h2>Propeller dimension and parameters</h2>
+      <h2></h2>
+      <form action="" >
+      Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
+      N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
+      Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.70" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
+      P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
+      Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
+    </form>
+   </div>
+         
      </div>
 
     </div>
@@ -1201,8 +1050,83 @@ tr:hover {background-color: #ddd;}
       <span><strong>cavitation analysis </strong></span> <br><br>
       <span> updating.... <input type="text" name="" id=""></span> <br>
       <span>updatin.... <input type="text" name="" id=""></span><br><br>
-  
+
    </div>
+   <div class="propellerTable">
+    <table id="propellerTable" class="Table">
+      <thead>
+        <th colspan="12">Propeller parameters using  Wageningen B-Screw Series  </th>
+      </thead>
+      <thead>
+  
+        <th colspan="">Parameters</th>
+        <th colspan=""> Values</th>
+      </thead>
+  
+      <tr>
+        <td>Wake </td>
+        <td><span id="wake">0</span></td>
+      </tr>
+      <tr>
+        <td>KT</td>
+        <td><span id="KT">0</span></td>
+      </tr>
+      <tr>
+        <td>KQ</td>
+        <td><span id="KQ">0</span></td>
+      </tr>
+      <tr>
+        <td>Hull efficiency </td>
+        <td><span id="NH">0</span></td>
+      </tr>
+      <tr>
+        <td>Open water efficiency  </td>
+        <td><span id="No">0</span></td>
+      </tr>
+      <tr>
+        <td>Thrust factor</td>
+        <td><span id="thrustFactor">0</span></td>
+      </tr>
+      <tr>
+        <td>advance propeller speed </td>
+        <td><span id="Va">0</span></td>
+      </tr>
+      <tr>
+        <td>propeller speed rps </td>
+        <td><span id="propeller_speed">0</span></td>
+      </tr>
+      <!-- <tr>
+        <td>Thrust loading Cth</td>
+        <td><span id="Cth">0</span></td>
+      </tr> -->
+      <tr>
+        <td>Thrust T</td>
+        <td><span id="thrust">0</span></td>
+      </tr>
+  
+      <tr>
+        <td>Thrust Power</td>
+        <td><span id="thrustP">0</span></td>
+      </tr>
+  
+    <tr>
+        <td> Power delivered to propeller </td>
+        <td><span id="Pd">0</span></td>
+      </tr>
+     <tr>
+        <td>Effective power </td>
+        <td><span id="Pe">0</span></td>
+      </tr>
+      <tr>
+        <td>Break  Power </td>
+        <td><span id="pb">0</span></td>
+      </tr>
+      <!-- <tr>
+      <td>SMCR  Power </td>
+      <td><span id="smcr">0</span></td>
+    </tr>  -->
+    </table>
+  </div>
    </div>
 </div>
 
@@ -1476,7 +1400,7 @@ tr:hover {background-color: #ddd;}
                   <td>propeller speed n  rpm </td>
                   <td><span id="propeller_speed">0</span></td>
                 </tr>
-  
+
                 <tr>
                   <td>Thrust T</td>
                   <td><span id="thrust">0</span></td>
@@ -1499,7 +1423,7 @@ tr:hover {background-color: #ddd;}
                   <td>Break  Power </td>
                   <td><span id="pb">0</span></td>
                 </tr>
-       
+
               </table>
             </div>
     </div>
@@ -1994,7 +1918,7 @@ tr:hover {background-color: #ddd;}
     Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,No_of_eng,No_of_genset,aux_load,main_inst_power,
     star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type,sellected_genset,sellected_battery,sellected_engine,propulsion_syst,
     gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,emission_comparison,
-    LNG_emission,wind_speed,RAA_wind
+    LNG_emission,wind_speed,RAA_wind,Lw,DP_Va
 
 
  // Major constant
@@ -2028,7 +1952,7 @@ var layout = {
     },
     yaxis:{
         showgrid: false,
-        range: [0, 1500],
+        range: [],
         title: 'kN'
 
     },
@@ -2938,8 +2862,7 @@ function currentSfocDisplay (){
    let newVal,curentID,oldVal,step,unit,eventVal,eventID,incri_ID
     eventID = event.target.id
     eventVal = event.target.value
-     alert(eventID)
-     alert(eventVal)
+
    unit = event.target.getAttribute("data-name")
     curentID =  eventID
    curentID = curentID.split("_")//split of the plus or minus id to get the coresponding input ID
@@ -2947,13 +2870,12 @@ function currentSfocDisplay (){
    if(curentID.length >1){
        curentID  =  curentID[0] // this will match every input id that corespond to either minus or plus
       incri_ID = incri_ID[1] // checking the ID to determine if to increase or decrese value
-      
+
       step = document.getElementById(curentID).step
       oldVal = document.getElementById(curentID).value
       oldVal = parseFloat(oldVal)
       step = parseFloat(step)
-      alert(oldVal)
-      alert(step)
+
       if(incri_ID ==="plus"){
          newVal = oldVal + step
 
@@ -2988,6 +2910,8 @@ function currentSfocDisplay (){
  T = parseFloat(T)
 //  document.getElementById('displayT').innerHTML= T + " m"
 
+Lb = document.getElementById('Lb').value
+Lb = parseFloat(Lb)
 
  TA = document.getElementById('TA').value
  TA = parseFloat(TA)
@@ -3019,20 +2943,22 @@ wind_speed  = parseFloat(wind_speed)
 //  document.getElementById('displayCm').innerHTML= Cm
  //lcb
  LCB = document.getElementById('LCB').value
- LCB = parseFloat(LCB) 
+ LCB = parseFloat(LCB)
  lcb_type = document.getElementById("lcb_type").value
 //  document.getElementById('displayLCB').innerHTML= LCB
 
  Av = document.getElementById('AirArea').value
- 
- Av =  parseFloat(Av) 
+
+ Av =  parseFloat(Av)
 
 //  document.getElementById('displayAirArea').innerHTML= Av + " m^2"
 
  H = document.getElementById('H').value
+  H =  parseFloat(H)
 //  document.getElementById('displayH').innerHTML= H + " "
 
  updateResistance()
+ store_initai_evenirnt_data()
 }
 
 
@@ -3331,7 +3257,7 @@ const eventVal = event.target.value
 const size_margin = 0.1
 size_SOC = "updating .... "
 if(eventID ==="max_time"){
-  max_time = eventVal 
+  max_time = eventVal
   max_time = parseFloat(max_time)
 }
 else if(eventID==="max_power"){
@@ -3363,17 +3289,17 @@ if(max_power){
  if(size_Crate){
    size_capacity = ((cal_rate/size_Crate)*size_capacity).toFixed(1)
    size_capacity =  (size_capacity*size_margin)+  size_capacity*1
-   chargeDischarge = (size_capacity*size_Crate).toFixed(1) 
+   chargeDischarge = (size_capacity*size_Crate).toFixed(1)
    size_SOC = size_capacity
    if(size_Crate_peak){
-     
+
    chargeDischarge_peak = (size_capacity*size_Crate_peak).toFixed(1)
    alert(chargeDischarge_peak)
   }
 
    if(size_DOD){
     size_capacity = size_capacity*1 + (size_capacity*(1-(size_DOD/100)))
-    size_capacity = size_capacity.toFixed(1) 
+    size_capacity = size_capacity.toFixed(1)
    }
 
  }
@@ -3392,9 +3318,9 @@ document.getElementById("cont_dischargeCharge_peak").innerHTML  = chargeDischarg
 
 
 
-// document.getElementById("size_capacity").innerHTML 
-// document.getElementById("size_capacity").innerHTML 
-// document.getElementById("size_capacity").innerHTML 
+// document.getElementById("size_capacity").innerHTML
+// document.getElementById("size_capacity").innerHTML
+// document.getElementById("size_capacity").innerHTML
 
 }
 
@@ -3727,7 +3653,7 @@ function displayBatteryType(event) {
 
   const EventVa = event.target.value
   const EventID = event.target.id
- 
+
  if(EventVa ==="battery_sizing"){
   document.getElementById("battery_sizing").classList.remove("hide");
  }
@@ -3775,7 +3701,7 @@ else if(EventID ==="custo_confirm"){
  c_rate = parseFloat(batteryDetail.c_Rate)
   c_rate_peak = parseFloat(batteryDetail.c_Rate_peak)
   DOD = parseFloat(batteryDetail.DOD)
-  
+
   if(!c_rate_peak){
     c_rate_peak = c_rate;
   }
@@ -4386,13 +4312,13 @@ propulsion_syst = EventValue
 
 }
 
-function PMS(){
-  this.ME_sys = function(){
+// function PMS(){
+//   this.ME_sys = function(){
 
-  }
-  this.ME_sys = function(){
-  }
-}
+//   }
+//   this.ME_sys = function(){
+//   }
+// }
 LiveResult()
 // sfocDisplay ()
 
@@ -4420,7 +4346,7 @@ function main_Simulate(event){
 
 
 
-  let type, aux_load_perc,max_load_perc, remain_distance,current_time,new_distance_m 
+  let type, aux_load_perc,max_load_perc, remain_distance,current_time,new_distance_m
    trans_check = document.getElementById("transit").checked
    standby_check = document.getElementById("standby").checked
    DP_check = document.getElementById("DP").checked
@@ -4437,7 +4363,7 @@ function main_Simulate(event){
  if (trans_check === true){
     transit_dis = transit_dis_mils*1852 // meters
     transit_time = (transit_dis/shipSpeed)/3600 //time for transit in seconds
-    remain_distance = transit_time 
+    remain_distance = transit_time
     end_sim = sim_time*60*1000 // convert the input time to milli seconds
     time_step = (transit_time*3600*1000/(end_sim /500)) //time step for every 0.5 seconds
   const sim_interv = setInterval(sim, 500);
@@ -4451,17 +4377,17 @@ function main_Simulate(event){
   let new_distance_mils,distance
   distance = 0
   function sim() {
-    
-     current_time = remain_distance/shipSpeed // recalculating the remaining voyage time 
-     step = current_time/(end_sim-time)  //calculation updated time step 
-     time_step = step/3600*1000  //converting milliseconds to hours 
-   
+
+     current_time = remain_distance/shipSpeed // recalculating the remaining voyage time
+     step = current_time/(end_sim-time)  //calculation updated time step
+     time_step = step/3600*1000  //converting milliseconds to hours
+
     load = Pb // break power
     type = "main" // the type is only important when it is auxilary calculation
     time +=500
     sim_time +=time_step
     // distance_past  = (shipSpeed*(sim_time*3600))/1852
-    new_distance_mils = (shipSpeed*(time_step*3600))/1852 // updated distance in mils 
+    new_distance_mils = (shipSpeed*(time_step*3600))/1852 // updated distance in mils
     new_distance_m = (shipSpeed*(time_step*3600)) // updated distance in meters
     distance += new_distance_mils
     distance_past = distance
@@ -4476,7 +4402,7 @@ function main_Simulate(event){
      type = "auxilary"
      aux_load // hotel laod and other
      aux_enginePower
-     
+
      gen_supplier
      EngineCal.SFOC(aux_load,aux_enginePower,aux_ratedsfoc,gen_supplier,type)
      FC_aux = aux_load*(sfoc_cal_aux/1000)*time_step
@@ -4556,7 +4482,7 @@ aux_HFO_cost,aux_HFO_CO2,aux_HFO_NOx,aux_HFO_SOx,aux_HFO_PM,aux_HFO_NMVOC,aux_HF
 main_HFO_cost,main_HFO_CO2,main_HFO_NOx,main_HFO_SOx,main_HFO_PM,main_HFO_NMVOC,main_HFO_volume, main_update, aux_update,
 
 main_cost,main_CO2,main_NOx,main_SOx,main_PM,main_NMVOC,main_volume,
-aux_cost,aux_CO2,aux_NOx,aux_SOx,aux_PM,aux_NMVOC,aux_volume,main_engine_fuel, Aaux_engine_fuel
+aux_cost,aux_CO2,aux_NOx,aux_SOx,aux_PM,aux_NMVOC,aux_volume,main_engine_fuel, Aaux_engine_fuel, DP_break_power, dynamic_load
 
 
 
