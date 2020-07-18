@@ -619,7 +619,7 @@ function propellerProperties (){
 
   function environment_load (){
     // update wave height and wind Speed, to have a dynamic laod
-    this.stotre_initial_data = function(H,wind_speed){
+    this.data = function(H,wind_speed){
       this.new_wave = H; // store max input wave wave_height
       this.new_wind_speed = wind_speed;  //  stored the max wind speed
     };
@@ -658,77 +658,90 @@ function propellerProperties (){
            this.engine_power = engine_power; // each installed power
            this.dynamic_load = 0;  // dynamic load in calm water
            this.Aux_load = Aux_load;  // Hotel and auxilary load combine as one
+           this.stand_by_engine = false;
            this.break_power = Pb; // Break power during transit
            this.operation = operation; // type of operation e.g transit, Harbor and DP operation
-      
            if(this.engine_nums > 4){
-             // only 4 engines are allow to be installed at this stage
-              alert( `maximum accepted numers of installed  generator set  is 4, but you installed ${this.engine_nums}`)
-              
-              //Stop the simulation from running since the PMS can only handle 4 genset TODO:
-              return  
-            }
-            else if(this.engine_nums <2){
-             // Minimum mber of engine allow to be installed is 2
-             alert( `minimum accepted numers of installed  generator set  is 2, but you installed ${this.engine_nums}`)
-              return
-            }
-            if(this.operation === "DP"){
-              // when DP operation things change like Load
-                this.break_power = DP_break_power; //constant power from the open propeller 
-                if(bat_SOC){
-                  // if battery pack is installed 
-                  this.battery_SOC = bat_SOC; 
-                  this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
-                }else {
-                  this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
-      
-                }
-            }else{
-              if(bat_SOC){
-                // if battery pack is installed 
-                this.battery_SOC = bat_SOC; 
-                this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
-              // }else {
-              //   this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
-    
+            // only 4 engines are allow to be installed at this stage
+             alert( `maximum accepted numers of installed  generator set  is 4, but you installed ${this.engine_nums}`)
+             
+             //Stop the simulation from running since the PMS can only handle 4 genset TODO:
+             return  
+           }
+           else if(this.engine_nums <2){
+            // Minimum mber of engine allow to be installed is 2
+            alert( `minimum accepted numers of installed  generator set  is 2, but you installed ${this.engine_nums}`)
+             return
+           }
+           if(this.operation === "DP"){
+             // when DP operation things change like Load
+               this.break_power = DP_break_power; //constant power from the open propeller 
+               if(bat_SOC){
+                 // if battery pack is installed 
+                 this.battery_SOC = bat_SOC; 
+                 this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
+               }else {
+                 this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
                }
-            }
-            this.combine_load = this.dynamic_load + this.Aux_load + this.break_power;
-
-           this.required_engines  = this.combine_load/this.engine_normal_load ;// allow 80 % of load on engine during normal operation
-           if(this.required_engines <= 1){
-            this.required_engines= 1;
-            this.engine_online_obj = {
-               one : 0,
-            } 
+           }else{
+             if(bat_SOC){
+               // if battery pack is installed 
+               this.battery_SOC = bat_SOC; 
+               this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
+              }else {
+                this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
+              }
            }
-           else if (this.required_engines >1 && this.required_engines<= 2){
-            this.required_engines= 2;
-            this.engine_online_obj = {
-              one : 0,
-              two : 0,
-           }
-           }
-           else if (this.required_engines >2 && this.required_engines<= 3){
-            this.required_engines= 3;
-            this.engine_online_obj = {
-              one : 0,
-              two : 0,
-              three : 0,
-           }
-           }
-           else if (this.required_engines >3){
-            this.required_engines= 4;
-            this.engine_online_obj = {
-              one : 0,
-              two : 0,
-              three : 0,
-              fourth : 0,
-           }
-           }
-        //    start_off_engine();
+           this.update();
       }
+
+       update(){
+
+       this.combine_load = this.dynamic_load + this.Aux_load + this.break_power;
+      this.required_engines  = this.combine_load/this.engine_normal_load ;// allow 80 % of load on engine during normal operation
+      if(this.required_engines <= 1){
+       this.required_engines= 1;
+       this.engine_online_obj = {
+          one : 0,
+       } 
+      }
+      else if (this.required_engines >1 && this.required_engines<= 2){
+       this.required_engines= 2;
+       this.engine_online_obj = {
+         one : 0,
+         two : 0,
+      }
+      }
+      else if (this.required_engines >2 && this.required_engines<= 3){
+       this.required_engines= 3;
+       this.engine_online_obj = {
+         one : 0,
+         two : 0,
+         three : 0,
+      }
+      }
+      else if (this.required_engines >3){
+       this.required_engines= 4;
+       this.engine_online_obj = {
+         one : 0,
+         two : 0,
+         three : 0,
+         fourth : 0,
+      }
+      }
+      else if (this.required_engines >3){
+       this.required_engines= 4;
+       this.engine_online_obj = {
+         one : 0,
+         two : 0,
+         three : 0,
+         fourth : 0,
+      }
+      }
+      // optimized the loads on engines for fuel efficiency after turning Onn the required engines 
+      this.optimized_engine_load()
+      
+    } 
       start_off_engine(){
           //this for the intial starting of the engine
           this.online_engine = this.required_engines; // numbers of engine online 
@@ -738,38 +751,70 @@ function propellerProperties (){
           // TODO:
            }
       
-      FLR(added_load,){
+      FLR(){
+        this.engine_normal_load  // 80% when battery is install and without battery pack is 65%
+        this.engine_load_limit = this.engine_power*1.1; // max load 110 % for 10 seconds 
+        this.combine_load
+        this.combine_engine_limit = this.engine_load_limit*this.online_engine
+        this.limit_load = Math.min(this.combine_load,this.combine_engine_limit)
+        
           //fast load reducer
            // TODO:
       }
-      share_load(fuelType){
+      share_load(){
         // optimizing the energy consumption by sharing the load among the engines 
         this.fuel_type = fuelType; 
-
-        EngineCal.SFOC()
-      
 
         // TODO:
       }
       BlackOut_prevention(){
+        this.engine_normal_load  // 80% when battery is install and without battery pack is 65%
+        this.engine_load_limit = this.engine_power*1.1; // max load 110 % for 10 seconds 
+        this.combine_load 
+        this.combine_power = this.engine_power*this.online_engine;
+        this.FLR(); // fast load reducering algrithyms 
+        if(this.limit_load >= this.combine_power*0.8 && this.limit_load < this.combine_power*0.9){
+          // TODO: activate standby engine 
+          //NOTE: TODO: A typical enine start time from starting, stand to connection of løaod is 45s
+          this.stand_by_engine = true;
+          setTimeout(() => {
+             
+          }, );
+
+         }
+         else if(this.limit_load >= this.combine_power*1.05){
+           //TODO: start new engine 
+           //typicall it takes 10 seconds to connection the genset and ready to take load after stand by 
+           setTimeout(() => {
+            this.update()
+             
+           }, 10000); 
+         }
 
       } 
       optimized_engine_load(){
         //this is the proposed algrithym  for sharing load,
         this.online_engine =online_engine;
         this.engine_normal_load = engin_norm_load
-        this.combine_load 
+        this.combine_load,
+        this.fuel_SFOC_cal_1 = 0,
         this.engine_online_obj // object of the individual engine online 
          this.load_on_each_eng
-        this.fuel_SFOC = EngineCal.SFOC(this.load_on_each_eng,this.engine_power,SFOC,supplier,"auxilary")
-        this.fuel_SFOC_cal = this.fuel_SFOC.sfoc_cal_aux;
+        this.fuel_SFOC_1 = EngineCal.SFOC(this.load_on_each_eng,this.engine_power,SFOC,supplier,"auxilary") //SFOC when laod is share equally on genset 
+        this.fuel_SFOC_cal_1 = (this.fuel_SFOC_1.sfoc_cal_aux)*this.online_engine;
          let i,j ;
          i = 0 ;
         j = 0;
+        if (this.stand_by_engine === true) {
+          this.engine_normal_load = this.engine_power*1.1 // allowing the engine to take load to the 
+          this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
+
+        }else{
+          this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
+        }
         Object.entries(this.engine_online_obj).forEach(entry => {
            if(i ===0 || j === 1){
             this.assigned_load = this.engine_normal_load
-            this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
             if(this.check_load < 0.3 && j=== 0 ){
                this.assigned_load = this.combine_load/2
                j = 1
@@ -783,6 +828,8 @@ function propellerProperties (){
            
             entry[1] =  this.assigned_load // update the engine load
             //TODO: check the remaining load before assigning to the engine 
+            this.fuel_SFOC_2 =  EngineCal.SFOC(this.assigned_load,this.engine_power,SFOC,supplier,"auxilary")
+            this.fuel_SFOC_cal_2 += this.fuel_SFOC_2.sfoc_cal_aux
 
            }
 
@@ -801,14 +848,54 @@ function propellerProperties (){
              }
             // this.assigned_load = Math.min(this.combine_load, this.engine_normal_load)
             entry[1] =  this.assigned_load
+            this.fuel_SFOC_2 =  EngineCal.SFOC(this.assigned_load,this.engine_power,SFOC,supplier,"auxilary")
+            this.fuel_SFOC_cal_2 += this.fuel_SFOC_2.sfoc_cal_aux
            }
           //use key and value here
           i++
          
         });
+        if(this.fuel_SFOC_cal_2 > this.fuel_SFOC_cal_1){
+          Object.entries(this.engine_online_obj).forEach(entry => {
+            entry[1] = this.this.load_on_each_eng
+          });
+        }
+      }
+      blackOut_recovery(){
+        // When partial blackout fully blackout due to break done of the engine, or an event of a single engine break down detected 
+       this.FLR()
+        if(this.stand_by_engine === true){
+          // if engine was already on standy then it takes 10 seconds to come online 
+          this.time  = 10000; 
+        }else if(this.stand_by_engine === false){
+           // if engine was not on standy then it takes 30 seconds to come online 
+            this.time = 30000; 
+            this.stand_by_engine = true;  // activate a stand_by engine 
+        }
+        setTimeout(() => {
+          //take 30 seconds to
+          this.update()
+        }, this.online);
+      }
+      Test_blackout(){
+
       }
       Monitor_system(){
         //TODO: this monitor the entire systems to ensure every thing is ok, if rise alarm or take action 
+        this.combine_load
+        Object.entries(this.engine_online_obj).forEach(entry => {
+          //Checking the engine for blackOut
+          if(entry[1] === 0){
+            //if any engine has zero load and is suppose to be online then that engine is blackout
+            this.blackUut = true;
+          }else{
+            this.blackOut = false;
+          }
+        });
+
+        if(this.blackOut === true){
+          this.blackOut_recovery() // initiate recovery  
+        }
       }
 
 }
@@ -1408,3 +1495,8 @@ const EngineCal = new engineAnalysis()
 
 //alternative fuel
  const fuel_property = new fuel_properties()
+
+ // Environment Data and load 
+
+ const environment = new environment_load()
+ console.log(environment)
