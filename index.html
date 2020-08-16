@@ -341,7 +341,6 @@ tr:hover {background-color: #ddd;}
       margin-left: 15px;
     }
 
-
     /* //Propeller */
 
     .propeller{
@@ -378,8 +377,6 @@ tr:hover {background-color: #ddd;}
       margin-bottom: 10px;
       margin-top:10px;
     }
-
-
     .simulation{
      /* background-color:rgba(0, 2, 4, 0.7); */
      background-color:rgba(44, 81, 117, 0.7);
@@ -537,7 +534,6 @@ tr:hover {background-color: #ddd;}
     display: flex;
 
      }
-
      .powerOn{
        border: solid rgb(7, 7, 7) 5px;
        padding: 4px;
@@ -562,13 +558,14 @@ tr:hover {background-color: #ddd;}
     #emission{
       position: relative;
      margin: auto;
-
      width: 100%;
     }
+    /* #result{
+      width:50%;
+    } */
     #update_top{
    margin-bottom: 20px ;
     }
-
 
     .darshboard_container,.result_compare{
       width: 100%;
@@ -660,7 +657,7 @@ tr:hover {background-color: #ddd;}
        transform: rotate(90deg);
 
      }
-     .ship_move{
+     /* .ship_move{
       animation: mymove 12s infinite;
       animation-timing-function: linear;
       position: relative;
@@ -668,7 +665,7 @@ tr:hover {background-color: #ddd;}
      @keyframes mymove {
       from{left: -30%;}
        to {left: 100%;}
-     }
+     } */
 
     </style>
     <div class="topnav">
@@ -1270,7 +1267,9 @@ tr:hover {background-color: #ddd;}
              <span>N0.of engines: </span> <span id="no_engines"></span><br>
              <span>installed power: </span><span id="main_installed_power"></span> <br>
              <span>Propulsion power :</span> <span id="propulsion_p"></span >
+             
             </div>
+
            <div class="aux_pro">
              <strong><span>Auxiliary Engine</span></strong><br><br>
              <span><strong>Engine Power :</strong> </span> <span id="aux_eng_power_dis"></span><br>
@@ -1282,14 +1281,16 @@ tr:hover {background-color: #ddd;}
            <div class="battery_pro">
             <strong><span>Battery pack</span></strong><br><br>
             <span><strong>battery capacity :</strong> </span> <span id="b_capacity"></span><br>
-            <span><strong>c_rate : </strong></span> <span id="c_rate"></span><br>
+            <span><strong>c_rate: </strong></span> <span id="c_rate"></span><br>
             <span><strong>c_rate peak : </strong></span> <span id="c_rate_peak"></span><br>
             <span><strong>voltage :</strong> </span><span id="volt_pro"></span> <br>
             <span><strong>Charge/discharge power :</strong> </span><span id="charge_power"></span> <br>
 
             <span><strong>DOD :</strong> </span><span id="DOD_pro"></span> <br>
-            <span><strong>SOC</strong> </span><span id="SOC_pro"></span> <br> <br>
-          </div>
+            <span><strong>SOC</strong> </span><span id="SOC_pro"></span> <br> 
+            <span><input type="button" value="Rest soc to 0" class="start_sim" id="rest_soc" onclick="preview(event)" ></span>
+
+           </div>
            <div class="gen_pro">
             <strong><span>General info</span></strong><br><br>
              <strong><span>Propulsion type : </span> </strong> <span id="chose_propulsion"></span><br>
@@ -1414,7 +1415,10 @@ tr:hover {background-color: #ddd;}
         </div>
               <!-- grapph ploting here -->
          <div class="SFOC" id="SFOC">
-             <div id="plot" class="plot"></div>
+             <div id="plot" class="plot">
+               
+             </div>
+             
          </div>
          <div class="darshboard_container hide" id="darshboard_container">
         <div class="sim_ploting">
@@ -1455,6 +1459,20 @@ tr:hover {background-color: #ddd;}
             <div class="darsh_top center"><span>Emissions Chart</span></div>
             <div class="emission" id="emission">
               <canvas id="emission_chart"></canvas>
+          
+              <span class="">  change engine :
+                <select  name="" id="online_engine_emission" onchange="swithc_engines(event)">
+                 <option value="combine"><strong> combine engines</strong></option> 
+                 <option value="engine_1">Engine set 1</option> 
+                 <option value="engine_2">engine set 2</option> 
+                 <option value="main_engine">Main engine</option> 
+                 <option value="genset_engine">genset engine </option> 
+                 <!-- <option value="engine_3">engine 3</option> 
+                  <option value="engine_4">engine 4</option> 
+                  <option value="engine_5">engine 5</option>  -->
+               </select></span>
+               <br> 
+               <br>
             </div>
            </div>
            <div class="general section ">
@@ -1463,6 +1481,7 @@ tr:hover {background-color: #ddd;}
               <span class="span_disp span_result"> <span id="speed_show" class="live_data"></span > <br> Speed Knt </span>
               <span class="span_disp span_result">  <span id="wave_height_show" class="live_data"></span > <br> wave heingt</span>
               <span class="span_disp span_result"> <span id="distance_Mils" class="live_data"></span ><br> Nautical Mils </span>
+
             </div>
           </div>
         </div>
@@ -1476,20 +1495,46 @@ tr:hover {background-color: #ddd;}
             <input type="checkbox" name="" id="">
             <span class="wave" id="wave_update"><span>max Wave height (m) : </span><input type="text" name="" id="wave_height" class="sim" onchange="sim_data(event)">
           </span> <br><br>
-          <span class="span_disp"> adjust hotel load <input type="range" name="" min="1000" max="10000" step="500" id="adjust_load" onclick="sim_data(event)"></span> <br><br>
+          <span class="span_disp"> adjust hotel load <input type="range" name="" min="1000" max="15000" step="500" id="adjust_load" onclick="sim_data(event)"></span> <br><br>
           </div>
-        </div>
+            </div>
           <div class=" section" id="">
-            <div id="result" class="result"></div>
+            <div id="result" class="result">
+             <span>Switch to different data</span> 
+              <select name="" id="online_engine_power" onchange="switch_displayed_data(event)"> 
+                <option value="General_powers">General engines</option>
+                <option value="engine_set1"> Engine set 1</option>
+                <option value="engine_set2"> Engine set 2</option>
+                <option value="genset_engine"> Genset Engine</option>
+                <option value="engine_set1_set2"> Engine set2 VS set1</option>
+                <option value="mian_engine"> main  engine </option>
+                <option value="mian_genset_engine"> main & genset engine </option>
+                <!-- <option value="engine_3"> Engine 3</option>
+                <option value="engine_4"> Engine 4</option>
+                <option value="engine_5"> Engine 5</option> -->
+                <option value="battery"> battery </option>
+              </select>
+              <br>
+              <br>
+            </div>
           </div>
           <div class="center result_button"  onclick="compare_result(event)"><input type="button" value="check other result " id="other_result"></div>
-        </div>
+         </div>
       </div>
    </div>
     </div>
     <div class="result_compare hide" id="result_compare" onclick="compare_result(event)">
       <div class="center result_button">
         <span class=""><strong> </strong></span><br><br>
+         <span>
+           <span>chnage fuel : </span>
+           <select name="" id="fuel_compare_type" onchange="compare_result(event)">
+             <option value="LNG">LNG</option>
+             <option value="MGO">MGO</option>
+             <option value="MDO">MDO</option>
+             <option value="">HFO</option>   
+           </select>
+         </span>
         <span><input type="button" value="emission" id="show_emission"></span>
         <span><input type="button" value="Cost" id="show_cost"></span>
         <span><input type="button" value="volume" id="show_volume"></span>
@@ -1500,16 +1545,17 @@ tr:hover {background-color: #ddd;}
        <canvas id="comparison_chart"></canvas>
      </div>
     </div>
-    <div class="addedMachinery">
+    <!-- <div class="addedMachinery">
       <h2>The chose machinery will be dispplay here  </h2>
        <div class="ship_move" id="ship_move">
         <img src="https://images.pexels.com/photos/1556991/pexels-photo-1556991.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260" alt=" Ship simulation" class="img_display">
 
        </div>
 
-    </div>
+    </div> -->
 
-
+   <br>
+   <br>
 
     <script>
 
@@ -1517,7 +1563,7 @@ tr:hover {background-color: #ddd;}
  // Major constant
  viscosity = 0.0000012 // m/s^2
  g = 9.81  // m/s^2
- density = 1025 // kg/m^3
+ density = 1000 // kg/m^3
  density_air = 1.225
 
  resistanceDisplay ()
@@ -1613,36 +1659,34 @@ const layout = {
 
 function LiveResult(){
 
-  const auxLoad = {
+let load_data = {
   type: 'scatter',
   x: [],
   y: [],
-  name: 'Auxilary load',
 }
-const mainLoad = {
-  type: 'scatter',
-  x: [],
-  y: [],
-  name: 'Propulsion load',
-}
-const mainPower = {
-  type: 'scatter',
-  x: [],
-  y: [],
-  name: 'propulsion power',
-}
-const auxPower = {
-  type: 'scatter',
-  x: [],
-  y: [],
-  name: 'Auxilary power',
-}
+const data1 = Object.create(load_data)
+const data2 = Object.create(load_data)
+const data3 = Object.create(load_data)
+const data4 = Object.create(load_data)
+const data5 = Object.create(load_data)
+const data6 = Object.create(load_data)
+const data7 = Object.create(load_data)
+const data8 = Object.create(load_data)
+const data9 = Object.create(load_data)
+const data10 = Object.create(load_data)
+const data11 = Object.create(load_data)
+const data12 = Object.create(load_data)
+
+
 // //   plot_bgcolor: 'yellow',
 //   width:600,
 //   height:400,
 // //   paper_bgcolor: 'purple'
-const datas = [ auxLoad,mainLoad,mainPower,auxPower]
+const datas = [data1,data2,data3,data4,data5,data6,data7,data8,data9,data10,data11,data12]
+//const datas = [auxLoad,mainLoad,mainPower,initialize_space]
+
 const layout = {
+  //autosize: true,
   font: {
     family: 'Courier New, monospace',
     size: 16,
@@ -1655,7 +1699,6 @@ const layout = {
   },
   xaxis:
 	{
-        //  range: [0,],
         showgrid: false,
         title: 'time millisecond',
         rangemode:"tozero",
@@ -1668,8 +1711,7 @@ const layout = {
     },
    title: 'Energy/power monitor  ',
    plot_bgcolor: '#3b1c50',
-  // width:600,
-  // height:600,
+
    paper_bgcolor: '#072b39'
 
   };
@@ -1692,7 +1734,6 @@ function emission(){
             backgroundColor:  'rgba(75, 192, 192, 0.2)',
             borderColor:'rgba(255, 159, 64, 1)',
             borderWidth: 1,
-
         },
            {
             label: 'Auxilairy engine',
@@ -2013,7 +2054,6 @@ setTimeout(function () {
 
 }
 
-
 function loadDisplay(){
     if(!engine_loadPercent){
         engine_loadPercent = 0
@@ -2027,7 +2067,6 @@ var chart4 = c3.generate({
       columns: [
           ['Load', engine_loadPercent]
       ],
-
       type: 'gauge',
       onclick: function (d, i) { console.log("onclick", d, i); },
       onmouseover: function (d, i) { console.log("onmouseover", d, i); },
@@ -2150,25 +2189,26 @@ setTimeout(function () {
 }, 2000)
 
 }
-
+let sfoc_display
 function currentSfocDisplay (){
-    let sofocdisplay
-    if(!sfoc_cal){
-        sfoc_cal = ratedSfoc
-        if(!sfoc_cal){
-          sfoc_cal = aux_ratedsfoc
+    
+    if(recent_chose_engine ==="aux_engine"){
+      if(!sfoc_display){
+        sfoc_display = aux_ratedsfoc      
+      }
+    
+    }else{
+      
+        if(!sfoc_display){
+          sfoc_display = ratedSfoc;
         }
     }
-
     var chart4 = c3.generate({
-
       bindto: '#sfocChart',
-
       data: {
           columns: [
-              ['sfoc', sfoc_cal]
+              ['sfoc', sfoc_display]
           ],
-
           type: 'gauge',
           onclick: function (d, i) { console.log("onclick", d, i); },
           onmouseover: function (d, i) { console.log("onmouseover", d, i); },
@@ -2202,19 +2242,15 @@ function currentSfocDisplay (){
     });
 
     var interval = setInterval(function() {
-
         chart4.load({
-          columns: [['sfoc', sfoc_cal]]
+          columns: [['sfoc', sfoc_display]]
       });
-
         // if( > 10) clearInterval(interval);
       }, 100);
-
-
     }
     let x = 0
 
-    function appendageCal(event){
+ function appendageCal(event){
          let BKA,SkegCheck, RBSCheck,RBSkegCheck,hullBossings,thrustersCheck,thrustersNO,thrusterD, bulbousCkeck,
          StaFinsVal, bKeelVal,domeCheckVal, sBracketVal,sBossingsVal,shaftsCheckVal,RBS,RBStern,
        Skeg,RBSArea,RBSternArea,SkegArea,shafts,hullBossingsVal,
@@ -2528,7 +2564,6 @@ wind_speed  = parseFloat(wind_speed)
  environment.data(H,wind_speed)
 }
 
-
 function sternType(event){
 
   sternId = document.getElementById('stern').value
@@ -2640,7 +2675,6 @@ function propellers(event){
    document.getElementById('propeller_speed').innerHTML=  propel_speed + "s^-1"
 }
 
-
 function updateResistance(){
 let c,k,val,i,s
       intervalResis = 0
@@ -2683,7 +2717,6 @@ let c,k,val,i,s
 
 let lastRPM;
 let i = 1;
-
 function loadSfoc(val){
     // this is for the percentage Range slider
  document.getElementById('loadDisplay').innerHTML= val + " engine load %"
@@ -2753,7 +2786,7 @@ else if(eventID==="size_c_rate"){
 else if(eventID==="size_c_rate_peak"){
   size_Crate_peak = eventVal
   size_Crate_peak = parseFloat(size_Crate_peak)
-  alert(size_Crate_peak)
+  
 }
 else if(eventID==="life_span"){
   life_span = eventVal
@@ -2772,7 +2805,7 @@ if(max_power){
    if(size_Crate_peak){
 
    chargeDischarge_peak = (size_capacity*size_Crate_peak).toFixed(1)
-   alert(chargeDischarge_peak)
+
   }
 
    if(size_DOD){
@@ -2818,7 +2851,7 @@ function displayEngineType(event) {
   const table = document.getElementById("Table");
   let i = 0
   let row, custo_eng_details;
-
+  recent_chose_engine = "Main_engine"
 
   const EventVal = event.target.value
   const EventID = event.target.id
@@ -2875,25 +2908,26 @@ else if(EventID==="custo_confirm"){
  }
 }
 engineStrokes =engineDetail.Strokes
-ratedPower = parseFloat(engineDetail.power)
+
  meanPressure = parseFloat(engineDetail.mean_Presure)
  cylinderBore = parseFloat(engineDetail.cylinderBore)
  cylinders = parseFloat(engineDetail.cylinders)
  pistonStroke = parseFloat(engineDetail.pistonStroke)
-  main_enginePower = parseFloat(engineDetail.power)
+  main_enginePower = parseFloat(engineDetail.Engine_Power)
  ratedSfoc = parseFloat(engineDetail.SFOC)
  supplier = engineDetail.supplier
  ratedSpeed = parseFloat(engineDetail.Engine_speed)
  enginePower = main_enginePower
+ ratedPower = main_enginePower
 EngineCal.torque(engineStrokes,ratedSpeed,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
-// engine.Margin()
- torqueDisplay ()
- powerDisplay()
- rpmDisplay()
- loadDisplay()
- loadWattDisplay ()
- currentSfocDisplay()
+
+//  torqueDisplay ()
+//  powerDisplay()
+//  rpmDisplay()
+//  loadDisplay()
+//  loadWattDisplay ()
+//  currentSfocDisplay()
     // updating sliders
   if(engineDetail.speed_type=== "Medium-Speed"){
    rpm_min = 400
@@ -2963,7 +2997,7 @@ function displayGenSetType(event) {
   // document.getElementById("mainDashboard").classList.remove("hide");  //this is for dispalying engine darshboard
   document.getElementById("custo_genset").classList.remove("hide");
   document.getElementById("custom_engine").classList.add("hide");
-
+  document.getElementById("battery_sizing").classList.add("hide");
   document.getElementById("select_message").classList.add("hide");
   const table = document.getElementById("genset_Table");
   let i = 0
@@ -2971,7 +3005,7 @@ function displayGenSetType(event) {
 
   const EventVal = event.target.value
   const EventID = event.target.id
-
+  recent_chose_engine = "aux_engine" 
  if(EventID==="choose_sys"){
   if(!propulsion_syst){
     alert("choose propulsion system first")
@@ -3013,10 +3047,9 @@ else if(EventID==="custom_genset"){
     throw "propulsion system unknow"
   }
   // let custom_genset =Generator_sets.customize
-  alert("testingn")
+  
   gensetDetail = custom_genset
   create_type = EventID
-  console.log(gensetDetail)
 
   while (table.hasChildNodes()) {
   table.removeChild(table.firstChild);
@@ -3045,16 +3078,14 @@ aux_meanPressure = parseFloat(gensetDetail.mean_Presure)
  Gen_Power = parseFloat(gensetDetail.Gen_Power)
  rated_BSEC = parseFloat(gensetDetail.BSEC)
  engine_effic = gensetDetail.efficiency
+ ratedPower = parseFloat(gensetDetail.Engine_Power)
 
  gen_supplier = gensetDetail.supplier
  aux_ratedSpeed = parseFloat(gensetDetail.Engine_speed)
  speedRPM =aux_ratedSpeed
- if(EventID ==="custom_genset"){
-  gensetDetail.SFOC
- }else {
+ if(!gensetDetail.SFOC){
   gensetDetail.SFOC= (((rated_BSEC/42700)*(1-engine_effic)+(rated_BSEC/42700))*1000).toFixed(2)*1 + " g/kWh"
  aux_ratedsfoc = parseFloat(gensetDetail.SFOC)
-
  }
 
 EngineCal.torque(aux_enginePower,aux_ratedSpeed,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke )
@@ -3130,16 +3161,21 @@ function displayBatteryType(event) {
   document.getElementById("gensetTable").classList.add("hide");
   document.getElementById("select_message").classList.add("hide");
   document.getElementById("battery_sizing").classList.add("hide");
+  document.getElementById("custom_battery").classList.remove("hide");
+
   const table = document.getElementById("bat_Table");
   let i = 0
-  let DOD;
-  let row,c_ratec_rate,custom_batteryDetail ;
+  let row,c_ratec_rate,custom_batteryDetail,DOD;
 
   const EventVa = event.target.value
   const EventID = event.target.id
 
  if(EventVa ==="battery_sizing"){
   document.getElementById("battery_sizing").classList.remove("hide");
+    document.getElementById("select_message").classList.add("hide");
+    document.getElementById("bat_Table").classList.add("hide");
+    document.getElementById("custom_battery").classList.add("hide");
+  return "sizing the battery "
  }
  else if(EventID==="choose_sys"){
   if(!propulsion_syst){
@@ -3148,6 +3184,11 @@ function displayBatteryType(event) {
   }
   sellected_battery = batteryDetail
   console.log(sellected_battery)
+  document.getElementById("batteryTable").classList.add("hide");
+  document.getElementById("select_message").classList.remove("hide");
+  document.getElementById("engine_perf").classList.add("hide");
+  document.getElementById("select_message_butt").value = "Battery pack has been successfully added to the mechinery"
+  
    throw "testing the"
  }
 
@@ -3181,6 +3222,7 @@ else if(EventID ==="custo_confirm"){
   batteryDetail = created_battery
 }
 }
+
  capacity = parseFloat(batteryDetail.capacity)
  c_rate = parseFloat(batteryDetail.c_Rate)
   c_rate_peak = parseFloat(batteryDetail.c_Rate_peak)
@@ -3191,7 +3233,7 @@ else if(EventID ==="custo_confirm"){
   }
   batteryDetail.cont_charging_power = (capacity*c_rate).toFixed(1)
     batteryDetail.peak_charging_power = (capacity*c_rate_peak).toFixed(1)
-    batteryDetail.SOC = capacity-capacity*(1-(DOD/100)) + " kWh"
+    batteryDetail.SOC = capacity*(DOD/100) + " kWh"
   // loop over the object of the battery details and display them on the table
   for (let [key, value] of Object.entries(batteryDetail)) {
     console.log(`${key}: ${value}`);
@@ -3330,9 +3372,9 @@ if(eventID==="supplier"){
           object_detail.LHV = "40.2 MJ/kg"
         }
       }
-      else if(eventID==="Engin_Power"){
-        object_detail.Engin_Power = eventVal + " kW"
-
+      else if(eventID==="Engine_Power"){
+        object_detail.Engine_Power = eventVal + " kW"
+        alert("testing")
       }
       else if(eventID==="Gen_Power"){
         object_detail.Gen_Power = eventVal + " kW"
@@ -3356,15 +3398,25 @@ function powerOn(event){
   }
   else if(eventID ==="done"){
 document.getElementById("mainDashboard").classList.add("hide")
+  
+  document.getElementById("SFOC").classList.add("hide")
   }
 
 }
 
 function engineDashboard(EventID ,val ){
-
+  let type,used_sfoc,used_supplier
+  if( recent_chose_engine ==="aux_engine"){
+    type = "auxilary";
+    used_sfoc = aux_ratedsfoc;
+    used_supplier = gen_supplier;
+  }else{
+    used_sfoc = ratedSfoc;
+    used_supplier = supplier
+  }
     t = 1
   if(EventID ==='loadInput'|| EventID ==='load'){
-
+ alert("test")
     sfocDisplay ()
      c= (10/100)*val;
      n = 10
@@ -3381,12 +3433,14 @@ function engineDashboard(EventID ,val ){
             console.log(i);
                 if(val -n >c ){
                 load = (n/100)*enginePower
-                EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
-                console.log("this is the load 1",load)
+                EngineCal.SFOC(load,enginePower,used_sfoc,used_supplier,type )
+                console.log("this is the load 1",load);
+                console.log(type,used_sfoc," type ")
              }else{
             load = (val/100)*enginePower
-            EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+            EngineCal.SFOC(load,enginePower,used_sfoc,used_supplier,type )
             console.log("this is the load last",load)
+            console.log(type,used_sfoc," type ")
                 }
                 Plotly.extendTraces('plot', {
                 x: [[engine_loadPercent]],
@@ -3414,18 +3468,19 @@ function engineDashboard(EventID ,val ){
      function inputData(i) {
         setTimeout(function() {
                if(val -n >c ){
-
                 load = n
-                EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+                EngineCal.SFOC(load,enginePower,used_sfoc,used_supplier,type)
                 console.log("this is the load 1",load)
+                console.log(type,used_sfoc," type ")
              }else{
             load = val
-            EngineCal.SFOC(load,enginePower,ratedSfoc,supplier)
+            EngineCal.SFOC(load,enginePower,used_sfoc,used_supplier,type)
             console.log("this is the load last",load)
+            console.log(type,used_sfoc  ," type ")
                 }
                 Plotly.extendTraces('plot', {
                 x: [[engine_loadPercent]],
-                y: [[sfoc_cal]]
+                y: [[sfoc_display]]
               }, [0], 10000)
               n+=c
         }, 1000 * i);
@@ -3535,7 +3590,6 @@ else if(define_result_check ===true){
 
 }
 
-
 //sim = simulation
 let transit_dis_mils
 function sim_data(event){
@@ -3612,17 +3666,17 @@ else if (eventID==="None_calm_sim" && eventcheck ===fase){
   document.getElementById("wave_height").required = false
   environment_type = eventID
 }
-
-if(eventID ==="aux_load_input"){
+ 
+if(eventID ==="aux_load_input"|| eventID ==="adjust_load"){
   aux_load = eventVal;
   aux_load = parseFloat(aux_load);
-
-
 }
 else if(eventID === "main_load"){
 Pb_calm = eventVal;
 Pb_calm = parseFloat(Pb_calm)
-
+}
+else if(eventID==="transit_dis"){
+  transit_dis_mils = eventVal
 }
 
  sim_time =  document.getElementById("sim_time").value
@@ -3672,22 +3726,8 @@ Pb_calm = parseFloat(Pb_calm)
 
 }
 
-// alert(eventID)
-if(eventID==="transit_dis"){
-  transit_dis_mils = eventVal
-}
-else if(eventID==="main_load"){
-Pb = eventVal // overide the inital calculation and assigned new break power
-}
-else if(eventID==="adjust_load"){
-  aux_load = eventVal
-}
-
-
 display_sim_param()
 }
-
-let eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion
 
 function display_sim_param(){
 //getting the properties of the available power sources installed on the vessel
@@ -3704,7 +3744,6 @@ function display_sim_param(){
     No_of_genset = 0
   }
   }
-
     if(sellected_engine){
     No_of_eng =parseFloat(sellected_engine.No_of_engine)
     eng_power = parseFloat(sellected_engine.power)
@@ -3717,16 +3756,15 @@ function display_sim_param(){
     main_inst_power = 0
 
    }
-
    if(sellected_battery){
-    bat_capacity = sellected_battery.capacity
-    bat_SOC = sellected_battery.SOC
-     bat_DOD = sellected_battery.DOD
-    bat_volt = sellected_battery.nor_Voltage
-    bat_C_rated = sellected_battery.c_Rate
-    bat_C_rated_peak = sellected_battery.c_Rate_peak
-    bat_charge_power = sellected_battery.cont_charging_power
-    console.log(bat_capacity)
+    bat_capacity = parseFloat( sellected_battery.capacity)
+    bat_SOC = parseFloat(sellected_battery.SOC)
+     bat_DOD = parseFloat(sellected_battery.DOD)
+    bat_volt = parseFloat(sellected_battery.nor_Voltage)
+    bat_C_rated = parseFloat(sellected_battery.c_Rate)
+    bat_C_rated_peak = parseFloat(sellected_battery.c_Rate_peak)
+    bat_charge_power = parseFloat(sellected_battery.cont_charging_power)
+  
   }else if(!sellected_battery) {
     bat_capacity = 0
     bat_SOC = 0
@@ -3735,6 +3773,7 @@ function display_sim_param(){
     bat_C_rated = 0
     bat_C_rated_peak = 0
     bat_charge_power= 0
+    console.log(bat_SOC,"testing soc zero")
   }
 
   if(propulsion_syst){
@@ -3844,14 +3883,13 @@ else if(EventValue === "battery_E"){
 propulsion_syst = EventValue
 
 }
-
 LiveResult()
 // sfocDisplay ()
 let required_power, installed_power
 
 function preview(event){
   event.preventDefault()
-  check_installed_data()
+   check_installed_data()
   const eventID = event.target.id
   if(required_power >=installed_power){
       alert(`Installed power is not enough, the require power is  ${required_power}`)
@@ -3879,14 +3917,17 @@ function preview(event){
   else if (eventID ==="start_sim"){
     document.getElementById("sellected_disp").classList.add("hide")
     document.getElementById("darshboard_container").classList.remove("hide")
-   if(operation==="DP"){
-    DP_operation ()
+   if(operation==="transit"){
+    main_Simulate(); // for mechanical simulation 
    }else{
-    main_Simulate()
+    DP_operation ()
    }
 
   }
-
+  else if(eventID ==="rest_soc"){
+    bat_SOC = 0;
+    document.getElementById("SOC_pro").innerHTML = bat_SOC 
+  }
  function check_installed_data(){
    // checking if the installed power source is enough for the required vessel.
    // check for different propulsion system.
@@ -3896,21 +3937,22 @@ function preview(event){
   }
   else if(propulsion_type ==="ME" ){
     console.log(sellected_engine.power)
-    installed_power =   parseFloat(sellected_engine.power)* parseFloat(sellected_engine.No_of_engine)
+    installed_power = parseFloat(sellected_engine.power)* parseFloat(sellected_engine.No_of_engine)
     const gentset_power = parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
      if(gentset_power*0.8 < aux_load){
-        alert("installed genset power if not enough for the required hotel  load ")
+        alert(`The installed genset power should be more than 80 % of the required hotel  load of  ${aux_load}`)
         throw "add more capacity to the installed gen set "
      }
+     installed_power = installed_power + gentset_power
   }
   else if(propulsion_type ==="DE_ME"){
     const i = parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
-    const j = parseFloat(sellected_engine.power)* parseFloat(sellected_engine.No_of_engine)
+    const j = parseFloat(sellected_engine.Engine_Power)* parseFloat(sellected_engine.No_of_engine)
     installed_power =  i + j
   }
 
   else if(propulsion_type ==="battery_E"){
-    installed_power =  parseFloat(sellected_genset.Engi)* parseFloat(sellected_genset.No_of_genset)
+    installed_power =  parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
     alert("Battery propulsion system is currently not support")
     return
   }
@@ -3921,13 +3963,14 @@ function preview(event){
 }
 let trans_check,standby_check,harbor_check,DP_check,sim_time,end_sim,distance_past,time
 function main_Simulate(event){
-  let type, aux_load_perc,max_load_perc, remain_distance,current_time,new_distance_m
+  let type, aux_load_perc,max_load_perc, remain_distance,current_time,new_distance_m,total_combine_load
    trans_check = document.getElementById("transit").checked
    standby_check = document.getElementById("standby").checked
    DP_check = document.getElementById("DP").checked
    harbor_check = document.getElementById("harbor").checked
   sim_time = document.getElementById("sim_time").value
   transit_dis_mils
+
   // const eventID = event.target.id
   // const eventVal = event.target.value
   // const eventcheck = event.target.checked
@@ -3941,23 +3984,28 @@ function main_Simulate(event){
     remain_distance = transit_dis// transit_time
     end_sim = sim_time*60*1000 // convert the input time to milli seconds
     time_step = (transit_time*3600*1000/(end_sim /500)) //time step for every 0.5 seconds
+    LiveResult()// live ploting
   const sim_interv = setInterval(sim, 500);
   time_step = time_step/(3600*1000)
   time = 0
   FC_ton_aux = 0
   FC_ton = 0
   distance_past = 0
-  LiveResult()// live ploting
+  
   sim_time = 0 // used to stored time past which correspond to the distance moved
   let new_distance_mils,distance
   distance = 0
+  // let propulsion_load
   function sim() {
-
+      
      current_time = remain_distance/shipSpeed // recalculating the remaining voyage time
      step = current_time/(end_sim-time)  //calculation updated time step
      time_step = step/3600*1000  //converting milliseconds to hours
-
-    load = Pb // break power
+     if(!dynamic_load){
+      dynamic_load = 0
+     }
+     total_combine_load = Pb_calm+dynamic_load
+    // load = Pb // break power
     type = "main" // the type is only important when it is auxilary calculation
     time +=500
     sim_time +=time_step
@@ -3968,8 +4016,8 @@ function main_Simulate(event){
     distance_past = distance
     remain_distance = transit_dis- (distance_past*1852)
     console.log("dist past", distance_past)
-    EngineCal.SFOC(load,main_enginePower,ratedSfoc,supplier,type)
-    FC = Pb*(sfoc_cal/1000)*time_step
+    EngineCal.SFOC(total_combine_load,main_enginePower,ratedSfoc,supplier,type)
+    FC = total_combine_load*(sfoc_cal/1000)*time_step
     FC_ton += FC/1000
     FC_ton = FC_ton.toFixed(2)*1
     // fuel_Details (FC_ton)
@@ -3977,8 +4025,7 @@ function main_Simulate(event){
      type = "auxilary"
      aux_load // hotel laod and other
      aux_enginePower
-
-     gen_supplier
+ 
      EngineCal.SFOC(aux_load,aux_enginePower,aux_ratedsfoc,gen_supplier,type)
      FC_aux = aux_load*(sfoc_cal_aux/1000)*time_step
      FC_ton_aux += FC_aux/1000
@@ -3996,7 +4043,7 @@ function main_Simulate(event){
 
     if(end_sim-time <=499){
       time_step = transit_time-sim_time
-      FC = Pb*(sfoc_cal/1000)*time_step
+      FC = Pb_calm*(sfoc_cal/1000)*time_step
       FC_ton += FC/1000
       FC_ton = FC_ton.toFixed(2)*1
       // fuel_Details (FC_ton)
@@ -4015,22 +4062,22 @@ function main_Simulate(event){
     } else {
 
     }
-    plotResult()
-    function plotResult(){
-      Plotly.extendTraces('result', {
-            x: [[time],[time],[time],[time]],
-            y: [[aux_load],[Pb],[main_enginePower],[aux_enginePower]]
-          }, [0,1,2,3], 1000)
+   // plotResult()
+    ploting_power_darshboard()
+    // function plotResult(){
+    //   Plotly.extendTraces('result', {
+    //         x: [[time],[time],[time],[time]],
+    //         y: [[aux_load],[Pb_calm],[main_enginePower],[aux_enginePower]]
+    //       }, [0,1,2,3], 1000)
 
-    //   Plotly.extendTraces('plot', {
-    //  x: [[max_load_perc],[max_load_perc]],
-    // y: [[sfoc_cal],[sfoc_cal_aux]]
-    //  }, [0,1], 10000)
+    // //   Plotly.extendTraces('plot', {
+    // //  x: [[max_load_perc],[max_load_perc]],
+    // // y: [[sfoc_cal],[sfoc_cal_aux]]
+    // //  }, [0,1], 10000)
 
-
-    }
+    // }
     main_display_darshboard()
-    fuel_Details ()
+    fuel_Details (FC_ton_aux)
 
 }
 
@@ -4038,9 +4085,9 @@ function main_Simulate(event){
 
 }
 
-
+let P_M_S
 function DP_operation (){
-  let DP_load,engine_nums,engine_power, remain_time,sfoc,online_engine
+  let DP_load,engine_nums,engine_power, remain_time,sfoc
   supplier =  sellected_genset.supplier;
   FC_ton_aux = 0;
   sfoc = sellected_genset.SFOC;
@@ -4060,25 +4107,26 @@ function DP_operation (){
   console.log(aux_load)
   console.log(bat_SOC)
   console.log(time_step)
-   const start_sim = setInterval(DP_running, 500);
-  const P_M_S = new PMS(engine_nums,engine_power,operation,aux_load,bat_SOC,supplier,sfoc)
-
-DP_running()
+   P_M_S = new PMS(engine_nums,engine_power,operation,aux_load,bat_SOC,supplier,sfoc)
+  const start_sim = setInterval(DP_running, 500);
+  LiveResult()// live ploting
+ // const battery_pack = new battery_system
+  
   function DP_running(){
     if(environment_type ===!"calm"){
       environment.data(wave_height , wind_speed)
       environment.data.wave_height_cal // current wave height which is calculated
       environment.data.wave_height_cal
     }
-    
+   // const testing = battery_pack.charge_battery()
     remain_time -= (500/(3600*1000))
     console.log(remain_time, "remain time")
 
     FC_aux = P_M_S.optimized_engine_load(time_step); // return sfoc of every given time past
     FC_ton_aux += FC_aux/1000
-    console.log(FC_ton_aux, "F cpnsumption")
+    FC_ton_aux = FC_ton_aux.toFixed(2)*1
     // FC_ton_aux =
-    fuel_Details ()
+     fuel_Details (FC_ton_aux)
     time +=500
     console.log(time,"time")
     if(time >=end_sim ){
@@ -4086,7 +4134,197 @@ DP_running()
   }
   console.log(P_M_S)
   online_engine = P_M_S.length; // the current online engine
+  console.log(online_engine,P_M_S.length, "online engine at index side")
+  main_display_darshboard()
+  ploting_power_darshboard()
+
   }
+}
+
+
+  function ploting_power_darshboard() {
+   let update1,update5,update2,update3,update4,update6,update7,update8,update9,update10,layout,layout1, display_power,engine_set1_power,engine_set1_load,engine_set2_power,engine_set2_load,total_load,constant_load,
+   engine_online_object,main_engine_load,total_online_engine_power
+   if(!dynamic_load){
+    dynamic_load = 0
+   }
+    if(propulsion_type ==="ME"){
+     const select1 = document.getElementById("online_engine_power")
+     select1.options[1].hidden = true;
+     select1.options[2].hidden = true;
+     select1.options[4].hidden = true;
+
+     total_load = Pb_calm + dynamic_load+aux_load;
+    
+     constant_load = Pb_calm;
+    engine_online_object = parseFloat(sellected_genset.No_of_genset);
+    engine_set1_power =aux_enginePower
+    main_enginePower // main propulsion engine power
+    main_engine_load = Pb_calm+ dynamic_load
+    engine_set2_power =  aux_enginePower*engine_online_object
+    engine_set2_load = aux_load;
+      total_online_engine_power  = aux_enginePower*engine_online_object + main_enginePower
+      update6 = { name: "genset avaliable power" }
+        
+        update7 = { name: "genset load "}
+    }else{
+      const select1 = document.getElementById("online_engine_power")
+      select1.options[6].hidden = true;
+     total_load = P_M_S.load_with_dynamics;
+    constant_load = P_M_S.combine_load;
+     engine_online_object = P_M_S.engine_online_obj;
+    total_online_engine_power = P_M_S.combine_engines_power;
+    engine_set1_power = P_M_S.engine_power
+    engine_set1_load = engine_online_object.one.load
+    engine_set2_power =   P_M_S.engine_power
+    engine_set2_load = P_M_S.last_engine_load;
+    battery_load = P_M_S.discharging_power;
+    battery_power = P_M_S.charging_power;
+    update6 = { name: "engines set  2", }
+        
+     update7 = { name: "engines set 2 load "}
+    }
+
+   // console.log(total_load, "laod with dynamics ")
+    // console.log(engine_online_object," engine main object")
+    // console.log(engine_online_object.one.load," engine main object ONE")
+    // console.log(time," time ")
+    // console.log(total_load,"testing load")
+    // console.log(total_online_engine_power," total engine power")
+    // console.log(engine_set1_power," total engine power")
+    // console.log(switch_name,"sellect vale")
+    // console.log(battery_power,"battery power")
+
+       //plot every posible result that user might used later but some of them are hiden until the user request to display,
+        // the ones with visibility set to false are hidden 
+        layout ={ visible : false }
+        layout2 ={ visible : true }
+        layout1 ={ title :"power darshboard"}
+         update1 = { name: "total load"}
+        update2 = { name: "constant load"}
+        update3 = { name: "avaliable power" }
+        update4 = { name: "engine power "}
+         update5 = { name: "engines set 1 load " }
+      
+        update8 = { name: "dynamic load"}
+        update9 = { name: " battery power" }
+        update10 = {name: " battery load"}
+        update11 = { name: " main engine power" }
+        update12 = {name: " propulsion load"}
+
+        Plotly.restyle('result', update1, 0);
+        Plotly.restyle('result', update2, 1);
+        Plotly.restyle('result', update3, 2);
+        Plotly.restyle('result', update4, 3);
+        Plotly.restyle('result', update5, 4);
+        Plotly.restyle('result', update6, 5);
+        Plotly.restyle('result', update7, 6);
+        Plotly.restyle('result', update8, 7);
+        Plotly.restyle('result', update9, 8);
+        Plotly.restyle('result', update10, 9);
+        Plotly.restyle('result', update11, 10);
+        Plotly.restyle('result', update12, 11);
+
+
+      if(!switch_id || switch_id==="online_engine_power" ){
+         //plot every posible result that user might used later but some of them are hiden until the user request to display,
+        // the ones with visibility set to false are hidden 
+
+      if(switch_name ==="General_powers"||!switch_name){
+
+        layout1 ={ title :"Power darshboard"};   
+        if(propulsion_type ==="ME"){
+          Plotly.update('result', layout,layout1, [1,3,4,5,6,9]);// hide those power
+         Plotly.restyle('result', layout2, [0,2,7,8,10,11]); // shows this power
+        }else{
+          Plotly.update('result', layout,layout1, [4,5,6,9,10,11]);// hide those power
+         Plotly.restyle('result', layout2, [0,1,2,3,7,8]); // shows this power
+        }
+       }
+       else if(switch_name ==="battery"){
+       
+        layout1 ={ title :"battery pack power darshboard"}
+        Plotly.update('result', layout,layout1, [0,2,3,4,5,6,10,11]); // hide those power
+        Plotly.restyle('result', layout2, [1,7,8,9]); // shows this power
+
+       }
+       else if(switch_name ==="engine_set1"){
+        
+        layout1 ={ title :"set 1 engine  power darshboard"}
+        Plotly.update('result', layout,layout1, [0,1,2,5,6,7,8,9,10,11]);// hide those power
+        Plotly.restyle('result', layout2, [0,3,4]);// shows this power
+
+       }
+       else if(switch_name ==="engine_set2"){
+        layout1 ={ title :"Set 2 engine power darshboard"}
+        Plotly.update('result', layout,layout1, [1,2,3,4,7,8,9,10,11]);// hide those power
+        Plotly.restyle('result', layout2, [0,5,6]);// shows this power
+       }
+       else if(switch_name ==="engine_set1_set2"){
+        layout1 ={ title :"Set 2 VS Set1 engine darshboard"}
+        Plotly.update('result', layout,layout1, [0,1,2,7,8,9,10,11]);// hide those power
+        Plotly.restyle('result', layout2, [3,4,5,6]);// shows this power
+       }
+       else if(switch_name === "mian_engine"){
+        layout1 ={ title :"Main engine darshboard"}
+        Plotly.update('result', layout,layout1, [0,1,2,3,4,5,6,7,9]);// hide those power
+        Plotly.restyle('result', layout2, [8,10,11]);// shows this power
+       }
+       else if(switch_name === "genset_engine"){
+        
+        layout1 ={ title :"Genset engine darshboard"}
+        Plotly.update('result', layout,layout1, [0,1,2,4,7,8,9,10,11]);// hide those power
+        Plotly.restyle('result', layout2, [3,5,6]);// shows this power
+
+       }
+       else if(switch_name === "mian_genset_engine"){
+        layout1 ={ title :"Main engine darshboard"}
+        Plotly.update('result', layout,layout1, [0,1,2,4,5,6,7,8,9]);// hide those power
+        Plotly.restyle('result', layout2, [3,5,6,10,11]);// shows this power
+        // y: [[total_load],[constant_load],[total_online_engine_power],[engine_set1_power],[engine_set1_load],[engine_set2_power],[engine_set2_load], [dynamic_load],[battery_power],[battery_load],[main_enginePower],[main_engine_load]],
+
+       }
+       if(!sellected_battery){
+        const select1 = document.getElementById("online_engine_power")
+        select1.options[7].hidden = true; 
+         Plotly.restyle('result', layout, [8,9]);
+          battery_load = 0
+          battery_power = 0
+        }
+      // console.log(total_load,"testing load")
+      // console.log(total_online_engine_power," total engine power")
+      // console.log(engine_set1_power," total engine power")
+
+      if(!dynamic_load){
+        dynamic_load = 0
+        Plotly.restyle('result', layout2, 7);// shows this power
+
+      }
+    }
+    Plotly.extendTraces('result', {
+        x: [[time],[time],[time],[time],[time],[time],[time],[time],[time],[time],[time],[time]],
+        y: [[total_load],[constant_load],[total_online_engine_power],[engine_set1_power],[engine_set1_load],[engine_set2_power],[engine_set2_load], [dynamic_load],[battery_power],[battery_load],[main_enginePower],[main_engine_load]],
+      }, [0,1,2,3,4,5,6,7,8,9,10,11], 10000)  
+
+}
+
+let previous_online_engine
+
+let  switch_name, switch_id;
+function switch_displayed_data(event){
+  const select = document.getElementById("online_engine_emission");
+  const select1 = document.getElementById("online_engine_power")
+  const eventID = event.target.id;
+  const eventVal = event.target.value; 
+
+  switch_name = eventVal
+  switch_id  = eventID
+  if(eventID ==="fuel_compare_type"){
+
+  }else{
+    ploting_power_darshboard()
+  }
+  
 }
 let aux_LNG_cost,aux_LNG_CO2,aux_LNG_NOx,aux_LNG_SOx,aux_LNG_PM,aux_LNG_NMVOC,aux_LNG_volume,
 main_LNG_cost,main_LNG_CO2,main_LNG_NOx,main_LNG_SOx,main_LNG_PM,main_LNG_NMVOC,main_LNG_volume,
@@ -4100,8 +4338,7 @@ main_HFO_cost,main_HFO_CO2,main_HFO_NOx,main_HFO_SOx,main_HFO_PM,main_HFO_NMVOC,
 main_cost,main_CO2,main_NOx,main_SOx,main_PM,main_NMVOC,main_volume,
 aux_cost,aux_CO2,aux_NOx,aux_SOx,aux_PM,aux_NMVOC,aux_volume,main_engine_fuel, aux_engine_fuel, DP_break_power
 
-function fuel_Details (){
-
+function fuel_Details (FC_ton_aux){
 
   // getting the currently fuel propertiesw use for main and Auxilairy engine
   if(propulsion_type ==="ME" || propulsion_type ==="DE_ME"){
@@ -4127,9 +4364,7 @@ function fuel_Details (){
     main_volume = main_engine_fuel.MGO_volume
 
      }
-
      else if(sellected_engine.fuel_type === "MDO"){
-
     main_engine_fuel = fuel_property.MDO(FC_ton,"main")
     main_CO2 = main_engine_fuel.MDO_CO2
     main_NOx = main_engine_fuel.MDO_NOx
@@ -4138,12 +4373,9 @@ function fuel_Details (){
     main_PM = main_engine_fuel.MDO_PM
     main_cost = main_engine_fuel.MDO_cost
     main_volume = main_engine_fuel.MDO_volume
-    console.log(main_volume)
-
+   
      }
     else if(sellected_engine.fuel_type === "HFO"){
-
-
     main_engine_fuel = fuel_property.HFO(FC_ton,"main")
     main_CO2 = main_engine_fuel.HFO_CO2
     main_NOx = main_engine_fuel.HFO_NOx
@@ -4157,7 +4389,7 @@ function fuel_Details (){
     main_update = [main_CO2,main_SOx,main_NOx,main_NMVOC]
      }
 
-     if(sellected_genset.fuelType === "LNG"){
+     if(sellected_genset.fuel_type === "LNG"){
     aux_engine_fuel = fuel_property.LNG(FC_ton_aux,"Auxiliary")
     aux_CO2 = aux_engine_fuel.LNG_CO2_Aux
     aux_NOx = aux_engine_fuel.LNG_NOx_Aux
@@ -4168,7 +4400,7 @@ function fuel_Details (){
     aux_volume = aux_engine_fuel.LNG_volume_Aux
 
      }
-     else if(sellected_genset.fuelType === "MGO"){
+     else if(sellected_genset.fuel_type === "MGO"){
     aux_engine_fuel = fuel_property.MGO(FC_ton_aux,"Auxiliary")
     aux_CO2 = aux_engine_fuel.MGO_CO2_Aux
     aux_NOx = aux_engine_fuel.MGO_NOx_Aux
@@ -4179,7 +4411,7 @@ function fuel_Details (){
     aux_volume = aux_engine_fuel.MGO_volume_Aux
 
      }
-     else if(sellected_genset.fuelType === "MDO"){
+     else if(sellected_genset.fuel_type === "MDO"){
     aux_engine_fuel = fuel_property.MDO(FC_ton_aux,"Auxiliary")
     aux_CO2 = aux_engine_fuel.MDO_CO2_Aux
     aux_NOx = aux_engine_fuel.MDO_NOx_Aux
@@ -4188,10 +4420,9 @@ function fuel_Details (){
     aux_PM = aux_engine_fuel.MDO_PM_Aux
     aux_cost = aux_engine_fuel.MDO_cost_Aux
     aux_volume = aux_engine_fuel.MDO_volume_Aux
-    console.log(aux_volume)
-
+   
      }
-    else if(sellected_genset.fuelType === "HFO"){
+    else if(sellected_genset.fuel_type === "HFO"){
     aux_engine_fuel = fuel_property.HFO(FC_ton_aux,"Auxiliary")
     aux_CO2 = aux_engine_fuel.HFO_CO2_Aux
     aux_NOx = aux_engine_fuel.HFO_NOx_Aux
@@ -4216,14 +4447,22 @@ function fuel_Details (){
   myChart.data.datasets[1].data =aux_update ;
   myChart.update();
  }
+ console.log(FC_ton_aux, "this is the FC")
+ return {
+    aux_CO2,
+    aux_NOx ,
+    aux_NMVOC ,
+    aux_SOx,
+    aux_PM ,
+    aux_cost,
+    aux_volume 
+ }
 }
 
 function main_display_darshboard(){
-
   let wave,distance_N_mils,aux_active,active,ETA, display_speed
   distance_N_mils = transit_dis_mils - distance_past //distance covered so far
    ETA = transit_time - sim_time
-
   ETA = ETA.toFixed(2)
   distance_N_mils  = distance_N_mils.toFixed(2)
 
@@ -4235,9 +4474,15 @@ function main_display_darshboard(){
   if(operation ==="DP"){
     display_speed = 0
     aux_active = online_engine
-
+    distance_N_mils  =0;
+    ETA = 0;
+    No_of_eng = 0;
+    sfoc_cal = 0;
+    FC_ton = 0;
+    main_enginePower = 0;
   }else {
     display_speed = shipSpeedKnots
+    aux_active = "....updating"
   }
   // impliment active engine status TODO:
 
@@ -4273,11 +4518,14 @@ function main_display_darshboard(){
 }
 
 function compare_result(event){
- const eventID = event.target.id
+  let lng_compare_aux,lng_compare_main,mgo_compare_aux,mgo_compare_main,mdo_compare_main,mdo_compare_aux,hfo_compare_main,hfo_compare_aux,
+update_lng_main,update_lng_aux,update_mgo_main,update_mgo_aux,update_hfo_aux, update_hfo_main,update_mdo_aux, update_mdo_main,
+comapre_main_cost,comapre_Aux_cost,comapre_main_emission,comapre_Aux_emission, comapre_main_FC,comapre_Aux_FC
+ const eventID = event.target.id;
+ const eventVal= event.target.value;
  if(eventID ==="other_result"){
    document.getElementById("darshboard_container").classList.add("hide")
    document.getElementById("result_compare").classList.remove("hide")
-
  }
  else if(eventID ==="show_dasrhboard"){
   document.getElementById("darshboard_container").classList.remove("hide")
@@ -4285,16 +4533,12 @@ function compare_result(event){
    document.getElementById("result_canvas").classList.add("hide")
 
  }
-let lng_compare_aux,lng_compare_main,mgo_compare_aux,mgo_compare_main,mdo_compare_main,mdo_compare_aux,hfo_compare_main,hfo_compare_aux,
-update_lng_main,update_lng_aux,update_mgo_main,update_mgo_aux,update_hfo_aux, update_hfo_main,update_mdo_aux, update_mdo_main
+
  if(eventID){
-
-
   lng_compare_main = fuel_property.LNG(FC_ton,"main")
   mgo_compare_aux = fuel_property.MGO(FC_ton_aux,"Auxiliary")
 
   hfo_compare_aux = fuel_property.HFO(FC_ton_aux,"Auxiliary")
-
 
   mdo_compare_aux = fuel_property.MDO(FC_ton_aux,"Auxiliary")
 
@@ -4303,7 +4547,6 @@ update_lng_main,update_lng_aux,update_mgo_main,update_mgo_aux,update_hfo_aux, up
 
   mdo_compare_main = fuel_property.MDO(FC_ton,"main")
   lng_compare_aux = fuel_property.LNG(FC_ton_aux,"Auxiliary")
-
 
  update_lng_main = [lng_compare_main.LNG_CO2,lng_compare_main.LNG_NOx,lng_compare_main.LNG_NMVOC,lng_compare_main.LNG_Sox,lng_compare_main.LNG_PM]
 
@@ -4317,11 +4560,19 @@ update_lng_main,update_lng_aux,update_mgo_main,update_mgo_aux,update_hfo_aux, up
 
  update_hfo_main =[hfo_compare_main.HFO_CO2,hfo_compare_main.HFO_NOx,hfo_compare_main.HFO_NMVOC,hfo_compare_main.HFO_Sox,hfo_compare_main.HFO_PM]
  update_hfo_aux =[hfo_compare_aux.HFO_CO2_Aux,hfo_compare_aux.HFO_NOx_Aux,hfo_compare_aux.HFO_NMVOC_Aux,hfo_compare_aux.HFO_Sox_Aux,hfo_compare_aux.HFO_PM_Aux]
+
+
+ comapre_main_cost =[hfo_compare_main.HFO_CO2,mdo_compare_main.MDO_CO2,mgo_compare_main.MGO_CO2,lng_compare_main.LNG_CO2]
+ comapre_Aux_cost =[hfo_compare_aux.HFO_CO2,mdo_compare_aux.MDO_CO2,mgo_compare_aux.MGO_CO2,lng_compare_aux.LNG_CO2]
+
+ comapre_main_emission =[hfo_compare_main.HFO_CO2,mdo_compare_main.MDO_CO2,mgo_compare_main.MGO_CO2,lng_compare_main.LNG_CO2]
+ comapre_Aux_emission =[hfo_compare_aux.HFO_CO2,mdo_compare_aux.MDO_CO2,mgo_compare_aux.MGO_CO2,lng_compare_aux.LNG_CO2]
+
 document.getElementById("result_canvas").classList.remove("hide")
 
  }
 if(eventID ==="show_emission"){
-  emission_comparison.data.labels =  ['CO2','NOX','NMVOC','SOX','PM'];
+  emission_comparison.data.labels = ['CO2','NOX','NMVOC','SOX','PM'];
   emission_comparison.data.datasets[0].data =  update_lng_main;
    emission_comparison.data.datasets[1].data =  update_mgo_main;
   emission_comparison.data.datasets[2].data =  update_mdo_main;
@@ -4329,38 +4580,52 @@ if(eventID ==="show_emission"){
   emission_comparison.update();
 }
 else if(eventID ==="show_cost"){
-   emission_comparison.data.labels =  [];
+
+   emission_comparison.data.labels =  ["HFO","MDO","MGO","LNG"];
    emission_comparison.data.datasets[0]={
-    label: 'LNG',
+    label: 'Main engine',
     backgroundColor:'green',
     borderColor: 'rgba(255, 159, 64, 1)',
-     data:[lng_compare_main.LNG_cost]}
-  emission_comparison.data.datasets[1]= {
-    label: 'MGO',
-    backgroundColor:'pink',
+     data:[comapre_main_cost]}
+     emission_comparison.data.datasets[1]={
+    label: 'Auxiliary engine',
+    backgroundColor:'green',
     borderColor: 'rgba(255, 159, 64, 1)',
-    borderWidth: 2,
-    data: [mgo_compare_main.MGO_cost]}
-  emission_comparison.data.datasets[2] = {
-    label: 'MDO',
-    backgroundColor:'blue',
-    borderColor: 'rgba(255, 159, 64, 1)',
-    borderWidth: 2,
-    data: [mdo_compare_main.MDO_cost]}
+     data:[comapre_Aux_cost]}
 
-  emission_comparison.data.datasets[3]={
-    label: 'HFO',
-    backgroundColor:'pink',
-    borderColor: 'rgba(255, 159, 64, 1)',
-    borderWidth: 2,
-    data :[hfo_compare_main.HFO_cost]};
+
+  //  emission_comparison.data.datasets[0]={
+  //   label: 'LNG',
+  //   backgroundColor:'green',
+  //   borderColor: 'rgba(255, 159, 64, 1)',
+  //    data:[lng_compare_main.LNG_cost]}
+  // emission_comparison.data.datasets[1]= {
+  //   label: 'MGO',
+  //   backgroundColor:'pink',
+  //   borderColor: 'rgba(255, 159, 64, 1)',
+  //   borderWidth: 2,
+  //   data: [mgo_compare_main.MGO_cost]}
+  // emission_comparison.data.datasets[2] = {
+  //   label: 'MDO',
+  //   backgroundColor:'blue',
+  //   borderColor: 'rgba(255, 159, 64, 1)',
+  //   borderWidth: 2,
+  //   data: [mdo_compare_main.MDO_cost]}
+
+  // emission_comparison.data.datasets[3]={
+  //   label: 'HFO',
+  //   backgroundColor:'pink',
+  //   borderColor: 'rgba(255, 159, 64, 1)',
+  //   borderWidth: 2,
+  //   data :[hfo_compare_main.HFO_cost]};
 
    emission_comparison.options.scales.yAxes.ticks=
 
   option_update(eventID)
-
   emission_comparison.update();
 }
+
+
 function option_update(type){
   let chart_name, tooltip,tick,tons
   if(type ==="show_cost"){
@@ -4419,14 +4684,9 @@ function option_update(type){
 }
 //  updatChat()
  function updatChat(){
-
-  // emission_comparison.data.datasets[0].data =  main_update;
-  // emission_comparison.data.datasets[1].data =aux_update ;
   emission_comparison.update();
  }
 }
-
-
     </script>
 
 </body>

@@ -8,7 +8,9 @@
     Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,No_of_eng,No_of_genset,aux_load,main_inst_power,
     star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type,sellected_genset,sellected_battery,sellected_engine,propulsion_syst,
     gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,emission_comparison,
-    LNG_emission,wind_speed,RAA_wind,Lw,DP_Va,Pe_calm,operation,Pt_calm,Pd_calm,Ps_calm,ND_calm, dynamic_load,wave_height_cal, wind_speed_cal,environment_type
+    LNG_emission,wind_speed,RAA_wind,Lw,DP_Va,Pe_calm,operation,Pt_calm,Pd_calm,Ps_calm,ND_calm, dynamic_load,wave_height_cal, wind_speed_cal,environment_type,
+     eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion, recent_chose_engine,online_engine
+
     
 function engineAnalysis (){
  //methods for different diesel engine property
@@ -33,7 +35,6 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     // this.power = ((this.Torque*1000*2*3.143*_)/60)/1000
     // load = this.power
 }
-
 //NOTE: SFOC is use of the baseline for the engine since the supplier dont provided the engine baseline
  this.SFOC = function(load, enginePower, SFOC,supplier,type) {
     this.supplier = supplier
@@ -41,12 +42,11 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
     this.type = type // used to determine weather is auxilary engine or main engine
     this.enginePower = enginePower
     this.EL = this.load/this.enginePower
-    this.sfocBase = SFOC // used as the baseline for the engine if not provided
+    this.sfocBase = 175 // used as the baseline for the engine if not provided
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-    this.sfocBase = 170;
+    // this.sfocBase = 170;
     engine_loadPercent = parseFloat((this.EL*100).toFixed(1))
     // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-
     if (this.supplier === "wartsila") {
     //   this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
     this.sfocRelative = 0.455*this.EL *this.EL-0.71*this.EL + 1.28; // general
@@ -55,11 +55,15 @@ this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumb
       if(this.type === "auxilary"){
         sfoc_cal_aux = parseFloat(this.SFOC_main);
         this.sfoc_cal_aux = sfoc_cal_aux
+        console.log(sfoc_cal_aux," test load")
+        sfoc_display = sfoc_cal_aux
       }else{
         sfoc_cal = parseFloat(this.SFOC_main);
          this.sfoc_cal = sfoc_cal
-      }
- 
+         sfoc_display = sfoc_cal
+         console.log(sfoc_cal_aux," test load main")
+      } 
+      console.log(sfoc_cal_aux," test load  general")
     }
     else if (this.supplier === "Cat") {
         this.sfocRelative = 0.7024*this.EL *this.EL-0.97728*this.EL + 1.35;
@@ -396,7 +400,7 @@ function resistance(){
          RT_calm = (RT_calm.toFixed(2))*1
          calResistnace.additionalResistance()
            //Total resistnace
-        RT = RT_calm +  Rfoul + Rwave+ RAA_wind
+        RT = RT_calm  + Rwave+ RAA_wind // + Rfoul
         RT = RT.toFixed(2)*1
         // SM = ((RT*shipSpeed/RT_calm*shipSpeed)-1)
         // alert(SM)
@@ -568,8 +572,15 @@ function propellerProperties (){
       Rwave =  (1/6)*density*g*H**2*Bwl*Math.sqrt(Bwl/Lb); // calclation the wave resistance
       this.dynamic_thrust = (Rwave+RAA_wind)/(1-TFactor);
       
-      this.dynamic_load  = (2*Math.PI*this.DP_KQ*this.dynamic_thrust**(3/2))/(density**0.5*D*this.DP_KT);
-      dynamic_load = this.dynamic_load;
+      if(operation ==="DP"){
+        this.dynamic_load  = (2*Math.PI*this.DP_KQ*this.dynamic_thrust**(3/2))/(density**0.5*D*this.DP_KT);
+        dynamic_load = this.dynamic_load;
+      }else{
+        this.Pe = Rwave*shipSpeed
+        this.Trusth_p = ((Rwave+RAA_wind)*shipSpeed*((1-W)/(1-TFactor)))
+        this.dynamic_load = this.Trusth_p/NB ;  
+        dynamic_load  = this.dynamic_load;
+      }
      
       return this.dynamic_load;
     };
@@ -602,22 +613,42 @@ function propellerProperties (){
     };
 
    }
+ 
+ const  engine_property = {
+   // used to hold the result of the each engine online engine during simulation to analized each engine 
+    load : 0,
+    power: 0,
+    sfoc : 0,
+    FC : 0,
+    Fuel_cost: 0,
+    CO2  :0
+   }
 
   class PMS {
       constructor(engine_nums,engine_power,operation,Aux_load,bat_SOC, supplier,sfoc){
            this.engine_nums = engine_nums; // numbers of engine installed
            this.engine_power = engine_power; // each installed power
-           this.Aux_load = Aux_load;  // Hotel and auxilary load combine as one
+           this.Aux_load = aux_load;  // Hotel and auxilary load combine as one
            this.break_power = Pb_calm; // Break power during transi
            this.stand_by_engine = false;
+           this.charging_activated = false;
            this.dynamic_load = 0;  // dynamic load in calm water
            this.fuel_SFOC_cal_1 = 0;
            this.fuel_consumption_final = 0;
            this.fuel_SFOC_cal_2 = 0;
            this.Fuel_cons_2 =0;
            this.supplier = supplier;
+           this.waiting_off_engine = false
            this.sfoc = sfoc;        
            this.fuel_consumption = 0; 
+           this.count = 0
+           if(sellected_battery){
+            this.battery_pack = new battery_system();
+            this.charging_power = this.battery_pack.charging_power
+            this.discharge_power = this.charging_power 
+           }
+           this.FC_without_battery = 0 
+           
           //  this.standy_by_ready_time = 20000; // time for the stand by engine to be ready 
           //  this.engine_start_time = 10000; // it takes the engine 10 seconds to be connected and ready to be used
            this.operation = operation; // type of operation e.g transit, Harbor and DP operation
@@ -650,25 +681,26 @@ function propellerProperties (){
 
       start_off_engine(){
         //this for the intial starting of the engine
+        this.combine_load = this.total_combine_load +this.dynamic_load
         this.waiting_connection= false;
         this.stand_by_engine = false;
+   
+        this.standy_by_ready_time = 0; 
         if(this.operation === "DP"){
           // when DP operation things change like Load
-            if(bat_SOC >1){
+            if(sellected_battery && bat_SOC >5){
               // if battery pack is installed 
               this.battery_SOC = bat_SOC; 
               this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
-               console.log(this.engine_normal_load)
              }else {
               this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
             }
         }else{
-          if(bat_SOC > 1){
+          if(sellected_battery && bat_SOC >5){
             // if battery pack is installed 
             this.battery_SOC = bat_SOC; 
             this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
            }
-   
         }
 
         // this.combine_load= this.combine_load.toFixed(0)*1
@@ -697,170 +729,238 @@ function propellerProperties (){
         }
         }
         this.update();
-        // TODO:
+     
          }
 
        update(){  
 
       if(this.required_engines <= 1){
        this.required_engines= 1;
-       this.engine_online_obj = {
-          one : 0,
-       } 
+       this.engine_online_obj = { }
+       this.engine_online_obj.one = Object.create(engine_property)
       }
       else if (this.required_engines >1 && this.required_engines<= 2){
        this.required_engines= 2;
-       this.engine_online_obj = {
-         one : 0,
-         two : 0,
-      }
+       this.engine_online_obj = { }
+       this.engine_online_obj.one = Object.create(engine_property)
+       this.engine_online_obj.two = Object.create(engine_property)
       }
       else if (this.required_engines >2 && this.required_engines<= 3){
       
        this.required_engines= 3;
-       this.engine_online_obj = {
-         one : 0,
-         two : 0,
-         three : 0,
-      }
+       this.engine_online_obj = { }
+       this.engine_online_obj.one = Object.create(engine_property)
+       this.engine_online_obj.two = Object.create(engine_property)
+       this.engine_online_obj.three = Object.create(engine_property)
+
       }
       
       else if (this.required_engines >3 && this.required_engines <4){
        this.required_engines= 4;
-       this.engine_online_obj = {
-         one : 0,
-         two : 0,
-         three : 0,
-         fourth : 0,
-         fourth : 0,
-      }
+       this.engine_online_obj = { }
+       this.engine_online_obj.one = Object.create(engine_property)
+       this.engine_online_obj.two = Object.create(engine_property)
+       this.engine_online_obj.three = Object.create(engine_property)
+       this.engine_online_obj.fourth = Object.create(engine_property)
     }
       else if (this.required_engines >4){
         this.required_engines= 5;
-        this.engine_online_obj = {
-          one : 0,
-          two : 0,
-          three : 0,
-          fourth : 0,
-          fifth : 0,
-       }
+        this.engine_online_obj = { }
+        this.engine_online_obj.one = Object.create(engine_property)
+        this.engine_online_obj.two = Object.create(engine_property)
+        this.engine_online_obj.three = Object.create(engine_property)
+        this.engine_online_obj.fourth = Object.create(engine_property)
+        this.engine_online_obj.fifth = Object.create(engine_property)
+       
       }
-     
       // optimized the loads on engines for fuel efficiency after turning Onn the required engines 
-      this.optimized_engine_load()  
+     // this.optimized_engine_load() 
+      console.log(this.engine_online_obj,"engine online")
+ 
     } 
     optimized_engine_load(step){
       //this is the proposed algrithym  for sharing load,
-      this.fuel_SFOC_2 = 0; // emtying the precivous calculated result 
+      this.fuel_SFOC_cal_2 = 0; // emtying the precivous calculated result 
      this.fuel_SFOC_cal_1 = 0; // emtying the precivous calculated result
      this.simulate_step =step; 
      this.fuel_consumption =0;
-     this.environment_loads = environment.update_dynamic_load();  // update dynamic laod 
-      if(this.environment_loads){
-        this.dynamic_load = this.environment_loads
-        this.combine_load = this.total_combine_load + this.dynamic_load; // updating the load  due to the environment load 
-      }else{
-        this.combine_load = this.total_combine_load
-      }
-      this.current_load = this.combine_load; // store the currently load before being pass to the FRL
-      this.BlackOut_prevention() // reduce the load to be assigned to teh gen sets 
-       console.log(this.combine_load," combine load test ")
-      this.online_engine = this.required_engines; // numbers of engine online 
-      this.load_on_each_eng = this.combine_load/this.online_engine; // used to decide how optimized the load on the engine foe better fuel consmption 
-      console.log(this.combine_load," combine load test2")
-      this.fuel_SFOC_1 = EngineCal.SFOC(this.load_on_each_eng,this.engine_power,this.sfoc,this.supplier,"auxilary") //SFOC when laod is share equally on genset 
-      this.fuel_SFOC_cal_1 = (this.fuel_SFOC_1.sfoc_cal_aux)*this.online_engine
-      this.SFOC = this.fuel_SFOC_cal_1;
-      // this.Fuel_cons_1 += this.load_on_each_eng*this.fuel_SFOC_cal_1*(500/1000*3600) 
-       let i,j ;
-       i = 0 ;
-       j = 0;
-      if (this.stand_by_engine === true) {
-        this.engine_normal_load = this.engine_power*1.1 // allowing the engine to take load to the 
-        this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
-      }else{
-        this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
-      }
-       this.length = Object.keys(this.engine_online_obj).length     
-      Object.keys(this.engine_online_obj).forEach(key => {
-        console.log(this.combine_load," combine load test last")
-         if(i ===0 || j === 1){
-          this.assigned_load = this.engine_normal_load
-          if(this.check_load < 0.3 && j=== 0 ){
-             this.assigned_load = this.combine_load/2
-             console.log(i)
-             j = 1;
-          }
-          else if(j === 1){
-            this.assigned_load = this.combine_load/2
-          }else{
-            this.combine_load  = this.combine_load - this.assigned_load
-            console.log(this.combine_load, "first combine load")
-          }
-          // this.assigned_load = this.engine_normal_load
-          this.engine_online_obj[key] =  this.assigned_load // update the engine load
-          //TODO: check the remaining load before assigning to the engine 
-          // this.fuel_SFOC_2 =  EngineCal.SFOC(this.assigned_load,this.engine_power,this.sfoc,this.supplier,"auxilary")
-          // this.fuel_SFOC_cal_2 += this.fuel_SFOC_2.sfoc_cal_aux
-          // this.Fuel_cons_2 += this.fuel_SFOC_2.sfoc_cal_aux*(500/1000*3600)
-         }   
-         else if(i > 0){
-          this.assigned_load = this.engine_normal_load
-           this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
-           if(this.check_load < 0.3 && this.length >i+1){
-            this.assigned_load = this.combine_load/2
-               j = 2; 
-           }
-           else if(j ===2){
-            this.assigned_load = this.combine_load/2
-       
-           } else{             
-             if(this.length=== i+1){
-               this.assigned_load = this.combine_load
-             }else{
-              this.combine_load = this.combine_load- this.assigned_load
-             }
-           }
-          // this.assigned_load = Math.min(this.combine_load, this.engine_normal_load)
-          this.engine_online_obj[key] =  this.assigned_load
-          
+     if(Object.is(aux_load,this.Aux_load) === false || Object.is(this.break_power,Pb_calm) ===false ){
+       if(operation === "DP"){
+        this.total_combine_load = aux_load + this.break_power
+       }else{
+        this.total_combine_load = aux_load + Pb_calm
+       }     
+     }
+     this.fuel_consumption_final =0;
+     this.used_battery = false; 
+     this.environment_loads = environment.update_dynamic_load();  // update dynamic laod   
+     this.dynamic_load = this.environment_loads
+     if(!this.dynamic_load ){
+      this.dynamic_load  = 0
+     }
+     this.load_with_dynamics = this.dynamic_load + this.total_combine_load
+     this.engine_optimzed = function(){
+      this.length = Object.keys(this.engine_online_obj).length
+      this.online_engine = this.length      
+     
+      let i = 1 ;
+      if (this.stand_by_engine === true) this.engine_normal_load = this.engine_power*1.1 // allowing the engine to take load to the 
+      
+     Object.keys(this.engine_online_obj).forEach(key => {
+         this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
+         if(this.length ===2){
+           this.assigned_load = this.combine_load/2
          }
-         console.log(this.assigned_load)
-         this.fuel_SFOC_2 =  EngineCal.SFOC(this.assigned_load,this.engine_power,this.sfoc,this.supplier,"auxilary")
-         this.fuel_SFOC_cal_2 = this.fuel_SFOC_2.sfoc_cal_aux
-        //  this.SFOC =
-         console.log(this.engine_online_obj, "gen online")
-         console.log(this.fuel_SFOC_cal_2, "fuel")
-         console.log(i)
-        i++  
-        this.fuel_consumption += this.assigned_load*(this.fuel_SFOC_cal_2/1000)*this.simulate_step
-      });
-      if(this.fuel_SFOC_cal_2 > this.fuel_SFOC_cal_1){
+        else if(this.check_load < 0.3){
+            this.assigned_load = this.combine_load/2
+
+         }
+  
+       else{
+           this.assigned_load = this.engine_normal_load
+           this.combine_load  = this.combine_load - this.assigned_load 
+         }        
+        this.fuel_SFOC_2 =  EngineCal.SFOC(this.assigned_load,this.engine_power,this.sfoc,this.supplier,"auxilary")
+        this.SFOC_cal_2 = this.fuel_SFOC_2.sfoc_cal_aux
+        this.fuel_SFOC_cal_2 +=this.SFOC_cal_2
+        this.fuel_consumption = this.assigned_load*(this.SFOC_cal_2/1000)*this.simulate_step;
+        this.fuel_consumption = this.fuel_consumption/1000;
+        if(this.used_battery ===false){
+          this.fuel_result = fuel_Details (this.fuel_consumption);
+          this.engine_online_obj[key]["load"] = this.assigned_load;
+          this.engine_online_obj[key]["FC"] += this.fuel_consumption;
+          this.engine_online_obj[key]["sfoc"] = this.SFOC_cal_2;
+          this.engine_online_obj[key]["Fuel_cost"] += this.fuel_result.aux_cost
+          this.engine_online_obj[key]["CO2"]  += this.fuel_result.aux_CO2 
+          this.fuel_consumption_final += this.fuel_consumption*1000
+          this.last_engine_load = this.assigned_load
+        }else{
+          //this capture the result of the Fuel consumption without the effect of the battery pack for comparison 
+     
+          this.FC_without_battery += this.fuel_consumption
+
+        }
+      
+        console.log(this.assigned_load," assigned load")
+        console.log(i)
+     
+        console.log(this.length)
+       //  this.fuel_SFOC_cal_2 = this.fuel_SFOC_cal_2-100
+
+        i++     
+       });
+
+       if(this.fuel_SFOC_cal_2 > this.fuel_SFOC_cal_1){
         // this.fuel_SFOC_cal_2 = 0
-        this.fuel_consumption = this.load_on_each_eng*(this.fuel_SFOC_cal_1/1000)*this.simulate_step
-        console.log(this.fuel_consumption,"FC testing")
-        Object.keys(this.engine_online_obj).forEach(key => {
-          this.engine_online_obj[key] = this.load_on_each_eng
-          console.log(this.load_on_each_eng,"equall load on engine ")          
-        });
+        // Object.keys(this.engine_online_obj).forEach(key => {
+        //         this.fuel_consumption = this.load_on_each_eng*(this.SFOC/1000)*this.simulate_step;
+        //         this.fuel_consumption = this.fuel_consumption/1000;
+        //         this.fuel_result = fuel_Details (this.fuel_consumption);
+        //         this.engine_online_obj[key]["load"] = this.load_on_each_eng;
+        //         this.engine_online_obj[key]["FC"] += this.fuel_consumption;
+        //         this.engine_online_obj[key]["sfoc"] = this.SFOC;
+        //         this.engine_online_obj[key]["Fuel_cost"] += this.fuel_result.aux_cost
+        //         this.engine_online_obj[key]["CO2"]  += this.fuel_result.aux_CO2
+
+        //       this.fuel_consumption_final += this.fuel_consumption
+        //       console.log(this.fuel_consumption, "fuel consumtion other ") 
+        //       });
       }else{
         // this.fuel_SFOC_cal_1 = 0
       }
-      console.log(this.fuel_consumption,"FC testing last")
-      console.log(this.simulate_step, " time step ")
-      return this.fuel_consumption
-
+      
+     }
+      if(this.environment_loads){
+        if(sellected_battery && bat_SOC> 0){ 
+          if(this.total_combine_load+this.dynamic_load> (this.combine_engines_power+this.discharge_power)){
+            //checking if the battery rated power and online engine can take the load 
+            this.discharge_power = this.discharge_battery(); // battery taking the dynamics based on the rated power of the battery pack
+            this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
+            this.BlackOut_prevention() // reduce the load to be assigned to teh gen sets if necessary   
+            this.engine_optimzed();
+          }else{
+     
+           if(this.total_combine_load+dynamic_load-this.discharge_powepppr > this.combine_engines_power) {
+              this.used_battery = true; // used to capture the effect of the battery useage for analysis purposed 
+              this.combine_load = this.combine_engines_power // updating the load  due to the environment load 
+              this.engine_optimzed(); // before en
+              this.discharge_power = this.discharge_battery(); // battery taking the dynamics based on the rated power of the battery pack
+              this.combine_load = this.total_combine_load + this.dynamic_load; // updating the load  due to the environment load 
+              this.combine_load =  this.combine_load - this.discharge_power; // updating the load  due to the environment load 
+              this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
+              this.engine_optimzed(); 
+            } else {
+              this.used_battery = true; // used to capture the effect of the battery useage for analysis purposed 
+              this.combine_load = this.total_combine_load + this.dynamic_load; // updating the load  due to the environment load 
+              this.engine_optimzed(); // before battery take the dynamic load
+              this.discharge_power = this.discharge_battery(); // battery taking the dynamics based on the rated power of the battery pack
+              this.combine_load = this.combine_load-this.discharge_power // update laod
+              this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
+              this.engine_optimzed(); // after battery has taken the dynamic load
+            }
+          }
+        
+        }else{
+          this.combine_load = this.dynamic_load + this.total_combine_load; //Nothing is taken by the battery pack 
+          this.BlackOut_prevention() // reduce the load to be assigned to teh gen sets if necessary   
+        this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
+        this.engine_optimzed();
+        }
+      // this.combine_load = this.total_combine_load + this.dynamic_load; // updating the load  due to the environment load 
+      }else{
+        this.combine_load = this.total_combine_load
+        this.BlackOut_prevention() // reduce the load to be assigned to teh gen sets if necessary   
+        
+        this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
+        this.engine_optimzed();
+      }
+      if(this.combine_load < this.combine_engines_power*0.8 && this.charging_activated ===true){
+        if(bat_SOC < bat_capacity*bat_DOD){
+         if(this.charging_power +this.combine_load < this.combine_engines_power*0.8 ){
+          this.used_battery = true; // used to ensure is running just the section of the battery in the next function
+           this.engine_optimzed();
+           this.battery_charge_power = this.charge_battery(); //return actuall charging power
+           this.used_battery = false;
+           this.combine_load = this.combine_load + this.battery_charge_power ;//
+           this.engine_optimzed();
+         }
+     
+        }        
+      }
+     
+      // this.online_engine = this.required_engines; // numbers of engine online 
+      // this.load_on_each_eng = this.combine_load/this.online_engine; // used to decide how optimized the load on the engine foe better fuel consmption 
+      // this.fuel_SFOC_1 = EngineCal.SFOC(this.load_on_each_eng,this.engine_power,this.sfoc,this.supplier,"auxilary") //SFOC when laod is share equally on genset 
+      // this.SFOC = this.fuel_SFOC_1.sfoc_cal_aux;
+      // this.fuel_SFOC_cal_1 = (this.fuel_SFOC_1.sfoc_cal_aux)*this.online_engine
+      // this.Fuel_cons_1 += this.load_on_each_eng*this.fuel_SFOC_cal_1*(500/1000*3600) 
+  
+        this.count++
+        console.log(this.waiting_off_engine, "waiting_off_engine")
+        console.log(this.stand_by_engine, "stand by engine ")
+        console.log(this.standy_by_ready_time, "standby ready time")
+        console.log(this.waiting_connection, "waiting connection")
+        return this.fuel_consumption_final  // include the effect of the of the battery packs if available 
+      
     }
       FLR(){
         this.engine_normal_load  // 80% when battery is install and without battery pack is 65%
         this.engine_load_limit = this.engine_power*1.1; // max load 110 % for 10 seconds   
         this.combine_engine_limit = this.engine_load_limit*this.online_engine
-        this.limit_load = Math.min(this.combine_load,this.combine_engine_limit)
-          //fast load reducer
+        if(this.combine_load > this.combine_engine_limit){
+          this.limit_load = this.combine_engine_limit
+          this.combine_load = this.limit_load
+        }else{
+          this.limit_load = this.combine_load
+        }
+        // this.limit_load = Math.min(this.combine_load,this.combine_engine_limit)
+        // const testing  = this.limit_load;
+      
            // TODO:
       }
       BlackOut_prevention(){
-        this.engine_normal_load  // 80% when battery is install and without battery pack is 65% of the engine capacity
+        this.online_engine = this.length
+        this.engine_normal_load  // 80% when battery is installed but without battery pack is 65% of the engine capacity
         this.engine_load_limit = this.engine_power*1.1; // max load 110 % for 10 seconds 
         this.combine_engines_power = this.engine_power*this.online_engine
         this.FLR(); // fast load reducering algrithyms 
@@ -884,25 +984,44 @@ function propellerProperties (){
          else if(this.limit_load >= this.combine_engines_power*1.05 && this.waiting_connection ===false){
            //TODO: start new engine 
            this.waiting_connection = true // used to ensure this section will one run once to keep track of the time 
-           if(this.standy_by_ready_time === 2000){
+           if(this.standy_by_ready_time === 20000){
             //typicall it takes 10 seconds to connection the genset and ready to take load after stand by 
             setTimeout(() => {
+              
               this.start_off_engine()
                
+               this.waiting_off_engine = true;
              }, 10000);
            }
            if(this.stand_by_engine === false){
-             // for any reason the stand by engine didnt activated in the above command, then it takes 30 seconds to active and get ready to connet to the grid
-             
+             // for any reason the stand by engine didnt activated in the above command, then it takes 30 seconds to active and get ready to connet to the grid             
             setTimeout(() => {
               this.start_off_engine()
-               
+              this.waiting_off_engine = true;
              }, 30000);
            }
          }
-
+         if(this.waiting_off_engine === true){
+          if(sellected_battery && this.load_with_dynamics < this.combine_engines_power* 0.75){
+            this.waiting_off_engine = false;
+           setTimeout(() => {
+            if(sellected_battery && this.load_with_dynamics < this.combine_engines_power* 0.75){
+             this.start_off_engine()
+            }else{
+              this.waiting_off_engine = true;
+            }
+            }, 40000);
+          }else if(!sellected_battery && this.load_with_dynamics < this.combine_engines_power* 0.65){
+            setTimeout(() => {
+              if(!sellected_battery && this.load_with_dynamics < this.combine_engines_power* 0.65){
+               this.start_off_engine()
+              }else{
+                this.waiting_off_engine = true;
+              }
+              }, 40000);
+          }
+         }        
       } 
-
       blackOut_recovery(){
         // When partial blackout fully blackout due to break done of the engine, or an event of a single engine break down detected 
        this.FLR()
@@ -919,132 +1038,157 @@ function propellerProperties (){
           this.start_off_engine()
         }, this.time);
       }
+      charge_battery(){
+        this.charging_properties = this.battery_pack.charge_battery();
+        this.charging_status = this.charging_properties.charging_status
+        this.chargin_power = this.charging_properties.charging_load;
+        this.charging_step = this.charging_properties.charging_step;
+        this.charging_time = this.charging_properties.charging_time;
+        // this.total_charging_power = this.chargin_power*this.charging_step; //kWh
+        return this.charging_power
+        //TODO: confirm if is a good pratices to charging a battery pack during a DP operation 
+      }
+      discharge_battery(){
+       this.discharging_propteries = this.battery_pack.discharge_battery(this.environment_loads)
+       this.discharge_status =this.discharging_propteries.discharge_status;
+       this.discharge_step = this.discharging_propteries.discharge_step
+      this.discharging_power = this.discharging_propteries.discharge_power
+       return this.discharging_propteries.discharge_power
+      }
       Test_blackout(blackOut_type){
         this.blackOut_type = blackOut_type;
         if(this.blackOut_type ==="fully"){
           //means : activating test for all engines down
           Object.keys(this.engine_online_obj).forEach(key => {
-            this.engine_online_obj[key] = 0;
+            Object.keys(this.engine_online_obj[key] ).forEach(key=>{   
+              if(key ==="load"){
+                this.engine_online_obj[key] = 0;
+              }
+            })
+            
         });
 
       }
-      if(this.blackOut_type ==="fully"){
+      if(this.blackOut_type ==="partially"){
         // intiate black out on a single engine 
+
         this.engine_online_obj.one = 0;
       }
       }
       Monitor_system(){
         //TODO: this monitor the entire systems to ensure every thing is ok, if rise alarm or take action 
         this.combine_load
-        Object.keys(this.engine_online_obj).forEach(key => {
-          //Checking the engine for blackOut
-          if(this.engine_online_obj[key] === 0){
-            //if any engine has zero load and is suppose to be online then that engine is blackout
-            this.blackUut = true;
-          }else{
-            this.blackOut = false;
-          }
+        Object.keys(this.engine_online_obj).forEach(key1 => {
+          
+          Object.keys(this.engine_online_obj[key1] ).forEach(key=>{   
+            if(key ==="load"){
+                //Checking the engine for blackOut
+              if(this.engine_online_obj[key1][key] === 0){
+                //if any engine has zero load and is suppose to be online then that engine is blackout
+                this.blackUut = true;
+              }else{
+                this.blackOut = false;
+              }
+            }
+          })
+        
         });
 
         if(this.blackOut === true){
-          delete this.engine_online_obj[key]  // remove the blackout generator online
+          delete this.engine_online_obj[key1]  // remove the blackout generator online
           this.blackOut_recovery() // initiate recovery 
         }
         
       }
-      Run_flow(){
-     
-      }
-      
 
 }
+  class battery_system{
+    constructor(){
+      this.c_rate =  bat_C_rated;
+      this.status = "not used";
+      this.capacity = bat_capacity;
+      this.charging_power  = this.capacity*this.c_rate;
+      this.scaled_charging_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes, so result can be analysis faster 
+      this.actual_charging_time = (60/this.c_rate)*60*1000; // the actual charging time in milliseconds 
+      this.charging_step =  (this.actual_charging_time)/(this.scaled_charging_time/500);
+      this.charging_step_hours =  this.charging_step/(3600*1000);
+      this.discharge_step = this.charging_step_hours; 
+      this.DOD =bat_DOD;
+      this.charging_time = 0
+      this.DOD = this.DOD/100;
+     this.test = 0;
+      this.discharging_time = 0; 
+    }
 
-  function battery_system(){
-      this.battery_sizing = function(max_time){
-        this.max_operation_tme  = max_time // maximum operation time or voyage time
-      };
-     this.charge_battery = function (c_rate,capacity,DOD){
-         //note: this charging is assuming to start from 100% DOD each time the charging start
-        this.time_past = 0  // total time that the pack has been charging in milli seconds
-        this.time_past_min = 0  // total time that the pack has been charging in minutes
-        const pack_DOD =DOD
-        let time = 0
-        bat_SOC = 0  //
-        this.capacity = parseFloat(capacity);
-        this.charge_capacity = 0 // this holds the stored energy at this point
-        this.c_rate = parseFloat(c_rate);
-        this.charging_power = this.capacity*this.c_rate
-        this.charge_time = (60/this.c_rate) *60*1000// in seconds (real charging time )
-
+   charge_battery (){
         // scale every thing down to complete every given charging in 2 minutes
-        this.scaled_charging_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes
-        const scaled_time =  this.scaled_charging_time;
-        this.scaled_charge_power = ((this.capacity)-((1-(pack_DOD/100))*this.capacity))*30*2// the scaled charging power
-        this.charging_step = (this.scaled_charge_power)/(this.scaled_charging_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second
-        let charging_step = this.charging_step;
-
-        const start_charging = setInterval(charging,500)
-        function charging(){
-            this.charge_capacity += charging_step;
-            time += 500;
-             bat_SOC = (charging_step*time/60) //in kwh
-             if(bat_SOC < 0){
-                // avoid showing a negatvate value as the SOC while charging
-                bat_SOC = 0
-             }
-             this.time_past += 500
-             this.time_past_min = (this.time_past/(60*1000))
-            if(time >= scaled_time){
-
-                clearInterval(start_charging)
-           }
-           console.log("time",time/(60*1000))
-           console.log("capacity", bat_SOC)
-           console.log("bad", this.charge_capacity)
-           console.log("step", charging_step)
-           console.log("t m", time )
-           console.log("t s", scaled_time )
-        }
-
-    };
-    this.discharge_battery = function (DOD,capacity,SOC,c_rate){
-        this.capacity = parseFloat(capacity);
-        this.c_rate = parseFloat(c_rate);
-        this.disCharge_power = this.capacity*this.c_rate
-        this.disCharge_time = (60/this.c_rate) *60*1000// in seconds (real charging time )
-        const pack_DOD =DOD
-
-        bat_SOC = capacity
-       //Scaled paramters
-       this.scaled_disCharge_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes
-       const scaled_time = this.scaled_disCharge_time
-        this.scaled_disCharge_power = ((this.capacity)-((1-(pack_DOD/100))*this.capacity))*30*2// the scaled charging power
-        this.disCharge_step = (this.scaled_disCharge_power)/(this.scaled_disCharge_time)  // the amount of charging power per 0.5 seconds since the simulation will update every 0.5 second
-        let discharge_step = this.disCharge_step;
-         this.DOD = parseFloat(DOD)/100;
-         this.SOC =SOC
-         const start_disCharge = setInterval(disCharging,500)
-
-         function disCharging(){
-            this.charge_capacity += charging_step;
-            time += 500;
-             bat_SOC = -(charging_step*time/60) //in kwh
-             this.time_past += 500
-             this.time_past_min = (this.time_past/(60*1000))
-            if(time >=scaled_time){
-                clearInterval(start_disCharge)
-           }
-           console.log("time",time/(60*1000))
-           console.log("capacity", bat_SOC)
-
-           console.log("step", charging_step)
-           console.log("test", (1-(pack_DOD/100))*this.capacity)
+        // the battery is condition to complete its charging in 2 minutes using it original rate C rate
+        this.status = "Charging"
+        if(bat_SOC < this.capacity*this.DOD){
+          this.charging_check = this.charging_power * this.charging_step_hours
+          if(this.charging_check+bat_SOC> this.capacity*this.DOD){
+            //checking/preventing over charging of the battery pack
+            this.charging_load = (this.capacity*this.DOD - bat_SOC)/this.charging_step_hours;// getting the remaining capacity to have 100% SOC and convering to required power
+            this.charging_load = this.charging_load *this.charging_step_hours
+          }else{
+            this.charging_load  = this.charging_power * this.charging_step_hours
+          }
+          bat_SOC += this.charging_load
+          this.charging_status =  bat_SOC /(this.capacity*this.DOD)*100;
+          this.charging_time += this.charging_step_hours*60
+        }else{
+          this.charging_load = 0
+          this.charging_status =  bat_SOC /(this.capacity*this.DOD)*100
 
         }
-    };
-    // this.BMS = function(){
+        this.test ++
+        console.log(bat_SOC ,"SOC")
+        console.log(this.charging_time  ,"Chargine time")
+        console.log(this.charging_load  ,"charge load")
+        console.log(this.charging_status ,"status")
+          console.log(this.test ,"count")
+          console.log(this.charging_step_hours,"step")
+          console.log(this.charging_power,"charge power")
+        
+       return {
+         charging_load : this.charging_load,
+         charging_status: this.charging_status,
+         charging_time : this.charging_time,
+         charging_step : this.charging_step_hours
 
-    // }
+       }
+    };
+    discharge_battery (load){
+      //conditioning the discharge to be complete in 2 minues of the simualation time.
+      this.load = load; //dynamics load
+      if(bat_SOC > 0 ){
+        this.status = "discharging"
+        if(this.load < this.disCharge_power){
+          this.check_remain_bat = (this.load*this.discharge_step)
+
+          if(this.check_remain_bat < bat_SOC){
+          dynamic_load = dynamic_load- this.load; // update the dynamics load so it can be taken by other source 
+          }else {
+            
+          this.load = bat_SOC/this.discharge_step; // recalculate the minimum accepted load of the bact if is less than the c rated
+          dynamic_load = dynamic_load- this.load; // update the dynamics load so it can be taken by other source 
+          }
+
+        }else {
+          dynamics_load = this.load-this.disCharge_power
+          this.load = this.disCharge_power;
+        }
+        bat_SOC = bat_SOC-(this.load*(500/(360*1000))); //update the state of charge of the battery pack
+        this.discharging_time += this.discharge_step;
+      }
+      this.charging_status = bat_SOC/(this.DOD*this.capacity)
+      return{
+         discharge_status: this.charging_status,
+         discharge_load :this.load*this.discharge_step,
+         discharge_power :this.load
+      }
+    };
+
   }
   function fuel_properties() {
 
@@ -1343,7 +1487,7 @@ function propellerProperties (){
         mean_Presure : "24.9 bar ",
         cylinders: 8,
         cylinder_output: "1200 kW/cyl",
-        power: "16800 kW",
+        Engine_Power: "16800 kW",
         Engine_speed:" 600 RPM",
         weight: "216 tonnes",
         length: "11729 mm",
@@ -1365,7 +1509,7 @@ function propellerProperties (){
         mean_Presure : "28.9 bar ",
         cylinders: 12,
         cylinder_output: "580 kW/cyl",
-        power: "6960 kW",
+        Engine_Power: "6960 kW",
         Engine_speed:" 750 RPM",
         weight: "216 tonnes",
         length: "6875 mm",
@@ -1402,7 +1546,7 @@ function propellerProperties (){
                       </select>`,
         LHV: "",
         SFOC: ` g/kWh <input type="text" name="" id="SFOC" class="custom_input" required>`,
-        power: `kW <input type="text" name="" id="power" class="custom_input" required>`,
+        Engine_Power: `kW <input type="text" name="" id="Engine_Power" class="custom_input" required>`,
         Engine_speed: `RPM  <input type="text" name="" id="rpm" class="custom_input" required>`,
         pistonStroke : ` mm  <input type="text" name="" id="pistonStroke" class="custom_input" required>`,
         cylinderBore: ` mm  <input type="text" name="" id="cylinderBore" class="custom_input" required>`,
@@ -1412,7 +1556,7 @@ function propellerProperties (){
 
       },
       custom_created:{
-
+      //empty object to create to hold the user customized engine
     }
 }
 
@@ -1435,7 +1579,7 @@ const Generator_sets = {
           cylinderBore: "310 mm",
           mean_Presure : "22.0 bar ",
           cylinders: 12,
-          fuelType: "MDO",
+          fuel_type: "MDO",
           Engine_Power: "5760 kW",
           Gen_Power: "5530 kW",
           efficiency: 0.95,
@@ -1459,7 +1603,7 @@ const Generator_sets = {
           pistonStroke : "430 mm",
           cylinderBore: "310 mm",
           mean_Presure : "27.1 bar ",
-          fuelType: "MDO",
+          fuel_type: "MDO",
           Engine_Power: "4400 kW",
           Gen_Power: "4225 kW",
           efficiency: 0.95,
@@ -1480,14 +1624,7 @@ const Generator_sets = {
         </select>`,
  // GenSET_type: "Wärtsilä 34DF",
  // model: "12V34DF",
- frequency: `Hz  <input type="text" name="" id="frequency" class="custom_input" required>`,
 
- Engine_speed:`rpm <input type="text" name="" id="rpm" class="custom_input" required>`,
- SFOC: ` g/kWh  <input type="text" name="" id="SFOC" class="custom_input" required>`,
- BSEC : ` Kj/kWh  <input type="text" name="" id="BSEC" required>`,
-  pistonStroke : ` mm <input type="text" name="" id="pistonStroke" class="custom_input" required>`,
-  cylinderBore: ` mm  <input type="text" name="" id="cylinderBore" class="custom_input" required> `,
- mean_Presure : ` bar <input type="text" name="" id="mean_Presure" class="custom_input" required>`,
  // cylinders: 12,
  Strokes: ` <select name="" id="Strokes" class="custom_input" required onchange="custom_engine_genset(event)">
               <option value="">Stroke type</option>
@@ -1507,7 +1644,14 @@ const Generator_sets = {
               <option value="HFO">HFO</option>
                <option value="LNG">LNG</option>
            </select>`,
- Engine_Power: `kW  <input type="text" name="" id="Engin_Power">`,
+ frequency: `Hz  <input type="text" name="" id="frequency" class="custom_input" required>`,
+ Engine_speed:`rpm <input type="text" name="" id="rpm" class="custom_input" required>`,
+ SFOC: ` g/kWh  <input type="text" name="" id="SFOC" class="custom_input" required>`,
+ BSEC : ` Kj/kWh  <input type="text" name="" id="BSEC">`,
+ pistonStroke : ` mm <input type="text" name="" id="pistonStroke" class="custom_input" required>`,
+ cylinderBore: ` mm  <input type="text" name="" id="cylinderBore" class="custom_input" required> `,
+ mean_Presure : ` bar <input type="text" name="" id="mean_Presure" class="custom_input" required>`,
+ Engine_Power: `kW  <input type="text" name="" id="Engine_Power">`,
  Gen_Power: `kW <input type="text" name="" id="Gen_Power" class="custom_input" required>`,
  efficiency: `kW <input type="text" name="" id="efficiency" class="custom_input" required>` ,
  voltage:  `kV <input type="text" name="" id="volt" class="custom_input" required>`,
@@ -1545,7 +1689,7 @@ const battery = batteries_properties.supplier
 const custom_battery = batteries_properties.supplier.customize
 const created_battery = batteries_properties.supplier.custom_created
 //power management system
-const charge_battery = new battery_system
+
 
 //Engine Margin
 // const Engine_Marine = new engineSellection()
