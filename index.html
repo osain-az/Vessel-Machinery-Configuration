@@ -570,10 +570,10 @@ tr:hover {background-color: #ddd;}
     .darshboard_container,.result_compare{
       width: 100%;
       background-color:#072b39;
-
       color: white;
       padding: 15px;
     }
+ 
     .c3-axis-y-label,.c3-axis-y,.c3-legend-item-tile  {
       stroke: #fff !important;
     }
@@ -644,6 +644,25 @@ tr:hover {background-color: #ddd;}
     border: solid #36e4f4 2px;
     border-radius: 15px;
     font-size: 1.3em;
+    }
+    .result_canvas{
+      width: 60%;
+      margin-left: auto;
+     margin-right: auto;
+    }
+    .insight_header{
+      display: block !important;
+      text-align: center;
+      width: fit-content;
+      border: solid #36e4f4 2px ;
+      border-radius: 10px;
+      margin-left: auto;
+      margin-right: auto;
+      font-size: 20px;
+      margin-top: 10px;
+      padding: 5px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
    .addedMachinery{
@@ -1524,21 +1543,22 @@ tr:hover {background-color: #ddd;}
    </div>
     </div>
     <div class="result_compare hide" id="result_compare" onclick="compare_result(event)">
+      <span class="insight_header"> <strong>Operation data insights for different engines </strong> </span> 
       <div class="center result_button">
         <span class=""><strong> </strong></span><br><br>
-         <span>
-           <span>chnage fuel : </span>
+         <span class="hide change_fuel" id="change_fuel">
+           <span><strong>change fuel </strong>: </span>
            <select name="" id="fuel_compare_type" onchange="compare_result(event)">
-             <option value="LNG">LNG</option>
+             <option value="LNG" selected>LNG</option>
              <option value="MGO">MGO</option>
              <option value="MDO">MDO</option>
-             <option value="">HFO</option>   
+             <option value="HFO">HFO</option>   
            </select>
          </span>
         <span><input type="button" value="emission" id="show_emission"></span>
-        <span><input type="button" value="Cost" id="show_cost"></span>
-        <span><input type="button" value="volume" id="show_volume"></span>
-        <span><input type="button" value="tonnes" id="show_FC"></span>
+        <span><input type="button" value=" fuel Cost" id="show_cost"></span>
+        <!-- <span><input type="button" value="fuel volume" id="show_volume"></span> -->
+        <span><input type="button" value=" fuel ton" id="show_FC"></span>
         <span><input type="button" value="show darshboard" id="show_dasrhboard"></span>
       </div>
      <div class="result_canvas" id="result_canvas">
@@ -1782,42 +1802,30 @@ function emission(){
 }
 fuel_comparison()
 function fuel_comparison(){
-
    const ctx = document.getElementById('comparison_chart');
    emission_comparison = new Chart(ctx, {
     type: 'bar',
     data: {
         labels: [],
         datasets: [{
-            label: 'LNG',
+            label: 'Main engine',
             data: [],
-            backgroundColor:  'rgba(75, 192, 192, 0.2)',
+            backgroundColor: 'rgba(164, 62, 223, 1)',
             borderColor:'rgba(255, 159, 64, 1)',
-            borderWidth: 1
+            borderWidth: 2
         },
            {
-            label: 'MGO',
+            label: 'Auxiliary engine',
             data: [],
-            backgroundColor:  'rgba(25, 99, 132, 56)',
-            borderColor: 'rgba(5, 19, 64, 1)',
+            backgroundColor:  'rgba(164, 223, 62, 1)',
+            borderColor: 'rgba(55, 67, 64, 1)',
             borderWidth: 2
         },
-         {
-        label: 'MDO',
-            data: [],
-            backgroundColor:  'rgba(28, 29, 132, 29)',
-            borderColor: 'rgba(255, 159, 64, 1)',
-            borderWidth: 2
-        },
-        {
-        label: 'HFO',
-            data: [],
-            backgroundColor:  'rgba(255, 99, 132, 0.2)',
-            borderColor: 'rgba(90, 190, 94, 200)',
-            borderWidth: 2
-        },]
+ 
+        ]
     },
     options: {
+      responsive:true,
       tooltips:{
       mode: 'index',
       },
@@ -1825,7 +1833,7 @@ function fuel_comparison(){
         position: 'bottom',
         align: 'center',
       },
-      title:{
+      title:{  
         display: true,
          text: 'Alternative Fuel comparison ',
          fontColor: 'rgb(255, 9, 132)',
@@ -4551,7 +4559,7 @@ comapre_main_cost,comapre_Aux_cost,comapre_main_emission,comapre_Aux_emission, c
  update_lng_main = [lng_compare_main.LNG_CO2,lng_compare_main.LNG_NOx,lng_compare_main.LNG_NMVOC,lng_compare_main.LNG_Sox,lng_compare_main.LNG_PM]
 
  update_lng_aux =[lng_compare_aux.LNG_CO2_Aux,lng_compare_aux.LNG_NOx_Aux,lng_compare_aux.LNG_NMVOC_Aux,lng_compare_aux.LNG_Sox_Aux,lng_compare_aux.LNG_PM_Aux]
-
+                              
  update_mgo_main =[mgo_compare_main.MGO_CO2,mgo_compare_main.MGO_NOx,mgo_compare_main.MGO_NMVOC,mgo_compare_main.MGO_Sox,mgo_compare_main.MGO_PM]
  update_mgo_aux =[mgo_compare_aux.MGO_CO2_Aux,mgo_compare_aux.MGO_NOx_Aux,mgo_compare_aux.MGO_NMVOC_Aux,mgo_compare_aux.MGO_Sox_Aux,mgo_compare_aux.MGO_PM_Aux]
 
@@ -4560,70 +4568,84 @@ comapre_main_cost,comapre_Aux_cost,comapre_main_emission,comapre_Aux_emission, c
 
  update_hfo_main =[hfo_compare_main.HFO_CO2,hfo_compare_main.HFO_NOx,hfo_compare_main.HFO_NMVOC,hfo_compare_main.HFO_Sox,hfo_compare_main.HFO_PM]
  update_hfo_aux =[hfo_compare_aux.HFO_CO2_Aux,hfo_compare_aux.HFO_NOx_Aux,hfo_compare_aux.HFO_NMVOC_Aux,hfo_compare_aux.HFO_Sox_Aux,hfo_compare_aux.HFO_PM_Aux]
+ 
 
-
- comapre_main_cost =[hfo_compare_main.HFO_CO2,mdo_compare_main.MDO_CO2,mgo_compare_main.MGO_CO2,lng_compare_main.LNG_CO2]
- comapre_Aux_cost =[hfo_compare_aux.HFO_CO2,mdo_compare_aux.MDO_CO2,mgo_compare_aux.MGO_CO2,lng_compare_aux.LNG_CO2]
+ comapre_main_cost =[hfo_compare_main.HFO_cost,mdo_compare_main.MDO_cost,mgo_compare_main.MGO_cost,lng_compare_main.LNG_cost]
+ comapre_Aux_cost =[hfo_compare_aux.HFO_cost_Aux,mdo_compare_aux.MDO_cost_Aux,mgo_compare_aux.MGO_cost_Aux,lng_compare_aux.LNG_cost_Aux]
 
  comapre_main_emission =[hfo_compare_main.HFO_CO2,mdo_compare_main.MDO_CO2,mgo_compare_main.MGO_CO2,lng_compare_main.LNG_CO2]
- comapre_Aux_emission =[hfo_compare_aux.HFO_CO2,mdo_compare_aux.MDO_CO2,mgo_compare_aux.MGO_CO2,lng_compare_aux.LNG_CO2]
+ comapre_Aux_emission =[hfo_compare_aux.HFO_CO2_Aux,mdo_compare_aux.MDO_CO2_Aux,mgo_compare_aux.MGO_CO2_Aux,lng_compare_aux.LNG_CO2_Aux]
 
-document.getElementById("result_canvas").classList.remove("hide")
+ document.getElementById("result_canvas").classList.remove("hide")
 
  }
-if(eventID ==="show_emission"){
+if(eventID ==="show_emission" || eventID === "fuel_compare_type"){
   emission_comparison.data.labels = ['CO2','NOX','NMVOC','SOX','PM'];
   emission_comparison.data.datasets[0].data =  update_lng_main;
    emission_comparison.data.datasets[1].data =  update_mgo_main;
-  emission_comparison.data.datasets[2].data =  update_mdo_main;
-  emission_comparison.data.datasets[3].data =  update_hfo_main;
+  // emission_comparison.data.datasets[2].data =  update_mdo_main;
+  // emission_comparison.data.datasets[3].data =  update_hfo_main;
+  document.getElementById("change_fuel").classList.remove("hide")
+  emission_comparison.data.labels = ["CO2","NOx","NMVOC","SOx","PM"];;
+
+  if(eventVal ==="LNG"){
+    emission_comparison.options.title.text = "LNG emission insight"
+    emission_comparison.data.datasets[0].data =  update_lng_main;
+   emission_comparison.data.datasets[1].data =  update_lng_aux ;
+  }
+  else if(eventVal ==="MGO"){
+    emission_comparison.options.title.text = "MGO emission insight"
+    emission_comparison.data.datasets[0].data =  update_mgo_main;
+   emission_comparison.data.datasets[1].data =  update_mgo_aux ;
+  }
+  else if(eventVal ==="MDO"){
+    emission_comparison.options.title.text = "MDO emission insight"
+    emission_comparison.data.datasets[0].data =  update_mdo_main;
+   emission_comparison.data.datasets[1].data =  update_mdo_aux ;
+  }
+  else if(eventVal ==="HFO"){
+    emission_comparison.options.title.text = "HFO emission insight"
+    emission_comparison.data.datasets[0].data =  update_hfo_main;
+   emission_comparison.data.datasets[1].data =  update_hfo_aux ;
+  }else{
+    emission_comparison.options.title.text = "LNG emission insight"
+    emission_comparison.data.datasets[0].data =  update_lng_main;
+   emission_comparison.data.datasets[1].data =  update_lng_aux ;
+  }
   emission_comparison.update();
 }
 else if(eventID ==="show_cost"){
-
+  document.getElementById("change_fuel").classList.add("hide")
+  emission_comparison.options.title.text = " fuel cost compare insight"
    emission_comparison.data.labels =  ["HFO","MDO","MGO","LNG"];
-   emission_comparison.data.datasets[0]={
-    label: 'Main engine',
-    backgroundColor:'green',
-    borderColor: 'rgba(255, 159, 64, 1)',
-     data:[comapre_main_cost]}
-     emission_comparison.data.datasets[1]={
-    label: 'Auxiliary engine',
-    backgroundColor:'green',
-    borderColor: 'rgba(255, 159, 64, 1)',
-     data:[comapre_Aux_cost]}
+    
+    emission_comparison.data.datasets[0].data = comapre_main_cost
 
-
-  //  emission_comparison.data.datasets[0]={
-  //   label: 'LNG',
-  //   backgroundColor:'green',
-  //   borderColor: 'rgba(255, 159, 64, 1)',
-  //    data:[lng_compare_main.LNG_cost]}
-  // emission_comparison.data.datasets[1]= {
-  //   label: 'MGO',
-  //   backgroundColor:'pink',
-  //   borderColor: 'rgba(255, 159, 64, 1)',
-  //   borderWidth: 2,
-  //   data: [mgo_compare_main.MGO_cost]}
-  // emission_comparison.data.datasets[2] = {
-  //   label: 'MDO',
-  //   backgroundColor:'blue',
-  //   borderColor: 'rgba(255, 159, 64, 1)',
-  //   borderWidth: 2,
-  //   data: [mdo_compare_main.MDO_cost]}
-
-  // emission_comparison.data.datasets[3]={
-  //   label: 'HFO',
-  //   backgroundColor:'pink',
-  //   borderColor: 'rgba(255, 159, 64, 1)',
-  //   borderWidth: 2,
-  //   data :[hfo_compare_main.HFO_cost]};
-
-   emission_comparison.options.scales.yAxes.ticks=
-
+    emission_comparison.data.datasets[1].data = comapre_Aux_cost 
+ 
+  // emission_comparison.options.scales.yAxes.ticks=
   option_update(eventID)
   emission_comparison.update();
 }
+else if(eventID ==="show_FC"){
+  document.getElementById("change_fuel").classList.add("hide")
+  emission_comparison.options.title.text = "fuel consumption  insight"
+  emission_comparison.data.labels =  ["Fuel consumption"];
+    
+    emission_comparison.data.datasets[0].data = [FC_ton]
+
+    emission_comparison.data.datasets[1].data = [FC_ton_aux]
+    emission_comparison.update();
+}
+// else if(eventID ==="show_volume"){
+//   document.getElementById("change_fuel").classList.add("hide")
+
+//   emission_comparison.data.labels =  ["HFO","MDO","MGO","LNG"];
+    
+//     emission_comparison.data.datasets[0].data = comapre_main_cost
+
+//     emission_comparison.data.datasets[1].data = comapre_Aux_cost 
+// }
 
 
 function option_update(type){
