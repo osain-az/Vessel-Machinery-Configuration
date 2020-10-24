@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ship Machinery Configuration </title>
     <script src="machinery.js"></script>
-    <script src="eedi.js"></script>
+    
 
     <!-- Load c3.css -->
 <link href="./c3-0.7.15/c3.css" rel="stylesheet">
@@ -361,7 +361,7 @@ tr:hover {background-color: #ddd;}
       margin-right: 1%;
     }
     .propulsion_type span:first-child{
-      margin-left: 4%;
+      margin-left: 10%;
     }
      .battery_sizing,.size_resul{
       border: solid#ddd 2px;
@@ -792,12 +792,20 @@ tr:hover {background-color: #ddd;}
                  <input type="text" id="LCB" min="-10" value="1.53 " max="10" step="0.01">
                  <span  data-name=" " id="LCB_plus">+</span>
 
+                 <div class="input_div align">
+                  <span class="span_name">Wetted Area Appendages  S_APP</span>
+                  <span data-name=" m^2" id="S_APP_minus">--</span>
+                  <input type="text" id="S_APP" min="5" value="0 m" max="1000" step="1" >
+                  <span  data-name=" m^2" id="S_APP_plus">+</span>
+                 </div>
+
                </div> <br>
               </form>
               <form action="" onchange="appendageCal(event)" onclick="handle_inputs(event)">
             <div class="">
 
               <br>
+
                <div  class="header"><span><strong>Appendages </strong></span></div>
                <br>
 
@@ -958,7 +966,7 @@ tr:hover {background-color: #ddd;}
    </div>
    <div onchange="appendageCal(event)" class="input_div align">
      <span>projection Area </span>
-    <input type="text" name="" class="" id="AirArea" min="0" value="0 m^2" step="0.1" max="30" oninput="shipDimension(event)">
+    <input type="text" name="" class="" id="AirArea" min="0" value="0 m^2" step="0.1" max="10000" oninput="shipDimension(event)">
   </div>
 </div>
 </div>
@@ -1154,7 +1162,7 @@ tr:hover {background-color: #ddd;}
       <form class="propulsion_type" onchange="dispProSystem(event)">
        <span>mechanical Propulsion</span> <input type="radio" name="Propulsion" id="ME_pro" value="ME">
         <span>Diesel Electric Propulsion</span> <input type="radio" name="Propulsion"id="DE_pro" value="DE">
-       <span>Hybrid DE and ME</span><input type="radio" name="Propulsion" id="DE_ME_pro" value="DE_ME">
+       <!-- <span>Hybrid DE and ME</span><input type="radio" name="Propulsion" id="DE_ME_pro" value="DE_ME"> -->
         <span>Hybrid: DE and battery</span><input type="radio" name="Propulsion" id="DE_Bat_pro" value="DE_Battery" >
         <span>Battery Electric </span><input type="radio" name="Propulsion" id="battery_E" value="battery_E" >
       </form>
@@ -1239,15 +1247,15 @@ tr:hover {background-color: #ddd;}
                  <span class="transit hide" id="transit_span">Voyage nautical mile <input type="text"  name="" class="sim" id="transit_dis">
                 </span>
                 <br><br>
-                 <span>  <input type="checkbox" name="" id="standby" value="operation">Stand by : </span>
+                 <!-- <span>  <input type="checkbox" name="" id="standby" value="operation">Stand by : </span>
                  <span id="standby_time_span" class="hide"> time (Hr)<input type="text" name="" class="sim" id="standby_time"></span>
-                 <br><br>
+                 <br><br> -->
                  <span>  <input type="checkbox" name="" id="DP" value="operation">DP operation :</span>
                  <span id="DP_time_span" class="hide"> Operation time (Hr)<input type="text" name="" class="sim" id="DP_time"></span>
                  <br><br>
-                 <span>  <input type="checkbox" name="" id="harbor" value="operation">Harbor : </span>
+                 <!-- <span>  <input type="checkbox" name="" id="harbor" value="operation">Harbor : </span>
                  <span id="harbor_time_span" class="hide"> time (Hr)<input type="text" name="" class="sim" id="harbor_time"></span>
-                 <br><br>
+                 <br><br> -->
               </div>
               <div onchange="sim_data(event)">
                 <strong><span>Simulation environment </span></strong><br><br>
@@ -1265,7 +1273,6 @@ tr:hover {background-color: #ddd;}
                      <span id="main_load_load_disp"></span><br><br>
                      <span><input type="submit" value="preview selected data " class="view_data" id="viewdata"></span>
                 </div>
-
               </div>
                 <!-- <div class="start_sim_main center" >
                   <span><input type="submit" value="Start Simulation" class="start_sim" id="start_sim" disabled></span>
@@ -1478,19 +1485,7 @@ tr:hover {background-color: #ddd;}
             <div class="darsh_top center"><span>Emissions Chart</span></div>
             <div class="emission" id="emission">
               <canvas id="emission_chart"></canvas>
-          
-              <span class="">  change engine :
-                <select  name="" id="online_engine_emission" onchange="swithc_engines(event)">
-                 <option value="combine"><strong> combine engines</strong></option> 
-                 <option value="engine_1">Engine set 1</option> 
-                 <option value="engine_2">engine set 2</option> 
-                 <option value="main_engine">Main engine</option> 
-                 <option value="genset_engine">genset engine </option> 
-                 <!-- <option value="engine_3">engine 3</option> 
-                  <option value="engine_4">engine 4</option> 
-                  <option value="engine_5">engine 5</option>  -->
-               </select></span>
-               <br> 
+
                <br>
             </div>
            </div>
@@ -1509,12 +1504,16 @@ tr:hover {background-color: #ddd;}
           <div class="update section" >
             <div class="darsh_top center" id="update_top"> <span>Update parameter</span></div>
             <div class="center">
-           <span> Adjust speed <input type="range" name="" id="shipSpeed" onchange="shipDimension(event)"></span> <br><br>
+           <span> Adjust speed <input type="range" name=""min="1" max="26" step="0.5" id="update_shipSpeed" onchange="update_simulation_data(event)"></span> <span id="update_shipSpeed_show"></span> <br><br>
            <span>wave
-            <input type="checkbox" name="" id="">
-            <span class="wave" id="wave_update"><span>max Wave height (m) : </span><input type="text" name="" id="wave_height" class="sim" onchange="sim_data(event)">
-          </span> <br><br>
-          <span class="span_disp"> adjust hotel load <input type="range" name="" min="1000" max="15000" step="500" id="adjust_load" onclick="sim_data(event)"></span> <br><br>
+            <input type="checkbox" name="" id="wave_check" onchange="update_simulation_data(event)">
+           <span>max Wave height (m) : </span ><input type="text" name="" id="wave_height_update" class="sim" onchange="update_simulation_data(event)">    <span class="" id="wave_update"></span>
+          </span> <br>
+          <span>Speed
+            <input type="checkbox" name="" id="speed_check" onchange="update_simulation_data(event)">
+           <span>max wind speed (m/s) : </span ><input type="text" name="" id="wind_speed_update" class="sim" onchange="update_simulation_data(event)">    <span class="" id="wind_update"></span>
+          </span> <br>
+          <span class="span_disp"> adjust hotel load <input type="range" name="" min="1000" max="15000" step="500" id="adjust_load" onchange="update_simulation_data(event)"></span> <span id="adjust_load_show"></span> <br><br>
           </div>
             </div>
           <div class=" section" id="">
@@ -1543,7 +1542,7 @@ tr:hover {background-color: #ddd;}
    </div>
     </div>
     <div class="result_compare hide" id="result_compare" onclick="compare_result(event)">
-      <span class="insight_header"> <strong>Operation data insights for different engines </strong> </span> 
+      <span class="insight_header"> <strong>Operational data insights for different engines and fuels  </strong> </span> 
       <div class="center result_button">
         <span class=""><strong> </strong></span><br><br>
          <span class="hide change_fuel" id="change_fuel">
@@ -1992,17 +1991,21 @@ setTimeout(function () {
 }
 
 function rpmDisplay(){
+  let rotating_speed = speedRPM
+
     if(!speedRPM){
         speedRPM = ratedSpeed
+        rotating_speed =  RPM 
     }
-
+    rotating_speed =  RPM 
+  
     var chart2 = c3.generate({
 
     bindto: '#RPMchart',
 
     data: {
         columns: [
-            ['Speed', speedRPM]
+            ['Speed', rotating_speed]
         ],
         type: 'gauge',
         onclick: function (d, i) { console.log("onclick", d, i); },
@@ -2028,7 +2031,7 @@ function rpmDisplay(){
         threshold: {
 //            unit: 'value', // percentage is default
 //            max: 200, // 100 is default
-            values: [speedRPM*0.25, speedRPM*0.5, speedRPM*0.7, speedRPM]
+            values: [rotating_speed*0.25, rotating_speed*0.5, rotating_speed*0.7, rotating_speed]
         }
     },
     size: {
@@ -2038,25 +2041,25 @@ function rpmDisplay(){
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', speedRPM*0.01]]
+        columns: [['Speed', rotating_speed*0.01]]
     });
 }, 1000);
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', speedRPM*0.3]]
+        columns: [['Speed', rotating_speed*0.3]]
     });
 }, 2000);
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', speedRPM*0.7]]
+        columns: [['Speed', rotating_speed*0.7]]
     });
 }, 3000);
 
 setTimeout(function () {
     chart2.load({
-        columns: [['Speed', speedRPM]]
+        columns: [['Speed', rotating_speed]]
     });
 }, 5000);
 
@@ -2468,11 +2471,10 @@ function currentSfocDisplay (){
  shipDimension(event)
 
  function handle_inputs(event){
-   // handle all the input fields with this fucntion
+   // handle all the RRESISTANCE input fields with this fucntion
    let newVal,curentID,oldVal,step,unit,eventVal,eventID,incri_ID
     eventID = event.target.id
     eventVal = event.target.value
-
    unit = event.target.getAttribute("data-name")
     curentID =  eventID
    curentID = curentID.split("_")//split of the plus or minus id to get the coresponding input ID
@@ -2480,7 +2482,6 @@ function currentSfocDisplay (){
    if(curentID.length >1){
        curentID  =  curentID[0] // this will match every input id that corespond to either minus or plus
       incri_ID = incri_ID[1] // checking the ID to determine if to increase or decrese value
-
       step = document.getElementById(curentID).step
       oldVal = document.getElementById(curentID).value
       oldVal = parseFloat(oldVal)
@@ -2561,6 +2562,10 @@ wind_speed  = parseFloat(wind_speed)
 
  cross_section_area =  parseFloat(cross_section_area)
 
+
+ S_APP_input = document.getElementById('S_APP').value // IF total wetted area of the appenadages are know 
+ S_APP_input = parseFloat(S_APP_input)
+ 
 //  document.getElementById('displayAirArea').innerHTML= cross_section_area + " m^2"
 
  wave_height  = document.getElementById('H').value
@@ -2569,11 +2574,10 @@ wind_speed  = parseFloat(wind_speed)
 //  document.getElementById('displayH').innerHTML= wave_height + " "
 
  updateResistance()
- environment.data(H,wind_speed)
+// environment()
 }
 
 function sternType(event){
-
   sternId = document.getElementById('stern').value
   screw = document.getElementById('screw').value
     if(sternId === "Normal"){
@@ -2688,11 +2692,12 @@ let c,k,val,i,s
       intervalResis = 0
      s = shipSpeedKnots*0.5144
     val = shipSpeedKnots;
-    resistanceDisplay ()
+   resistanceDisplay ()
 
     //  n = 20
-        c = 1
-        i = 0
+        c = 1;
+        i = 0;
+        k =1;
       for ( k = 1; k < val;k ++) {
 
         if(val-k > 1 ){
@@ -2706,9 +2711,7 @@ let c,k,val,i,s
                 if(RT){
                   displayResistance()
                  intervalResis = 2
-
                  propellers()
-
                 //  resistanceDisplay ()
                 }
               }
@@ -2747,13 +2750,13 @@ function powerSfoc(val){
 
 function myFunction(val) {
 
-// document.getElementById("demo").innerHTML = val;
-// console.log(val)
+ document.getElementById("demo").innerHTML = val;
+ console.log(val)
 // // lastRPM= document.getElementById("demo").min;
 // // lastRPM= document.getElementById("demo").max;
 // document.getElementById('displayRPM').innerHTML= val + " rpm"
 // speedRPM = val
-alert("Estimation using the RPM is still under improvemnt !, use other methods")
+//alert("Estimation using the RPM is still under improvemnt !, use other methods")
 }
 
 function showEngineDashbaord (){
@@ -2834,8 +2837,6 @@ document.getElementById("cont_dischargeCharge").innerHTML  =  chargeDischarge + 
 document.getElementById("cont_dischargeCharge_peak").innerHTML  = chargeDischarge_peak + " kW"
 
 }
-
-
 
 // document.getElementById("size_capacity").innerHTML
 // document.getElementById("size_capacity").innerHTML
@@ -2930,12 +2931,13 @@ engineStrokes =engineDetail.Strokes
 EngineCal.torque(engineStrokes,ratedSpeed,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
 
-//  torqueDisplay ()
+//  torqueDisplay () 
 //  powerDisplay()
 //  rpmDisplay()
 //  loadDisplay()
 //  loadWattDisplay ()
 //  currentSfocDisplay()
+
     // updating sliders
   if(engineDetail.speed_type=== "Medium-Speed"){
    rpm_min = 400
@@ -3028,6 +3030,8 @@ function displayGenSetType(event) {
   document.getElementById("select_message_butt").value = "Generator set has been successfully added to the mechinery"
   // document.getElementById("gensetTable").classList.add("hide");
   document.getElementById("battery_sizing").classList.add("hide");
+  document.getElementById("engine_perf").classList.remove("hide");
+
 
   throw "testing the"
  }
@@ -3078,7 +3082,7 @@ else if(EventID==="custo_confirm"){
 }
 }
 
-aux_enginePower = parseFloat(gensetDetail.Gen_Power)
+aux_enginePower = parseFloat(gensetDetail.Engine_Power)
 aux_meanPressure = parseFloat(gensetDetail.mean_Presure)
  aux_cylinderBore = parseFloat(gensetDetail.cylinderBore)
  aux_cylinders = parseFloat(gensetDetail.cylinders)
@@ -3414,6 +3418,7 @@ document.getElementById("mainDashboard").classList.add("hide")
 
 function engineDashboard(EventID ,val ){
   let type,used_sfoc,used_supplier
+
   if( recent_chose_engine ==="aux_engine"){
     type = "auxilary";
     used_sfoc = aux_ratedsfoc;
@@ -3424,7 +3429,11 @@ function engineDashboard(EventID ,val ){
   }
     t = 1
   if(EventID ==='loadInput'|| EventID ==='load'){
- alert("test")
+     if(engine_test_type = "RPM"){
+      val = power 
+     }
+     torqueDisplay ()
+     rpmDisplay()
     sfocDisplay ()
      c= (10/100)*val;
      n = 10
@@ -3498,31 +3507,39 @@ function engineDashboard(EventID ,val ){
   }
 }
 
+//  torqueDisplay () 
+  powerDisplay()
+//  rpmDisplay()
 function getValues(event){
     let val, k,i, n, c,t
     t = 1
   const EventID = event.target.id;
 
  if (EventID ==='RPM' || EventID === 'RPMInput') {
+   engine_test_type = "RPM";
       RPM  = event.target.value
     if (EventID ==='RPMInput') {
      document.getElementById(EventID).value = ""
+     document.getElementById("displayRPM").innerHTML= RPM + "% engine power"
     }
+  
 }
 else if(EventID ==='loadInput'|| EventID ==='load'){
+  engine_test_type = "load";
     if( EventID ==='loadInput'){
       val = document.getElementById(EventID).value
+      
       document.getElementById(EventID).value = ""
       document.getElementById("loadDisplay").innerHTML= val + "% engine power"
     }else{
       val  = event.target.value
       document.getElementById("loadDisplay").innerHTML= val + "% engine power"
     }
-    engineDashboard(EventID,val)
+    power = val
 }
 // }
 else if(EventID === 'powerInput' || EventID ==='power'){
-
+   engine_test_type = "load";
   if(EventID === 'powerInput'){
 
     val = parseFloat(document.getElementById(EventID).value)
@@ -3531,9 +3548,15 @@ else if(EventID === 'powerInput' || EventID ==='power'){
   }else{
     val = parseFloat(document.getElementById(EventID).value)
   }
-  engineDashboard(EventID,val )
+  power = val
+
 
 }
+EngineCal.torque(engineStrokes,ratedSpeed,meanPressure,cylinderBore,cylinders,pistonStroke )
+if( engine_test_type = "load"){
+  val = power
+}
+engineDashboard(EventID,val )
 }
 
 //  let simulate,DP_time, habor_time,standby_time,PpowerInstall,
@@ -3600,6 +3623,45 @@ else if(define_result_check ===true){
 
 //sim = simulation
 let transit_dis_mils
+
+function update_simulation_data(event) {
+  const eventID = event.target.id;
+  const eventcheck = document.getElementById("wave_check").checked;
+  const eventVal = event.target.value;
+  
+  if(eventID ==="update_shipSpeed"){
+    shipSpeedKnots = eventVal*1; 
+    shipSpeed = shipSpeedKnots* 0.5144; //m/s
+   document.getElementById("update_shipSpeed_show").innerHTML = shipSpeedKnots +" knt"
+   updateResistance(); // recalculating the resistance
+  
+  }
+  else if(eventID ==="wave_height_update" || eventID ==="wave_check"){
+     
+     if( eventcheck === true){
+      simulation_environment = "wave_wind";
+      wave_height = parseFloat(eventVal);
+     wave_height  = wave_height ;
+     if(!wave_height)  wave_height = 0 ;
+     if(wave_height)  environment.updat_wave = wave_height // environmental wave data
+
+     document.getElementById("wave_update").innerHTML = wave_height  + " m";
+     environment.updat_wave = wave_height // environmental wave data
+     
+     }else{
+      wave_height  = wave_height ;
+      simulation_environment = "calm";
+      document.getElementById("wave_height_update").value =  " "
+      document.getElementById("wave_update").innerHTML = " "
+     }
+
+  }
+  else if(eventID ==="adjust_load"){
+    aux_load = parseFloat(eventVal);
+  document.getElementById("adjust_load_show").innerHTML = eventVal +" kW"
+  }
+}
+
 function sim_data(event){
   // display the field and get the input data in the simulation environment
   const eventID = event.target.id;
@@ -3610,14 +3672,14 @@ function sim_data(event){
 //uncheck and check type of operation
 if(eventID ==="transit"){
 
- document.getElementById("standby").checked = false;
+//  document.getElementById("standby").checked = false;
  document.getElementById("DP").checked = false;
-  document.getElementById("harbor").checked = false;
+  // document.getElementById("harbor").checked = false;
 //  document.getElementById("transit").checked = true;
-document.getElementById("standby_time_span").classList.add("hide")
-  document.getElementById("standby_time").required = false
-  document.getElementById("harbor_time_span").classList.add("hide")
-  document.getElementById("harbor_time").required = false
+// document.getElementById("standby_time_span").classList.add("hide")
+//   document.getElementById("standby_time").required = false
+  // document.getElementById("harbor_time_span").classList.add("hide")
+  // document.getElementById("harbor_time").required = false
   document.getElementById("DP_time_span").classList.add("hide")
   document.getElementById("DP_time").required = false
   // document.getElementById("transit_span").classList.add("hide")
@@ -3625,59 +3687,59 @@ document.getElementById("standby_time_span").classList.add("hide")
 
 }
 else if(eventID ==="DP"){
-  document.getElementById("standby").checked = false;
+  // document.getElementById("standby").checked = false;
 //  document.getElementById("DP").checked = true;
-  document.getElementById("harbor").checked = false;
+  // document.getElementById("harbor").checked = false;
   document.getElementById("transit").checked =false;
 
-  document.getElementById("standby_time_span").classList.add("hide")
-  document.getElementById("standby_time").required = false
-  document.getElementById("harbor_time_span").classList.add("hide")
-  document.getElementById("harbor_time").required = false
+  // document.getElementById("standby_time_span").classList.add("hide")
+  // document.getElementById("standby_time").required = false
+  // document.getElementById("harbor_time_span").classList.add("hide")
+  // document.getElementById("harbor_time").required = false
   // document.getElementById("DP_time_span").classList.add("hide")
   // document.getElementById("DP_time").required = false
   document.getElementById("transit_span").classList.add("hide")
   document.getElementById("transit_dis").required = false;
 }
-else if(eventID ==="standby"){
-  // document.getElementById("standby").checked = true;
- document.getElementById("DP").checked = false;
-  document.getElementById("harbor").checked = false;
-  document.getElementById("transit").checked =false;
+// else if(eventID ==="standby"){
+//   // document.getElementById("standby").checked = true;
+//  document.getElementById("DP").checked = false;
+//   document.getElementById("harbor").checked = false;
+//   document.getElementById("transit").checked =false;
 
-  // document.getElementById("standby_time_span").classList.add("hide")
-  // document.getElementById("standby_time").required = false
-  document.getElementById("harbor_time_span").classList.add("hide")
-  document.getElementById("harbor_time").required = false
-  document.getElementById("DP_time_span").classList.add("hide")
-  document.getElementById("DP_time").required = false
-  document.getElementById("transit_span").classList.add("hide")
-  document.getElementById("transit_dis").required = false;
-}
-else if(eventID ==="harbor"){
-  document.getElementById("standby").checked = false;
- document.getElementById("DP").checked = false;
-  // document.getElementById("harbor").checked = true;
-  document.getElementById("transit").checked =false;
+//   // document.getElementById("standby_time_span").classList.add("hide")
+//   // document.getElementById("standby_time").required = false
+//   document.getElementById("harbor_time_span").classList.add("hide")
+//   document.getElementById("harbor_time").required = false
+//   document.getElementById("DP_time_span").classList.add("hide")
+//   document.getElementById("DP_time").required = false
+//   document.getElementById("transit_span").classList.add("hide")
+//   document.getElementById("transit_dis").required = false;
+// }
+// else if(eventID ==="harbor"){
+//   document.getElementById("standby").checked = false;
+//  document.getElementById("DP").checked = false;
+//   // document.getElementById("harbor").checked = true;
+//   document.getElementById("transit").checked =false;
 
-  document.getElementById("standby_time_span").classList.add("hide")
-  document.getElementById("standby_time").required = false
-  // document.getElementById("harbor_time_span").classList.add("hide")
-  // document.getElementById("harbor_time").required = false
-  document.getElementById("DP_time_span").classList.add("hide")
-  document.getElementById("DP_time").required = false
-  document.getElementById("transit_span").classList.add("hide")
-  document.getElementById("transit_dis").required = false;
-}
-else if (eventID==="None_calm_sim" && eventcheck ===fase){
+//   document.getElementById("standby_time_span").classList.add("hide")
+//   document.getElementById("standby_time").required = false
+//   // document.getElementById("harbor_time_span").classList.add("hide")
+//   // document.getElementById("harbor_time").required = false
+//   document.getElementById("DP_time_span").classList.add("hide")
+//   document.getElementById("DP_time").required = false
+//   document.getElementById("transit_span").classList.add("hide")
+//   document.getElementById("transit_dis").required = false;
+// }
+else if (eventID==="None_calm_sim" && eventcheck ===false){
   document.getElementById("wave").classList.add("hide")
   document.getElementById("wave_height").required = false
   environment_type = eventID
 }
- 
 if(eventID ==="aux_load_input"|| eventID ==="adjust_load"){
   aux_load = eventVal;
   aux_load = parseFloat(aux_load);
+  document.getElementById("adjust_load_show").innerHTML = aux_load + " KW"
 }
 else if(eventID === "main_load"){
 Pb_calm = eventVal;
@@ -3692,12 +3754,12 @@ else if(eventID==="transit_dis"){
 //  transit_dis =  document.getElementById("transit").value
  DP_operat_time =  document.getElementById("DP_time").value;
  DP_operat_time = parseFloat(DP_operat_time);
- harbor_time =  document.getElementById("DP_time").value;
- harbor_time = parseFloat(harbor_time);
- standby_time =  document.getElementById("DP_time").value;
- standby_time = parseFloat(standby_time);
- wave_height =  document.getElementById("wave_height").value;
- wave_height = parseFloat(wave_height);
+//  harbor_time =  document.getElementById("DP_time").value;
+//  harbor_time = parseFloat(harbor_time);
+//  standby_time =  document.getElementById("DP_time").value;
+//  standby_time = parseFloat(standby_time);
+   wave_height =  document.getElementById("wave_height").value;
+  wave_height = parseFloat(wave_height);
 
  if(eventVal ==="operation"){
   operation = eventID
@@ -3719,14 +3781,14 @@ else if(eventID==="transit_dis"){
   document.getElementById("transit_span").classList.remove("hide")
   document.getElementById("transit_dis").required = true
  }
- else if(eventID ==="standby"){
-  document.getElementById("standby_time_span").classList.remove("hide")
-  document.getElementById("standby_time").required = true
- }
- else if(eventID ==="harbor"){
-  document.getElementById("harbor_time_span").classList.remove("hide")
-  document.getElementById("harbor_time").required = true
- }
+//  else if(eventID ==="standby"){
+//   document.getElementById("standby_time_span").classList.remove("hide")
+//   document.getElementById("standby_time").required = true
+//  }
+//  else if(eventID ==="harbor"){
+//   document.getElementById("harbor_time_span").classList.remove("hide")
+//   document.getElementById("harbor_time").required = true
+//  }
  else if(eventID ==="DP"){
   document.getElementById("DP_time_span").classList.remove("hide")
   document.getElementById("DP_time").required = true
@@ -3804,12 +3866,12 @@ function display_sim_param(){
     show_propulsion = "not ready"
   }
 
-  if(end_sim){
+  if(simulation_period){
 
-    simu_time_show = end_sim
+    simu_time_show = simulation_period
 
   }
-  else if(!end_sim){
+  else if(!simulation_period){
     simu_time_show = "not updated yet..."
   }
 
@@ -3844,7 +3906,6 @@ function display_sim_param(){
 //  document.getElementById("volt_pro").innerHTML = bat_volt
 //  document.getElementById("charge_power").innerHTML =  bat_charge_power
 }
-
 
 function dispProSystem(event){
 
@@ -3925,10 +3986,12 @@ function preview(event){
   else if (eventID ==="start_sim"){
     document.getElementById("sellected_disp").classList.add("hide")
     document.getElementById("darshboard_container").classList.remove("hide")
-   if(operation==="transit"){
+   if(operation==="transit" && propulsion_syst==="ME"){
+
     main_Simulate(); // for mechanical simulation 
    }else{
-    DP_operation ()
+     //alert("testing DP")
+    DP_operation () 
    }
 
   }
@@ -3951,7 +4014,11 @@ function preview(event){
         alert(`The installed genset power should be more than 80 % of the required hotel  load of  ${aux_load}`)
         throw "add more capacity to the installed gen set "
      }
-     installed_power = installed_power + gentset_power
+     else if(installed_power*0.8 < Pb_calm){
+      alert(`The installed main engine power should be more than 80 % of the required propulsion load of  ${Pb_calm}`)
+        throw "add more capacity to the installed main engine "
+     }
+    //  installed_power = installed_power + gentset_power
   }
   else if(propulsion_type ==="DE_ME"){
     const i = parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
@@ -3969,61 +4036,76 @@ function preview(event){
  }
 
 }
-let trans_check,standby_check,harbor_check,DP_check,sim_time,end_sim,distance_past,time
+let trans_check,standby_check,harbor_check,DP_check,sim_time,simulation_period,distance_past,time,simulating_time
 function main_Simulate(event){
   let type, aux_load_perc,max_load_perc, remain_distance,current_time,new_distance_m,total_combine_load
    trans_check = document.getElementById("transit").checked
-   standby_check = document.getElementById("standby").checked
+  //  standby_check = document.getElementById("standby").checked
    DP_check = document.getElementById("DP").checked
-   harbor_check = document.getElementById("harbor").checked
-  sim_time = document.getElementById("sim_time").value
-  transit_dis_mils
-
-  // const eventID = event.target.id
-  // const eventVal = event.target.value
-  // const eventcheck = event.target.checked
-
+  //  harbor_check = document.getElementById("harbor").checked
+   simulating_time = document.getElementById("sim_time").value
   aux_load_perc =(aux_load/aux_enginePower)*100 //TODO: note this needs to be modify to handle many engine
   max_load_perc = (Pb/main_enginePower)*100 //TODO: note this needs to be modify to handle many engine
-
+  environment.updat_wave = wave_height // environmental wave data
  if (trans_check === true){
-    transit_dis = transit_dis_mils*1852 // meters
-    transit_time = (transit_dis/shipSpeed)/3600 //time for transit in seconds
-    remain_distance = transit_dis// transit_time
-    end_sim = sim_time*60*1000 // convert the input time to milli seconds
-    time_step = (transit_time*3600*1000/(end_sim /500)) //time step for every 0.5 seconds
+    // transit_dis = transit_dis_mils*1852 // meters
+    // transit_time = (transit_dis/shipSpeed)/3600 //time for transit in seconds
+    // remain_distance = transit_dis// transit_time
+    // simulation_period = simulating_time*60*1000 // convert the input time to milli seconds
+    // time_step = (transit_time*3600*1000/(simulation_period /500)) //time step for every 0.5 seconds
     LiveResult()// live ploting
+    simulation_period = sim_time*60*1000
+    transit_data = new transiting_details()
   const sim_interv = setInterval(sim, 500);
-  time_step = time_step/(3600*1000)
-  time = 0
-  FC_ton_aux = 0
-  FC_ton = 0
-  distance_past = 0
+  let i  = 0
+  time = 0;
+  FC_ton_aux = 0;
+  FC_ton = 0;
+  distance_past = 0;
+   let assigned_aux_load,aux_active
+  const avaliable_power = aux_enginePower
   
-  sim_time = 0 // used to stored time past which correspond to the distance moved
+   if( aux_load <= avaliable_power*0.8){
+    assigned_aux_load = aux_load
+    aux_active = 1
+   }
+   else if(aux_load > avaliable_power*0.8 &&  aux_load < avaliable_power*0.8*2){
+    assigned_aux_load = aux_load/2
+    aux_active = 2
+   }
+  
+  else if(aux_load > avaliable_power*0.8*2 &&  aux_load < avaliable_power*0.8*3){
+    assigned_aux_load = aux_load/3
+    aux_active = 3
+   }
+  else if(aux_load > avaliable_power*0.8 *3 &&  aux_load < avaliable_power*0.8*4){
+    assigned_aux_load = aux_load/4
+    aux_active = 4
+   }
   let new_distance_mils,distance
   distance = 0
+
   // let propulsion_load
   function sim() {
-      
-     current_time = remain_distance/shipSpeed // recalculating the remaining voyage time
-     step = current_time/(end_sim-time)  //calculation updated time step
-     time_step = step/3600*1000  //converting milliseconds to hours
+    
+    //  current_time = remain_distance/shipSpeed // recalculating the remaining voyage time
+    //  step = current_time*1000/((simulation_period-time)/500) //calculation updated time step
+    //  time_step = (step/3600*1000)  //converting milliseconds to hours
+    transit_info = transit_data.Parameters()
+    time_step = transit_info.time_step
+
+    if(simulation_environment ==="wave_wind" ){
+      environment.update_dynamic_load()
+      environment.wave_height_cal // current wave height which is calculated
+    }
      if(!dynamic_load){
       dynamic_load = 0
      }
      total_combine_load = Pb_calm+dynamic_load
     // load = Pb // break power
     type = "main" // the type is only important when it is auxilary calculation
+    
     time +=500
-    sim_time +=time_step
-    // distance_past  = (shipSpeed*(sim_time*3600))/1852
-    new_distance_mils = (shipSpeed*(time_step*3600))/1852 // updated distance in mils
-    new_distance_m = (shipSpeed*(time_step*3600)) // updated distance in meters
-    distance += new_distance_mils
-    distance_past = distance
-    remain_distance = transit_dis- (distance_past*1852)
-    console.log("dist past", distance_past)
     EngineCal.SFOC(total_combine_load,main_enginePower,ratedSfoc,supplier,type)
     FC = total_combine_load*(sfoc_cal/1000)*time_step
     FC_ton += FC/1000
@@ -4033,70 +4115,98 @@ function main_Simulate(event){
      type = "auxilary"
      aux_load // hotel laod and other
      aux_enginePower
- 
-     EngineCal.SFOC(aux_load,aux_enginePower,aux_ratedsfoc,gen_supplier,type)
-     FC_aux = aux_load*(sfoc_cal_aux/1000)*time_step
-     FC_ton_aux += FC_aux/1000
+     i++
+     console.log(i, "count")
+     EngineCal.SFOC(assigned_aux_load,aux_enginePower,aux_ratedsfoc,gen_supplier,type)
+     FC_aux =  assigned_aux_load*(sfoc_cal_aux/1000)*time_step
+     FC_ton_aux += (FC_aux/1000)*aux_active
+     let test = 0
+     test += FC_aux/1000
      FC_ton_aux = FC_ton_aux.toFixed(2)*1
-    //  fuel_Details (FC_ton_aux)
+     FC_ton_aux = FC_ton_aux //compensating for the numbers of engine currently running 
+      console.log(FC_ton_aux,aux_active,test,"testing auxillary " )
+     //  fuel_Details (FC_ton_aux)
+  //   if(simulation_period-time <=499){
+  //     time_step = transit_time-sim_time
+  //     FC = Pb_calm*(sfoc_cal/1000)*time_step
+  //     FC_ton += FC/1000
+  //     FC_ton = FC_ton.toFixed(2)*1
+  //     // fuel_Details (FC_ton)
+  //  // "Auxiliary engine fuel consumption
+  //  FC_aux  = assigned_aux_load*(sfoc_cal_aux/1000)*time_step *aux_active
+  //    FC_ton_aux += FC_aux/1000
+  //    FC_ton_aux = FC_ton_aux.toFixed(2)*1
+  //   }
 
-     console.log("aux_ratesfoc",aux_ratedsfoc)
-     console.log("aux engine",aux_enginePower)
-     console.log("sfoc_cal_aux",sfoc_cal_aux)
-     console.log("sfoc_cal",sfoc_cal)
-     console.log("aux load",aux_load)
-     console.log("FC TON_aux",FC_ton_aux)
-     console.log("FC TON",FC_ton)
-     console.log("FC_aux",FC_aux)
-
-    if(end_sim-time <=499){
-      time_step = transit_time-sim_time
-      FC = Pb_calm*(sfoc_cal/1000)*time_step
-      FC_ton += FC/1000
-      FC_ton = FC_ton.toFixed(2)*1
-      // fuel_Details (FC_ton)
-
-   // "Auxiliary engine fuel consumption
-      FC_aux = aux_load*(sfoc_cal_aux/1000)*time_step
-     FC_ton_aux += FC_aux/1000
-     FC_ton_aux = FC_ton_aux.toFixed(2)*1
-    //  fuel_altern = new alternativeFuel(FC_ton_aux,"Auxiliary")
-    // fuel_Details (FC_ton_aux)
-
-    }
-
-    if (time >=end_sim) {
+    if (time >=simulation_period) {
       clearInterval(sim_interv);
-    } else {
-
-    }
+    } 
    // plotResult()
-    ploting_power_darshboard()
-    // function plotResult(){
-    //   Plotly.extendTraces('result', {
-    //         x: [[time],[time],[time],[time]],
-    //         y: [[aux_load],[Pb_calm],[main_enginePower],[aux_enginePower]]
-    //       }, [0,1,2,3], 1000)
-
-    // //   Plotly.extendTraces('plot', {
-    // //  x: [[max_load_perc],[max_load_perc]],
-    // // y: [[sfoc_cal],[sfoc_cal_aux]]
-    // //  }, [0,1], 10000)
-
-    // }
-    main_display_darshboard()
+    ploting_power_darshboard(assigned_aux_load)
+    main_display_darshboard(aux_active)
     fuel_Details (FC_ton_aux)
-
 }
 
 }
 
 }
 
-let P_M_S
+let P_M_S,transit_data
+class transiting_details{
+  constructor(){
+    this.distance = 0;
+    this.distance_past = 0;
+    this.current_time  = 0;
+    this.sim_time= 0
+    this.ship_speed = 0;
+    if(operation==="transit"){
+    this.transit_dis = transit_dis_mils*1852 // meters
+    this.transit_time = (this.transit_dis/shipSpeed)/3600 // in hours
+    transit_time = this.transit_time
+    this.remain_time = this.transit_time;
+    this.simulation_period = sim_time*60*1000
+    this.remain_distance = this.transit_dis
+    // current_time =  // recalculating the remaining voyage time
+     this.step = ((this.remain_distance/shipSpeed)*1000)/((this.simulation_period-time)/500)  //calculation updated time step
+     this.time_step = this.step/(3600*1000) //converting milliseconds to hours
+  }
+  }
+  Parameters(){
+
+   this.current_time = this.remain_distance/shipSpeed // recalculating the remaining voyage time
+   if(Object.is(this.ship_speed,shipSpeed)===false){
+    this.ship_speed = shipSpeed
+    this.step = (this.current_time*1000)/((this.simulation_period-time)/500)  //calculation updated time step
+     this.time_step = this.step/(3600*1000 ) //converting milliseconds to hours
+     this.transit_time = this.current_time/3600
+     this.sim_time = this.time_step
+   }
+    //  this.step = (this.current_time*1000)/((this.simulation_period-time)/500)  //calculation updated time step
+    //  this.time_step = this.step/(3600*1000) //converting milliseconds to hours
+    //this.sim_time +=this.time_step
+    this.distance_mils = (shipSpeed*(this.time_step*3600))/1852 // updated distance in mils
+    this.distance_meter = (shipSpeed*(this.time_step*3600)) // updated distance in meters
+    this.distance += this.distance_mils
+    this.distance_past = this.distance
+    this.remain_distance = this.transit_dis- (this.distance_past*1852) 
+    this.remain_distance_mils = transit_dis_mils-this.distance_past
+    //this.ETA = this.current_time/3600
+    this.transit_time-=this.sim_time
+    this.ETA = this.transit_time
+    console.log(this.step,this.time_step, this.sim_time,this.remain_distance_mils,this.ETA)
+  return {
+    time_step: this.time_step,
+    distance_mils: this.distance_mils,
+    distance_meter: this.distance_meter,
+    remain_distance : this.distance_meter,
+    simulation_time : this.simulation_period
+  }
+  }
+}
 function DP_operation (){
-  let DP_load,engine_nums,engine_power, remain_time,sfoc
+  let DP_load,engine_nums,engine_power, remain_time,sfoc, current_time,transit_info
   supplier =  sellected_genset.supplier;
+  transit_dis_mils = parseFloat(transit_dis_mils)
   FC_ton_aux = 0;
   sfoc = sellected_genset.SFOC;
   sfoc = parseFloat(sfoc);
@@ -4105,31 +4215,39 @@ function DP_operation (){
   sim_time
   DP_operat_time   // is expected input is hours
   time = 0;
-  remain_time= DP_operat_time
-  end_sim =sim_time*60*1000
-  time_step = ((DP_operat_time*3600*1000)/(end_sim/500))/(3600 *1000)
-  // DP_break_power
-    console.log(engine_nums)
-  console.log(engine_power)
-  console.log(operation)
-  console.log(aux_load)
-  console.log(bat_SOC)
-  console.log(time_step)
+  i = 0;
+ 
+  if(operation==="transit"){
+    transit_data = new transiting_details()
+    console.log(transit_data ,"data test")
+    simulation_period = sim_time*60*1000
+
+  }else{
+    // for DP operation 
+    remain_time= DP_operat_time
+    simulation_period = sim_time*60*1000
+    time_step = ((DP_operat_time*3600*1000)/(simulation_period/500))/(3600 *1000)
+  }
+ 
+  console.log(engine_nums,engine_power,operation,aux_load,supplier,sfoc,"print what i want ")
    P_M_S = new PMS(engine_nums,engine_power,operation,aux_load,bat_SOC,supplier,sfoc)
+   console.log(P_M_S)
   const start_sim = setInterval(DP_running, 500);
   LiveResult()// live ploting
  // const battery_pack = new battery_system
-  
   function DP_running(){
-    if(environment_type ===!"calm"){
-      environment.data(wave_height , wind_speed)
-      environment.data.wave_height_cal // current wave height which is calculated
-      environment.data.wave_height_cal
+    if(simulation_environment === "wave_wind" ){
+      environment.update_dynamic_load()
+      environment.wave_height_cal // current wave height which is calculated 
     }
-   // const testing = battery_pack.charge_battery()
+   if(operation ==="transit"){
+    transit_info = transit_data.Parameters()
+     time_step  = transit_info.time_step
+     console.log(time_step,"time step main")
+   }else{
     remain_time -= (500/(3600*1000))
-    console.log(remain_time, "remain time")
-
+   }
+    
     FC_aux = P_M_S.optimized_engine_load(time_step); // return sfoc of every given time past
     FC_ton_aux += FC_aux/1000
     FC_ton_aux = FC_ton_aux.toFixed(2)*1
@@ -4137,7 +4255,7 @@ function DP_operation (){
      fuel_Details (FC_ton_aux)
     time +=500
     console.log(time,"time")
-    if(time >=end_sim ){
+    if(time >=simulation_period ){
      clearInterval(start_sim)
   }
   console.log(P_M_S)
@@ -4149,8 +4267,7 @@ function DP_operation (){
   }
 }
 
-
-  function ploting_power_darshboard() {
+  function ploting_power_darshboard(new_assigned_load) {
    let update1,update5,update2,update3,update4,update6,update7,update8,update9,update10,layout,layout1, display_power,engine_set1_power,engine_set1_load,engine_set2_power,engine_set2_load,total_load,constant_load,
    engine_online_object,main_engine_load,total_online_engine_power
    if(!dynamic_load){
@@ -4170,37 +4287,30 @@ function DP_operation (){
     main_enginePower // main propulsion engine power
     main_engine_load = Pb_calm+ dynamic_load
     engine_set2_power =  aux_enginePower*engine_online_object
-    engine_set2_load = aux_load;
-      total_online_engine_power  = aux_enginePower*engine_online_object + main_enginePower
-      update6 = { name: "genset avaliable power" }
-        
-        update7 = { name: "genset load "}
+    engine_set2_load = new_assigned_load; // load on each auxiliary engine
+    total_online_engine_power  = aux_enginePower*engine_online_object + main_enginePower
+    update6 = { name: "genset avaliable power" }     
+    update7 = { name: "genset load "}
     }else{
       const select1 = document.getElementById("online_engine_power")
       select1.options[6].hidden = true;
+      select1.options[5].hidden = true;
+      select1.options[3].hidden = true;
      total_load = P_M_S.load_with_dynamics;
-    constant_load = P_M_S.combine_load;
+    constant_load = P_M_S.total_combine_load;
      engine_online_object = P_M_S.engine_online_obj;
     total_online_engine_power = P_M_S.combine_engines_power;
+    // dynamic_load = P_M_S.dynamic_load
     engine_set1_power = P_M_S.engine_power
     engine_set1_load = engine_online_object.one.load
     engine_set2_power =   P_M_S.engine_power
     engine_set2_load = P_M_S.last_engine_load;
     battery_load = P_M_S.discharging_power;
     battery_power = P_M_S.charging_power;
-    update6 = { name: "engines set  2", }
-        
+    update6 = { name: "engines set  2", } 
      update7 = { name: "engines set 2 load "}
     }
 
-   // console.log(total_load, "laod with dynamics ")
-    // console.log(engine_online_object," engine main object")
-    // console.log(engine_online_object.one.load," engine main object ONE")
-    // console.log(time," time ")
-    // console.log(total_load,"testing load")
-    // console.log(total_online_engine_power," total engine power")
-    // console.log(engine_set1_power," total engine power")
-    // console.log(switch_name,"sellect vale")
     // console.log(battery_power,"battery power")
 
        //plot every posible result that user might used later but some of them are hiden until the user request to display,
@@ -4233,13 +4343,11 @@ function DP_operation (){
         Plotly.restyle('result', update11, 10);
         Plotly.restyle('result', update12, 11);
 
-
       if(!switch_id || switch_id==="online_engine_power" ){
          //plot every posible result that user might used later but some of them are hiden until the user request to display,
         // the ones with visibility set to false are hidden 
 
       if(switch_name ==="General_powers"||!switch_name){
-
         layout1 ={ title :"Power darshboard"};   
         if(propulsion_type ==="ME"){
           Plotly.update('result', layout,layout1, [1,3,4,5,6,9]);// hide those power
@@ -4250,7 +4358,6 @@ function DP_operation (){
         }
        }
        else if(switch_name ==="battery"){
-       
         layout1 ={ title :"battery pack power darshboard"}
         Plotly.update('result', layout,layout1, [0,2,3,4,5,6,10,11]); // hide those power
         Plotly.restyle('result', layout2, [1,7,8,9]); // shows this power
@@ -4278,8 +4385,7 @@ function DP_operation (){
         Plotly.update('result', layout,layout1, [0,1,2,3,4,5,6,7,9]);// hide those power
         Plotly.restyle('result', layout2, [8,10,11]);// shows this power
        }
-       else if(switch_name === "genset_engine"){
-        
+       else if(switch_name === "genset_engine"){ 
         layout1 ={ title :"Genset engine darshboard"}
         Plotly.update('result', layout,layout1, [0,1,2,4,7,8,9,10,11]);// hide those power
         Plotly.restyle('result', layout2, [3,5,6]);// shows this power
@@ -4311,7 +4417,7 @@ function DP_operation (){
     }
     Plotly.extendTraces('result', {
         x: [[time],[time],[time],[time],[time],[time],[time],[time],[time],[time],[time],[time]],
-        y: [[total_load],[constant_load],[total_online_engine_power],[engine_set1_power],[engine_set1_load],[engine_set2_power],[engine_set2_load], [dynamic_load],[battery_power],[battery_load],[main_enginePower],[main_engine_load]],
+        y: [[total_load],[constant_load],[total_online_engine_power],[engine_set1_power],[engine_set1_load],[engine_set2_power],[engine_set2_load], [dynamic_load,dynamic_load],[battery_power],[battery_load],[main_enginePower],[main_engine_load]],
       }, [0,1,2,3,4,5,6,7,8,9,10,11], 10000)  
 
 }
@@ -4445,9 +4551,6 @@ function fuel_Details (FC_ton_aux){
 
       updatChat()
  function updatChat(){
-   console.log(main_update)
-   console.log(aux_update)
-
    if(propulsion_type ==="ME" || propulsion_type ==="DE_ME"){
     myChart.data.datasets[0].data =  main_update;
    }
@@ -4467,19 +4570,25 @@ function fuel_Details (FC_ton_aux){
  }
 }
 
-function main_display_darshboard(){
-  let wave,distance_N_mils,aux_active,active,ETA, display_speed
-  distance_N_mils = transit_dis_mils - distance_past //distance covered so far
-   ETA = transit_time - sim_time
-  ETA = ETA.toFixed(2)
-  distance_N_mils  = distance_N_mils.toFixed(2)
+function main_display_darshboard(aux_active_engine){
+  let wave,distance_N_mils,aux_active,active,ETA, display_speed, calculated_wave
+   distance_N_mils = transit_data.remain_distance_mils //transit_dis_mils - distance_past //distance covered so far
+   ETA = transit_data.ETA //transit_time - 
+   ETA =  ETA.toFixed(2)
+   distance_N_mils  = distance_N_mils.toFixed(2)
+   calculated_wave = environment.wave_height_cal
 
-  if(wave_height){
-    wave = wave_height
-  }else if(!wave_height){
+   console.log("calclated wave", calculated_wave)
+  if(wave_height && simulation_environment ==="wave_wind" ){
+    if(calculated_wave){
+      wave = calculated_wave.toFixed(2)*1
+    }else{
+      wave = wave_height
+    }
+  }else {
     wave = 0
   }
-  if(operation ==="DP"){
+  if(operation ==="DP" ){
     display_speed = 0
     aux_active = online_engine
     distance_N_mils  =0;
@@ -4489,16 +4598,19 @@ function main_display_darshboard(){
     FC_ton = 0;
     main_enginePower = 0;
   }else {
+    if(propulsion_syst ==="DE"){
+      aux_active = online_engine 
+    }else{
+      aux_active = aux_active_engine
+    }
     display_speed = shipSpeedKnots
-    aux_active = "....updating"
+    
+    
   }
   // impliment active engine status TODO:
 
   active = " updating...." // for the main engine
-  if(aux_no_engines>1 && aux_load>aux_enginePower){
-    // check for the active engine TODO:
 
-  }
   document.getElementById("main_install_darsh").innerHTML = main_enginePower * No_of_eng
   document.getElementById("main_FC_darsh").innerHTML = FC_ton
   document.getElementById("main_active_engine_darsh").innerHTML = active
@@ -4580,12 +4692,13 @@ comapre_main_cost,comapre_Aux_cost,comapre_main_emission,comapre_Aux_emission, c
 
  }
 if(eventID ==="show_emission" || eventID === "fuel_compare_type"){
-  emission_comparison.data.labels = ['CO2','NOX','NMVOC','SOX','PM'];
-  emission_comparison.data.datasets[0].data =  update_lng_main;
-   emission_comparison.data.datasets[1].data =  update_mgo_main;
-  // emission_comparison.data.datasets[2].data =  update_mdo_main;
-  // emission_comparison.data.datasets[3].data =  update_hfo_main;
+  // emission_comparison.data.labels = ['CO2','NOX','NMVOC','SOX','PM'];
+  // emission_comparison.data.datasets[0].data =  update_lng_main;
+  //  emission_comparison.data.datasets[1].data =  update_mgo_main;
+   
   document.getElementById("change_fuel").classList.remove("hide")
+    const passed_ID = "show_emission"
+    option_update(passed_ID)
   emission_comparison.data.labels = ["CO2","NOx","NMVOC","SOx","PM"];;
 
   if(eventVal ==="LNG"){
@@ -4612,10 +4725,13 @@ if(eventID ==="show_emission" || eventID === "fuel_compare_type"){
     emission_comparison.data.datasets[0].data =  update_lng_main;
    emission_comparison.data.datasets[1].data =  update_lng_aux ;
   }
+  // eventID ="show_emission"
+  // option_update(eventID)
   emission_comparison.update();
 }
 else if(eventID ==="show_cost"){
   document.getElementById("change_fuel").classList.add("hide")
+  option_update(eventID)
   emission_comparison.options.title.text = " fuel cost compare insight"
    emission_comparison.data.labels =  ["HFO","MDO","MGO","LNG"];
     
@@ -4624,17 +4740,20 @@ else if(eventID ==="show_cost"){
     emission_comparison.data.datasets[1].data = comapre_Aux_cost 
  
   // emission_comparison.options.scales.yAxes.ticks=
-  option_update(eventID)
+
   emission_comparison.update();
 }
 else if(eventID ==="show_FC"){
   document.getElementById("change_fuel").classList.add("hide")
+  option_update(eventID)
   emission_comparison.options.title.text = "fuel consumption  insight"
+
   emission_comparison.data.labels =  ["Fuel consumption"];
     
     emission_comparison.data.datasets[0].data = [FC_ton]
 
     emission_comparison.data.datasets[1].data = [FC_ton_aux]
+    
     emission_comparison.update();
 }
 // else if(eventID ==="show_volume"){
@@ -4651,7 +4770,7 @@ else if(eventID ==="show_FC"){
 function option_update(type){
   let chart_name, tooltip,tick,tons
   if(type ==="show_cost"){
-      tooltip = 'mode';
+      tooltip = 'index';
       tick = '$';
       tons = '';
    }
@@ -4660,11 +4779,13 @@ function option_update(type){
       tons = 'Tonns'
       tick = ''
     }
-    else if (type ==="show_volume"){
-      tooltip ='mode'
-    }
+    // else if (type ==="show_volume"){
+    //   tooltip ='mode'
+    // }
     else if (type ==="show_FC"){
-      tooltip = 'mode'
+      tooltip = 'index'
+      tons = 'Tonns'
+      tick = ''
     }
     emission_comparison.options={
 
