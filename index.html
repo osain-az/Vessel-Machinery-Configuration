@@ -10,13 +10,14 @@
     
 
     <!-- Load c3.css -->
-<link href="./c3-0.7.15/c3.css" rel="stylesheet">
-
+<link href="./c3-0.7.20/c3.css" rel="stylesheet">
 <!-- Load d3.js and c3.js -->
 <script src="https://d3js.org/d3.v5.min.js"></script>
-<script src="./c3-0.7.15/c3.min.js"></script>
+<script src="./c3-0.7.20/c3.min.js"></script>
+
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <style>
@@ -570,6 +571,7 @@ tr:hover {background-color: #ddd;}
     .darshboard_container,.result_compare{
       width: 100%;
       background-color:#072b39;
+      height: 100%;
       color: white;
       padding: 15px;
     }
@@ -1540,6 +1542,9 @@ tr:hover {background-color: #ddd;}
          </div>
       </div>
    </div>
+ 
+    <button id="dashboard_downlaod" onclick="dashboard_download(event)">Download dashboard</button>
+
     </div>
     <div class="result_compare hide" id="result_compare" onclick="compare_result(event)">
       <span class="insight_header"> <strong>Operational data insights for different engines and fuels  </strong> </span> 
@@ -1564,6 +1569,7 @@ tr:hover {background-color: #ddd;}
        <canvas id="comparison_chart"></canvas>
      </div>
     </div>
+
     <!-- <div class="addedMachinery">
       <h2>The chose machinery will be dispplay here  </h2>
        <div class="ship_move" id="ship_move">
@@ -1860,6 +1866,7 @@ function fuel_comparison(){
 }
 
 function powerDisplay (){
+
 var chart = c3.generate({
 
     bindto: '#powerChart',
@@ -1992,13 +1999,13 @@ setTimeout(function () {
 
 function rpmDisplay(){
   let rotating_speed = speedRPM
-
-    if(!speedRPM){
-        speedRPM = ratedSpeed
-        rotating_speed =  RPM 
+    if(RPM){
+      rotating_speed = RPM
+    }else{
+      if(!speedRPM){
+        rotating_speed = ratedSpeed
+      }
     }
-    rotating_speed =  RPM 
-  
     var chart2 = c3.generate({
 
     bindto: '#RPMchart',
@@ -2020,7 +2027,7 @@ function rpmDisplay(){
           show: true // to turn off the min/max labels.
       },
   min: 0, // 0 is default, //can handle negative min e.g. vacuum / voltage / current flow / rate of change
-  max: ratedSpeed+10, // 100 is default
+  max: ratedSpeed, // 100 is default
  units: '  rpm',
   width: 39 // for adjusting arc thickness
 
@@ -2069,7 +2076,6 @@ function loadDisplay(){
     if(!engine_loadPercent){
         engine_loadPercent = 0
     }
-
 var chart4 = c3.generate({
 
   bindto: '#loadChart',
@@ -2134,7 +2140,6 @@ setTimeout(function () {
 //  if( > 10) clearInterval(interval);
 
  ;
-
 
 }
 
@@ -2466,9 +2471,9 @@ function currentSfocDisplay (){
 
      }
 
-   sternType()
- appendageCal(event)
  shipDimension(event)
+ appendageCal(event)
+ sternType()
 
  function handle_inputs(event){
    // handle all the RRESISTANCE input fields with this fucntion
@@ -2699,7 +2704,6 @@ let c,k,val,i,s
         i = 0;
         k =1;
       for ( k = 1; k < val;k ++) {
-
         if(val-k > 1 ){
              shipSpeed = k*0.5144
              shipSpeedKnots = k
@@ -2716,8 +2720,7 @@ let c,k,val,i,s
                 }
               }
           calResistnace.totalResistance()
-          console.log("new speed", shipSpeed)
-
+         
           Plotly.extendTraces('resistanceGraph', {
             x: [[shipSpeedKnots]],
             y: [[RT]]
@@ -2878,7 +2881,7 @@ function displayEngineType(event) {
    document.getElementById("select_message").classList.remove("hide");
   document.getElementById("select_message_butt").value = "Main engine has been successfully added to the mechinery"
   // document.getElementById("gensetTable").classList.add("hide");
-
+   powerDisplay()
    throw "testing the"
  }
 
@@ -2928,15 +2931,17 @@ engineStrokes =engineDetail.Strokes
  ratedSpeed = parseFloat(engineDetail.Engine_speed)
  enginePower = main_enginePower
  ratedPower = main_enginePower
+// EngineCal.torque(engineStrokes,ratedSpeed,meanPressure,cylinderBore,cylinders,pistonStroke)
+
 EngineCal.torque(engineStrokes,ratedSpeed,meanPressure,cylinderBore,cylinders,pistonStroke )
 //  EngineCal.SFOC(load,power,ratedSfoc,supplier)
 
-//  torqueDisplay () 
-//  powerDisplay()
-//  rpmDisplay()
-//  loadDisplay()
-//  loadWattDisplay ()
-//  currentSfocDisplay()
+  torqueDisplay () 
+  powerDisplay()
+  rpmDisplay()
+  loadDisplay()
+  loadWattDisplay ()
+ currentSfocDisplay()
 
     // updating sliders
   if(engineDetail.speed_type=== "Medium-Speed"){
@@ -3416,9 +3421,10 @@ document.getElementById("mainDashboard").classList.add("hide")
 
 }
 
+
+
 function engineDashboard(EventID ,val ){
   let type,used_sfoc,used_supplier
-
   if( recent_chose_engine ==="aux_engine"){
     type = "auxilary";
     used_sfoc = aux_ratedsfoc;
@@ -3429,11 +3435,7 @@ function engineDashboard(EventID ,val ){
   }
     t = 1
   if(EventID ==='loadInput'|| EventID ==='load'){
-     if(engine_test_type = "RPM"){
-      val = power 
-     }
-     torqueDisplay ()
-     rpmDisplay()
+
     sfocDisplay ()
      c= (10/100)*val;
      n = 10
@@ -3507,39 +3509,35 @@ function engineDashboard(EventID ,val ){
   }
 }
 
-//  torqueDisplay () 
-  powerDisplay()
-//  rpmDisplay()
+
 function getValues(event){
     let val, k,i, n, c,t
     t = 1
   const EventID = event.target.id;
 
  if (EventID ==='RPM' || EventID === 'RPMInput') {
-   engine_test_type = "RPM";
       RPM  = event.target.value
+      engine_test_type = "RPM"
     if (EventID ==='RPMInput') {
      document.getElementById(EventID).value = ""
-     document.getElementById("displayRPM").innerHTML= RPM + "% engine power"
     }
-  
 }
 else if(EventID ==='loadInput'|| EventID ==='load'){
-  engine_test_type = "load";
+  engine_test_type = "load"
     if( EventID ==='loadInput'){
       val = document.getElementById(EventID).value
-      
       document.getElementById(EventID).value = ""
       document.getElementById("loadDisplay").innerHTML= val + "% engine power"
     }else{
       val  = event.target.value
       document.getElementById("loadDisplay").innerHTML= val + "% engine power"
     }
-    power = val
+    engineDashboard(EventID,val)
+    power = val 
 }
 // }
 else if(EventID === 'powerInput' || EventID ==='power'){
-   engine_test_type = "load";
+  engine_test_type = "load"
   if(EventID === 'powerInput'){
 
     val = parseFloat(document.getElementById(EventID).value)
@@ -3548,16 +3546,18 @@ else if(EventID === 'powerInput' || EventID ==='power'){
   }else{
     val = parseFloat(document.getElementById(EventID).value)
   }
-  power = val
-
-
+  engineDashboard(EventID,val )
+   power = val 
 }
+
 EngineCal.torque(engineStrokes,ratedSpeed,meanPressure,cylinderBore,cylinders,pistonStroke )
-if( engine_test_type = "load"){
-  val = power
+
+rpmDisplay()
+torqueDisplay()
+
 }
-engineDashboard(EventID,val )
-}
+
+
 
 //  let simulate,DP_time, habor_time,standby_time,PpowerInstall,
 //  star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate
@@ -3595,12 +3595,12 @@ else if (sim_check ===false){
   document.getElementById("mainDashboard").classList.remove("hide");
   // document.getElementById("mainDashboard").classList.add("hide")
   // engine.Margin()
- torqueDisplay ()
- powerDisplay()
- rpmDisplay()
- loadDisplay()
- loadWattDisplay ()
- currentSfocDisplay()
+// torqueDisplay ()
+// powerDisplay()
+// rpmDisplay()
+// loadDisplay()
+// loadWattDisplay ()
+// currentSfocDisplay()
 }
 else if(eventID ==="close"){
 
@@ -3667,7 +3667,6 @@ function sim_data(event){
   const eventID = event.target.id;
   const eventcheck = event.target.checked;
   const eventVal = event.target.value;
-
 
 //uncheck and check type of operation
 if(eventID ==="transit"){
@@ -3806,8 +3805,8 @@ function display_sim_param(){
     No_of_genset = parseFloat(sellected_genset.No_of_genset)
     aux_enginePower = parseFloat(sellected_genset.Gen_Power)
     aux_inst_power =No_of_genset* aux_enginePower
-
     }
+
     else if(!sellected_genset){
     aux_enginePower = 0
     aux_inst_power = 0
@@ -3824,7 +3823,6 @@ function display_sim_param(){
     No_of_eng = 0
     eng_power = 0
     main_inst_power = 0
-
    }
    if(sellected_battery){
     bat_capacity = parseFloat( sellected_battery.capacity)
@@ -3872,17 +3870,18 @@ function display_sim_param(){
 
   }
   else if(!simulation_period){
-    simu_time_show = "not updated yet..."
+    sim_time =  document.getElementById("sim_time").value
+    simu_time_show = sim_time
   }
 
   total_insta_power = main_inst_power+ aux_inst_power+bat_charge_power
 
 //display the parameters prameters that has been input or sellected
- document.getElementById("main_eng_power_dis").innerHTML =  eng_power + "  kW"
+ document.getElementById("main_eng_power_dis").innerHTML = enginePower + "  kW"
  document.getElementById("main_engine_rpm").innerHTML = ratedSpeed + " rpm"
  document.getElementById("no_engines").innerHTML =  No_of_eng
- document.getElementById("propulsion_p").innerHTML = Pb+ " kW   "
- document.getElementById("main_installed_power").innerHTML = main_inst_power  +" kW  "
+ document.getElementById("propulsion_p").innerHTML = Pb_calm+ "  kW   "
+ document.getElementById("main_installed_power").innerHTML = enginePower  +" kW  "
 
  document.getElementById("aux_eng_power_dis").innerHTML =  aux_enginePower + "  kw"
   document.getElementById("aux_engine_rpm").innerHTML = aux_ratedSpeed + " rpm"
@@ -3899,7 +3898,7 @@ function display_sim_param(){
  document.getElementById("charge_power").innerHTML =  bat_charge_power + " kW"
 
  document.getElementById("chose_propulsion").innerHTML =  show_propulsion
- document.getElementById("Total_inst_power").innerHTML =  total_insta_power
+ document.getElementById("Total_inst_power").innerHTML =  aux_inst_power + enginePower
   document.getElementById("simulate_time").innerHTML = simu_time_show +" milliseconds"
 //  document.getElementById("DOD_pro").innerHTML =  bat_DOD
 //  document.getElementById("SOC_pro").innerHTML = bat_SOC + " kWh"
@@ -4008,8 +4007,9 @@ function preview(event){
   }
   else if(propulsion_type ==="ME" ){
     console.log(sellected_engine.power)
-    installed_power = parseFloat(sellected_engine.power)* parseFloat(sellected_engine.No_of_engine)
+    installed_power = parseFloat(sellected_engine.Engine_power)
     const gentset_power = parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
+
      if(gentset_power*0.8 < aux_load){
         alert(`The installed genset power should be more than 80 % of the required hotel  load of  ${aux_load}`)
         throw "add more capacity to the installed gen set "
@@ -4034,8 +4034,10 @@ function preview(event){
   required_power = aux_load + Pb_calm
 
  }
+ total_insta_power = installed_power +  gentset_power
 
 }
+
 let trans_check,standby_check,harbor_check,DP_check,sim_time,simulation_period,distance_past,time,simulating_time
 function main_Simulate(event){
   let type, aux_load_perc,max_load_perc, remain_distance,current_time,new_distance_m,total_combine_load
@@ -4829,6 +4831,15 @@ function option_update(type){
  function updatChat(){
   emission_comparison.update();
  }
+}
+
+function dashboard_download(event) {
+ // const doc = new jsPDF()
+  const doc = new jsPDF();
+  const downlaod_file = document.getElementById(darshboard_container)
+  doc.fromHTML(downlaod_file)
+  alert("testinh")
+  doc.save("dashbbard")
 }
     </script>
 

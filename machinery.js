@@ -11,92 +11,99 @@
     LNG_emission,wind_speed,RAA_wind,Lw,DP_Va,Pe_calm,operation,Pt_calm,Pd_calm,Ps_calm,ND_calm, dynamic_load,wave_height_cal, wind_speed_cal,environment_type,
      eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion, recent_chose_engine,online_engine,simulation_environment,S_APP_input, engine_test_type,power
 
-  let c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,Fnt, phi,m1,m2, m3, m4 ,LR, CP1, p_b , Fni//for  testing vaues 
-function engineAnalysis (){
- //methods for different diesel engine property
-this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumber,pistonStroke){
-    this.mean_p = mean_Presure;// bar
-    this.cylinderBore = cylinderBore*0.001;//m
-    this.pistonStroke = pistonStroke *0.001;//m
-    this.speed_RPM = speedRPM;
-    this.engineStroke = Strokes;
-    if (this.engineStroke === "4 Stroke"){
-        this.cranshaftRev = 2;
-    }
-    else if (this.engineStroke === "2 Stroke") {
-        this.cranshaftRev = 1
-    }
-    // this.pistonSpeed =
-    this.cylinderNumber = cylinderNumber
-    this.area = (3.1413*this.cylinderBore*this.cylinderBore)/4
-    this.Volume = this.area*this.pistonStroke*this.cylinderNumber
-    this.force = this.area*this.mean_p*100000;
-  
-    if(engine_test_type = "load"){
-      this.power = power
-      this.RPM = (power*100* this.cranshaftRev *60)/(this.mean_P*this.Volume) //kNm
-      RPM = this.RPM
-      this.torque = (power*60)/this.RPM
-      torque = this.torque
-    }
-    if(engine_test_type = "RPM"){
-      RPM //is an input from the dashbaord
-      this.power =  ((this.mean_p*this.Volume*RPM)/(100*this.cranshaftRev*60)) //KW
-     // this.Torque = ((this.mean_p*100*this.Volume)/(2*3.143*this.cranshaftRev)) // kNm
-      this.torque = ((this.power*60)/RPM)/1000 // kNm
-      torque = this.torque
-    }
-    return this.torque
-}
-//NOTE: SFOC is use of the baseline for the engine since the supplier dont provided the engine baseline
- this.SFOC = function(load, enginePower, SFOC,supplier,type) {
-    this.supplier = supplier
-    this.load = load
-    this.type = type // used to determine weather is auxilary engine or main engine
-    this.enginePower = enginePower
-    this.EL = this.load/this.enginePower
-    this.sfocBase = 170 // used as the baseline for the engine if not provided
-    // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-    // this.sfocBase = 170;
-    engine_loadPercent = parseFloat((this.EL*100).toFixed(1))
-    // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-    if (this.supplier === "wartsila") {
-    //   this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
-    this.sfocRelative = 0.455*this.EL *this.EL-0.71*this.EL + 1.28; // general
-       console.log(this.sfocRelative)
-      this.SFOC_main = (this.sfocRelative*this.sfocBase).toFixed(1)
-      if(this.type === "auxilary"){
-        sfoc_cal_aux = parseFloat(this.SFOC_main);
-        this.sfoc_cal_aux = sfoc_cal_aux
-        console.log(sfoc_cal_aux," test load")
-        sfoc_display = sfoc_cal_aux
-      }else{
-        sfoc_cal = parseFloat(this.SFOC_main);
-         this.sfoc_cal = sfoc_cal
-         sfoc_display = sfoc_cal
-         console.log(sfoc_cal_aux," test load main")
-      } 
-      console.log(sfoc_cal_aux," test load  general")
-    }
-    else if (this.supplier === "Cat") {
-        this.sfocRelative = 0.7024*this.EL *this.EL-0.97728*this.EL + 1.35;
-        sfoc_cal = this.SFOC_main;
-    }
-    else if (this.supplier === "MAN") {
-        this.sfocRelative = 0.2933*this.EL *this.EL-0.432*this.EL + 1.1565;
-        sfoc_cal = this.SFOC_main;
-    }
-    // this.SFOC_main = this.sfocBase*this.sfocRelative;
-    // sfoc_cal = this.SFOC_main;
-    return {
-      sfoc_cal_aux,
-      sfoc_cal 
-    }
-}
+  let c1,c2,c3s,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,Fnt, phi,m1,m2, m3, m4 ,LR, CP1, p_b , Fni//for  testing vaues 
 
-
-
-}
+  function engineAnalysis (){
+    //methods for different diesel engine property
+   this.torque = function  (Strokes,speedRPM,mean_Presure,cylinderBore,cylinderNumber,pistonStroke){
+       this.mean_P = mean_Presure;// bar
+       this.cylinderBore = cylinderBore*0.001;//m
+       this.pistonStroke = pistonStroke *0.001;//m
+       this.speed_RPM = speedRPM;
+       this.engineStroke = Strokes;
+       if (this.engineStroke === "4 Stroke"){
+           this.cranshaftRev = 2;
+       }
+       else if (this.engineStroke === "2 Stroke") {
+           this.cranshaftRev = 1
+       }
+       // this.pistonSpeed =
+       this.cylinderNumber = cylinderNumber
+       this.area = (3.1413*this.cylinderBore*this.cylinderBore)/4
+       this.Volume = this.area*this.pistonStroke*this.cylinderNumber
+       this.force = this.area*this.mean_p*100000;
+     
+       if(engine_test_type === "load"){
+         this.power = power
+         this.RPM = (this.power*60)/(this.mean_P*this.Volume*(this.cranshaftRev*100)) //kNm
+         RPM = this.RPM
+         RPM = RPM.toFixed(2)
+         this.torque = (power*60)/this.RPM
+         torque = this.torque
+         torque = torque.toFixed(2)*1
+         console.log( (this.power*100*this.cranshaftRev *60),(this.mean_P*this.Volume))
+        
+       }
+   
+       if(engine_test_type === "RPM"){
+         RPM //is an input from the dashbaord
+         this.power =  ((this.mean_p*this.Volume*RPM)/(100*this.cranshaftRev*60)) //KW
+        // this.Torque = ((this.mean_p*100*this.Volume)/(2*3.143*this.cranshaftRev)) // kNm
+         this.torque = ((this.power*60)/RPM)/1000 // kNm
+         torque = this.torque
+       }
+       return this.torque
+   }
+   //NOTE: SFOC is use of the baseline for the engine since the supplier dont provided the engine baseline
+    this.SFOC = function(load, enginePower, SFOC,supplier,type) {
+       this.supplier = supplier
+       this.load = load
+       this.type = type // used to determine weather is auxilary engine or main engine
+       this.enginePower = enginePower
+       this.EL = this.load/this.enginePower
+       this.sfocBase = 170 // used as the baseline for the engine if not provided
+       // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
+       // this.sfocBase = 170;
+       engine_loadPercent = parseFloat((this.EL*100).toFixed(1))
+       // this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
+       if (this.supplier === "wartsila") {
+       //   this.sfocRelative = 0.4613*this.EL *this.EL-0.7168*this.EL + 1.28;
+       this.sfocRelative = 0.455*this.EL *this.EL-0.71*this.EL + 1.28; // general
+          console.log(this.sfocRelative)
+         this.SFOC_main = (this.sfocRelative*this.sfocBase).toFixed(1)
+         if(this.type === "auxilary"){
+           sfoc_cal_aux = parseFloat(this.SFOC_main);
+           this.sfoc_cal_aux = sfoc_cal_aux
+           console.log(sfoc_cal_aux," test load")
+           sfoc_display = sfoc_cal_aux
+         }else{
+           sfoc_cal = parseFloat(this.SFOC_main);
+            this.sfoc_cal = sfoc_cal
+            sfoc_display = sfoc_cal
+            console.log(sfoc_cal_aux," test load main")
+         } 
+         console.log(sfoc_cal_aux," test load  general")
+       }
+       else if (this.supplier === "Cat") {
+           this.sfocRelative = 0.7024*this.EL *this.EL-0.97728*this.EL + 1.35;
+           sfoc_cal = this.SFOC_main;
+       }
+       else if (this.supplier === "MAN") {
+           this.sfocRelative = 0.2933*this.EL *this.EL-0.432*this.EL + 1.1565;
+           sfoc_cal = this.SFOC_main;
+       }
+       // this.SFOC_main = this.sfocBase*this.sfocRelative;
+       // sfoc_cal = this.SFOC_main;
+       return {
+         sfoc_cal_aux,
+         sfoc_cal 
+       }
+   }
+   
+   
+   
+   }
+   
 
 function ship(){
  // ship resistance  component estimation
@@ -214,7 +221,7 @@ function resistance(){
         RA =  RA/1000
         RA = (RA.toFixed(2))*1
         c2 = this.c2
-        c3 = this.c3
+        c3s = this.c3
         c4 = this.c4
         console.log("ca",Ca)
     }
@@ -358,7 +365,7 @@ function resistance(){
         c1 = this.c1
         c2 = this.c2
         c4 = this.c4
-        c3 = this.c3
+        c3s = this.c3
         c15 = this.c15
         c17 = this.c17
         c16 = this.c16
@@ -472,7 +479,7 @@ function resistance(){
         // alert(SM)
         console.log("c1",c1)
         console.log("c2",c2)
-        console.log("c3",c3)
+        console.log("c3",c3s)
         console.log("c4",c4)
         console.log("c5",c5)
         console.log("c6",c6)
@@ -1080,7 +1087,7 @@ let track_dynalic = 1
       //  this.load_with_dynamics
       //   }
       //   else if(this.required_engines)
-      alert("test")
+    
     if(this.required_engines > this.length){
       this.remain_engine = this.required_engines-this.length
      
@@ -1103,7 +1110,7 @@ let track_dynalic = 1
         }
        
         }
-        alert(index)
+       
       }
       FLR(){
         this.engine_normal_load  // 80% when battery is install and without battery pack is 65%
