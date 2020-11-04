@@ -511,6 +511,18 @@ function resistance(){
     }
 }
 
+function fourier_propeller_analyis(){
+  //using fourier method
+  if(!beta) {
+    Math.atan(va/(0.7*Math.PI*n*D))
+  }
+  CT_S = A_T0 + A_T1*Math.cos*beta + B_T1*Math.sin*beta 
+  CQ_S = A_Q0 + A_Q1*Math.cos*beta + B_Q1*Math.sin*beta 
+
+   Propeller_Thrust = CT_S*0.5*density(va**2 + beta**2)*(Math.PI/4)*D**2
+   Propeller_torque = CQ_S*0.5*density(va**2 + beta**2)*(Math.PI/4)*D**3
+}
+
 function propellerProperties (){
     this.Thrust =function(){
         //cth = thrust loading cofficient

@@ -289,6 +289,21 @@ tr:hover {background-color: #ddd;}
       margin-bottom: 15px;
 
     }
+    .beta_angle{
+      -webkit-appearance: none;
+      background-color: white;
+      
+    }
+    /* .beta_angle::-moz-range-thumb{
+      width: 25px;
+      height: 25px;
+      background: black;
+    }
+    .beta_angle::-webkit-slider-thumb{
+      width: 25px;
+      height: 25px;
+      background: black;
+    } */
     .spanNew{
       border: solid#ddd 2px;
       margin-right: 10px;
@@ -1059,17 +1074,54 @@ tr:hover {background-color: #ddd;}
             </div>
           </div>
 
-    <div class="propeller" onchange="propellers(event)">
-      <h2>Propeller dimension and parameters</h2>
-      <h2></h2>
-      <form action="" >
-      Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
-      N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
-      Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.70" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
-      P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
-      Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
-    </form>
-   </div>
+         <div onclick="switch_propeller_model(event)">
+          <h2>Propeller analysis </h2>
+          <span>Choose propeller analysis model</span> <br> 
+           <span class="hide"> <input type="radio" name="proppel_model" id="fourier_model"> <span><strong>Fouriers series : </strong></span>  <span>Note: this allows only few pre-defined models </span> </span><br>
+           <input type="radio" name="proppel_model" id="polynomia_model" checked> <span><strong>Polynomia model </strong></span> <br>
+            <div class="propeller " id="polynomia_propeller" onchange="propellers(event)">
+            
+              <form action="" >
+              Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="6" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
+              N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
+              Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.70" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
+              P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
+              Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
+             </form>
+           </div>
+
+           <div id="fourier_model_propeller" class="hide " onchange="propeller_furier(event)">
+             <div class="propeller_model hide" id="propeller_model">
+               <span> <input type="radio" name="B_series" id="B4_70_check"> <span>B4 70 </span></span> <br>
+               <span> <input type="radio" name="B_series" id="B4_check"> <span>B: 4-40, 4-55, 4-85, 4-10 @  P/D = 1.0</span></span> <br>
+               <span> <input type="radio" name="B_series" id="B_other_check"> <span>B: 3-65, 5-75, 6-80, B7-85 @  P/D = 1.0</span></span> <br> <br>
+               <span><strong>Angle of attack :beta &#946</strong></span>
+               <input type="range" class="beta_angle" id="beta_angle_min" value="0" min="0" step="5" max="360">
+               <input type="range"  class="beta_angle" id="beta_angle_max" value="90" min="0" step="5" max="360">
+               <span>Possible  angle  </span id="beta_min_display"> &#946 555 -<span  id="beta_max_display">- &#946 676</span> <br> <br>
+             </div>
+             <div>
+                <span class="B_series_other hide" id="B_series_other">
+                  <span><strong> Choode proppeller model : </strong></span>
+                <select id=B_series_drop_choice>
+                <option value="B_3_65"><strong>B 3-65</strong> </option>
+                <option value="B_5_75"><strong>B 5-75</strong></option>
+                <option value="B_6_80"><strong>B 6-80</strong></option>
+                <option value="B_7_85"><strong>B 7-85</strong></option>
+                </select>
+                <span><strong> Propeller model </strong> </span> <span id="B_series_other_display"></span>
+              </span>
+               <span class=" hide B4_70" id="B4_70">
+                 <span><strong>Choose P/D</strong></span>  <input type="range" name="B4_70_PD " id="B4_70_range" min="0.6" step="0.2" max="1.4"> <span> P/D = <span id="B_70_PD_display"> update</span></span> <span> and EA/EO = 0.7</span>
+               </span> <br><br>
+               <span class=" hide B4" id="B4">
+                <!-- FOR  B: 4-40,4-55,4-85,4-10 @  P/D = 1.0 -->
+                <span><strong>Choose EA/EO</strong> <input type="range" name="B4_EA/EO " id="B4_EA/EO_range" min="0.40" step="0.15" max="1.00"> <span> EA/EO = <span id="B4_EAEO_display"></span></span> <span> and P/D = 1.0</span>
+                </span> <br><br>
+
+             </div>  
+           </div>
+         </div>
      </div>
     </div>
     <!-- <div class="cavitation center">
@@ -2690,6 +2742,63 @@ function propellers(event){
    document.getElementById('Va').innerHTML=  Va + " m/s"
   //  document.getElementById('smcr').innerHTML=  SMCR + " kW"
    document.getElementById('propeller_speed').innerHTML=  propel_speed + "s^-1"
+}
+
+function propeller_furier(event){
+   const eventID = event.target.id 
+   const eventVal = event.target.value
+  
+    if(eventID ==="Beta"){
+
+    }
+   if(eventID ==="B4_70_check"){
+     document.getElementById("B4_70").classList.remove("hide")
+     document.getElementById("B_series_other").classList.add("hide")
+     document.getElementById("B4").classList.add("hide")
+    }
+   else if(eventID ==="B4_check"){
+    document.getElementById("B4_70").classList.add("hide")
+     document.getElementById("B_series_other").classList.add("hide")
+     document.getElementById("B4").classList.remove("hide")
+   }
+   else if(eventID ==="B_other_check"){
+    document.getElementById("B4_70").classList.add("hide")
+     document.getElementById("B_series_other").classList.remove("hide")
+     document.getElementById("B4").classList.add("hide")
+  }
+
+  if(eventID ==="B4_70_range"){
+    document.getElementById("B_70_PD_display").innerHTML =  eventVal
+  }
+  else if(eventID ==="B4_EA/EO_range"){
+    document.getElementById("B4_EAEO_display").innerHTML =  eventVal
+  }
+  else if(eventID ==="B_series_drop_choice"){
+    document.getElementById("B_series_other_display").innerHTML =  eventVal
+  }
+  if(eventID ==="beta_angle_max" || eventID ==="beta_angle_min"){
+
+   let  beta_min = document.getElementById("beta_angle_min").value
+    beta_min = parseFloat(beta_min)
+   let beta_max = document.getElementById("beta_angle_max").value
+    beta_max = parseFloat(beta_max)
+    console.log("min", beta_min, "max",beta_max)
+    document.getElementById("beta_min_display").innerHTML =  beta_min
+    document.getElementById("beta_max_display").innerHTML = beta_max
+  }
+  
+}
+
+function switch_propeller_model(event){
+  const eventID = event.target.id
+  if(eventID==="fourier_model"){
+    document.getElementById("polynomia_propeller").classList.add("hide")
+    document.getElementById("fourier_model_propeller").classList.remove("hide")
+}
+  if(eventID==="polynomia_model"){
+    document.getElementById("fourier_model_propeller").classList.add("hide")
+      document.getElementById("polynomia_propeller").classList.remove("hide")
+ }
 }
 
 function updateResistance(){
