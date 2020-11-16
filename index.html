@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ship Machinery Configuration </title>
-    <script src="machinery.js"></script>
+ 
     
-
+     <!-- tensorflow -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
     <!-- Load c3.css -->
 <link href="./c3-0.7.15/c3.css" rel="stylesheet">
 <!-- Load d3.js and c3.js -->
@@ -18,6 +19,11 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
+
+<script src="machinery.js"></script>
+  <!--  For Maths computation -->
+
+
 </head>
 <body>
     <style>
@@ -1640,7 +1646,7 @@ tr:hover {background-color: #ddd;}
  // Major constant
  viscosity = 0.0000012 // m/s^2
  g = 9.81  // m/s^2
- density = 1000 // kg/m^3
+ density = 1025 // kg/m^3
  density_air = 1.225
 
  resistanceDisplay ()
@@ -1659,7 +1665,7 @@ var layout = {
 
   xaxis:
 	{
-        range: [0, 30],
+        range: [1,13],
         showgrid: false,
         title: 'Ship speed in knots'
     },
@@ -2812,7 +2818,7 @@ let c,k,val,i,s
         c = 1;
         i = 0;
         k =1;
-      for ( k = 1; k < val;k ++) {
+      for ( k = 1; k < val;k++) {
         if(val-k > 1 ){
              shipSpeed = k*0.5144
              shipSpeedKnots = k
@@ -4008,7 +4014,7 @@ function display_sim_param(){
 
  document.getElementById("chose_propulsion").innerHTML =  show_propulsion
  document.getElementById("Total_inst_power").innerHTML =  aux_inst_power + enginePower
-  document.getElementById("simulate_time").innerHTML = simu_time_show +" milliseconds"
+  document.getElementById("simulate_time").innerHTML = simu_time_show +" minutes, "
 //  document.getElementById("DOD_pro").innerHTML =  bat_DOD
 //  document.getElementById("SOC_pro").innerHTML = bat_SOC + " kWh"
 //  document.getElementById("volt_pro").innerHTML = bat_volt
@@ -4107,17 +4113,20 @@ function preview(event){
     bat_SOC = 0;
     document.getElementById("SOC_pro").innerHTML = bat_SOC 
   }
+  let gentset_power = 0
  function check_installed_data(){
    // checking if the installed power source is enough for the required vessel.
    // check for different propulsion system.
-
+  
    if(propulsion_type ==="DE" || propulsion_type ==="DE_Battery"){
     installed_power =  parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
+    
+  
   }
   else if(propulsion_type ==="ME" ){
     console.log(sellected_engine.power)
     installed_power = parseFloat(sellected_engine.Engine_power)
-    const gentset_power = parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
+     gentset_power = parseFloat(sellected_genset.Engine_Power)* parseFloat(sellected_genset.No_of_genset)
 
      if(gentset_power*0.8 < aux_load){
         alert(`The installed genset power should be more than 80 % of the required hotel  load of  ${aux_load}`)
@@ -4262,7 +4271,9 @@ function main_Simulate(event){
 
 }
 
+FC_ton_aux = 0;
 let P_M_S,transit_data
+let new_testing = 0
 class transiting_details{
   constructor(){
     this.distance = 0;
@@ -4318,7 +4329,8 @@ function DP_operation (){
   let DP_load,engine_nums,engine_power, remain_time,sfoc, current_time,transit_info
   supplier =  sellected_genset.supplier;
   transit_dis_mils = parseFloat(transit_dis_mils)
-  FC_ton_aux = 0;
+  FC_ton_aux = 0
+  new_testing = 0
   sfoc = sellected_genset.SFOC;
   sfoc = parseFloat(sfoc);
    engine_nums =  parseFloat(sellected_genset.No_of_genset)
@@ -4327,6 +4339,7 @@ function DP_operation (){
   DP_operat_time   // is expected input is hours
   time = 0;
   i = 0;
+ 
  
   if(operation==="transit"){
     transit_data = new transiting_details()
@@ -4359,9 +4372,11 @@ function DP_operation (){
     remain_time -= (500/(3600*1000))
    }
     
-    FC_aux = P_M_S.optimized_engine_load(time_step); // return sfoc of every given time past
-    FC_ton_aux += FC_aux/1000
-    FC_ton_aux = FC_ton_aux.toFixed(2)*1
+    FC_aux = P_M_S.optimized_engine_load(time_step); // return Fuel consumption of every given time past
+
+    FC_ton_aux = FC_aux.toFixed(2)*1
+    //FC_ton_aux = FC_ton_aux.toFixed(2)*1
+    new_testing += FC_ton_aux
     // FC_ton_aux =
      fuel_Details (FC_ton_aux)
     time +=500

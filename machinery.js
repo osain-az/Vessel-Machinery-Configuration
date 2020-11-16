@@ -11,7 +11,7 @@
     LNG_emission,wind_speed,RAA_wind,Lw,DP_Va,Pe_calm,operation,Pt_calm,Pd_calm,Ps_calm,ND_calm, dynamic_load,wave_height_cal, wind_speed_cal,environment_type,
      eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion, recent_chose_engine,online_engine,simulation_environment,S_APP_input, engine_test_type,power
 
-  let c1,c2,c3s,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,Fnt, phi,m1,m2, m3, m4 ,LR, CP1, p_b , Fni//for  testing vaues 
+  let c1,c2,c3s,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,Fnt, phi,m1,m2, m3, m4 ,LR, CP1, p_b , Fni,try_tsting //for  testing vaues 
 
   function engineAnalysis (){
     //methods for different diesel engine property
@@ -94,12 +94,16 @@
        }
        // this.SFOC_main = this.sfocBase*this.sfocRelative;
        // sfoc_cal = this.SFOC_main;
+       this.gunnerus_sfoc = 0.0008*this.EL**2 - 0.22*this.EL + 212 //This is just for Gunnerus vessel case study 
+       sfoc_cal_aux = this.gunnerus_sfoc
        return {
          sfoc_cal_aux,
          sfoc_cal 
        }
    }
-   
+   this.SFOC_matrix = function(){
+     this.matrix_3x3 = math.matrix([[]])
+   }
    
    
    }
@@ -121,6 +125,10 @@ function ship(){
         this.c23 = (0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp)
         Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)* (0.615989*this.c23 + 0.111439*Cm**3 +0.000571111*stern +
         0.245357*(this.c23/Cm)) + 3.45538*AT + (ABT/Cb)*(1.4660538 + 0.5839497/Cm) // Surface weted area
+
+      
+        shipVolume = 579 // This is jsut to test a specific model 
+        //Sa = 7381
      }
 
     this.hull = function(){
@@ -137,15 +145,18 @@ function ship(){
             ////Schneekluth formular
         if(lcb_type ==="aft"){
         lcb  = -(LCB/Lwl)*100
-        
+
         }
         else if(lcb_type ==="forward"){
             lcb  = (LCB/Lwl)*100
+
         }else {
           //  method by Harvald(1974)
           lcb = -(0.44*Fn-0.094)
+
         }
-        lcb = 1.3067 ;// NOTE :this is used for one time test so delete it after this time 
+       // lcb = -0.75 ;// NOTE :this is used for one time test so delete it after this time 
+
         if(!T) T = 0.5*(Tf + TA)
         
         // this.Sa =1.025*((shipVolume/this.T)+1.7*this.Lpp*this.T) // Surface weted area
@@ -154,7 +165,7 @@ function ship(){
 
 function resistance(){
     this.formFactor = function(){
-      lcb -0.75
+    
         this.LR =Lwl*(1-Cp+0.06*Cp*(-0.75))/(4*Cp-1)
         LR
     //     }
@@ -283,11 +294,9 @@ function resistance(){
     this.waveResistance = function(){
       //Wave making resistnace 
         // this.lcb = 0.0101*Lwl
-        lcb -0.75
+      
         this.LR =Lwl*((1-Cp)+0.06*Cp*(-0.75)/(4*Cp-1))
-       // this.LR = 81
-        shipVolume = 37500
-        Cwp = 0.75
+       // this.LR = 81     
         LR = this.LR
         this.d = -0.9
          iE = 1+89*Math.exp((-1*(Lwl/Bwl)**0.80856)*(1-Cwp)**0.30484*(1-Cp-0.0225*(-0.75))**0.6367*(this.LR/Bwl)**0.34574*((100*shipVolume)/Lwl**3)**0.16302) // (original equation)  //halfe angle entrance of teh waterline
@@ -341,7 +350,6 @@ function resistance(){
 
         if(Fn < 0.4) this.m1 = ((0.0140407*Lwl)/T)-((1.75254*shipVolume**(1/3))/Lwl)-((4.79323*Bwl)/Lwl)-this.c16
         
-
         this.m2 = this.c15*Cp**2*Math.exp((-0.1)*Fn**-2)
         this.m4 = this.c15*0.4*Math.exp(-0.0034*Fn**-3.29)
         m4 = this.m4
@@ -352,7 +360,7 @@ function resistance(){
             this.phi = 1.446 * Cp - 0.036
         }
 
-        Rw_A = this.c1*this.c2*this.c5*density*shipVolume*g*Math.exp(this.m1*Fn**this.d+this.m4*Math.cos(this.phi* Fn**-2))
+        Rw_A = this.c1*this.c2*this.c5*density*shipVolume*g*Math.exp(this.m1*Fn**this.d+this.m2*Math.cos(this.phi* Fn**-2))
         Rw_A = ((Rw_A.toFixed(2))*1)/1000
         console.log("rwa",Rw_A/1000)
         console.log("c15",this.c15)
@@ -394,7 +402,6 @@ function resistance(){
 
             this.c15 =  -1.69385 + ((Lwl/shipVolume**(1/3)-8.0)/2.36)
         }
-
         this.m4 = this.c15*0.4*Math.exp((-1)*0.034*Fn**-3.29)
         if(hB > 0.6*Tf){
             hB = 0.5*Tf
@@ -523,10 +530,27 @@ function fourier_propeller_analyis(){
    Propeller_torque = CQ_S*0.5*density(va**2 + beta**2)*(Math.PI/4)*D**3
 }
 
+// function NTNU_Gunnerus(){
+// the power model is based from extracted experimatal result from NTNU Gunrus vessel 
+//   this.power_estimate = function(shipSpeedKnots){
+//     this.speed = shipSpeedKnots // t
+//     this.estimated_power = 3.97306397*this.speed**3 -84.90620491*this.speed**2 + 669.15103415*this.speed -1754.43001443
+//      return this.estimated_power
+//   }
+// }
+
+function NTNU_Gunnerus(){
+  // the power model is based from extracted experimatal result from NTNU Gunrus vessel 
+      const speed = shipSpeedKnots // t
+      this.estimated_power = 3.97306397*this.speed**3 -84.90620491*this.speed**2 + 669.15103415*this.speed -1754.43001443
+       return this.estimated_power
+  
+  }
+
 function propellerProperties (){
     this.Thrust =function(){
         //cth = thrust loading cofficient
-        lcb = -0.7
+      
         this.Cpi = 1.45*Cp - 0.315-0.0225*lcb
         if(Lwl/Bwl < 5.2){
             this.c10 = 0.25-0.003328402/(Bwl*Lwl - 0.134615385)
@@ -535,7 +559,8 @@ function propellerProperties (){
             this.c10 = Bwl/Lwl
         }
         if(screw ==="singleScrew"){
-           TFactor = (0.25*(Bwl/Lwl)**0.28956*(Math.sqrt(T*Bwl)/D)**0.2624)/(1-Cp+0.0225*lcb)**0.01762 + 0.0015*stern
+           TFactor = ((0.25*(Bwl/Lwl)**0.28956*(Math.sqrt(T*Bwl)/D)**0.2624)/(1-Cp+0.0225*lcb)**0.01762) + 0.0015*stern
+           
         }
         if(screw ==="TwinScrew"){
             TFactor = 0.325*Cb-0.1885*D/Math.sqrt(Bwl*T)
@@ -546,18 +571,19 @@ function propellerProperties (){
         TFactor = TFactor.toFixed(2)
         console.log("cpi",this.cpi)
         console.log("c10",this.c10)
+        TFactor = 0.1747 // this is just for test 
     }
 
     this.wake = function(){
 
-        // Cv = (formFactor*this.Rf+ this.Rapp + this.RA)/0.5*density*shipSpeed**2*(Sa+Sapp)
+        //Cv = (formFactor*Rf+ Rapp + RA)/(0.5*density*shipSpeed**2*(Sa+Sapp))
         Cv = formFactor*Cf+Ca
         // Single screw ship
-        lcb= -0.7
-        if(Bwl/TA < 5){
+        
+        if(Bwl/TA <= 5){
             this.c8 = (Bwl*Sa)/(Lwl*D*TA)
         }
-        else if(Bwl/TA >= 5){
+        else if(Bwl/TA > 5){
             this.c8 = Sa*(7*Bwl/TA-25)/(Lwl*D*(Bwl/TA - 3))
         }
         if(this.c8 < 28){
@@ -593,11 +619,12 @@ function propellerProperties (){
            NR =  0.9737 +0.111*(Cp - 0.0225*lcb) - 0.06325*PD
         }
         Va = shipSpeed*(1-W)
-        Va = Va.toFixed(2)
+        Va = Va.toFixed(2)*1
         Cth = thrust/(density*Va**2*D**2*(Math.PI/8))
-        W = W.toFixed(3)
-        Cth = Cth.toFixed(3)
-        NR = NR.toFixed(3)
+        W = W.toFixed(3)*1
+        //W = 0.2584 // this is just for test 
+        Cth = Cth.toFixed(3)*1
+        NR = NR.toFixed(3)*1
 
         //For Dp Operation
         this.DP_speed = 3*0.51 // Dp speed is assumed to be 3 knot according to the literatures (tranvser speed)
@@ -610,38 +637,434 @@ function propellerProperties (){
     }
 
     this.KTandKQ = function(){
-     
+        this.RPM_input = 230//test input
+         this.input_propeller_speed = this.RPM_input/60 // USED FOR TESTING 
+         this.input_propeller_speed = 1.659
+        // AeAo = 0.7393
+        this.K = shipSpeedKnots
+        this.gunnerus_propeller_speed = 0.09427609*this.K**3 - 1.804040*this.K**2 + 27.419*this.K - 30.68888 
+        this.gunnerus_propeller_speed = this.gunnerus_propeller_speed/60
         this.Co7r = 2.073*AeAo *D/Z
+      //  J =   Va/(this.input_propeller_speed *D)
+        J =   Va/(this.gunnerus_propeller_speed *D)  // This if just for gunnerus 
         this.Rno = (this.Co7r*Math.sqrt(Va**2 + (0.75*Math.PI*n*D)**2))/viscosity
-        if(n && this.Rno > 2*10**6){
 
-        KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.log(this.Rno)-0.301)**2*AeAo*J**2+0.0000643192*(Math.log(this.Rno)-0.301)*PD**6*J**2
-        - 0.0000110636*(Math.log(this.Rno)-0.301)**2*PD**6*J**2- 0.0000276305**(Math.log(this.Rno)-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.log(this.Rno)-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.log(this.Rno)-0.301)*Z**2*AeAo*PD**3*J
+        n = this.input_propeller_speed
+        //this.AE_Ao = 0.08+((1.3 + 0.2*Z)*thrust)/(D**2)
+        
+        // if(n && this.Rno > 2*10**6){
+         
+        // KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.log(this.Rno)-0.301)**2*AeAo*J**2+0.0000643192*(Math.log(this.Rno)-0.301)*PD**6*J**2
+        // - 0.0000110636*(Math.log(this.Rno)-0.301)**2*PD**6*J**2- 0.0000276305**(Math.log(this.Rno)-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.log(this.Rno)-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.log(this.Rno)-0.301)*Z**2*AeAo*PD**3*J
 
-        KQ = -0.000591412+0.00696898*PD-0.0000666654*Z*PD**6+0.0160818*AeAo**2-0.000938091*(Math.log(this.Rno)-0.301)*PD-0.00059593*(Math.log(this.Rno)-0.301)*PD**2+0.0000782099*(Math.log(this.Rno)-0.301)**2*PD**2
-        +0.0000052199*(Math.log(this.Rno)-0.301)*Z*AeAo*J**2-0.00000088528*(Math.log(this.Rno)-0.301)**2*Z*AeAo*PD*J+0.0000230171*(Math.log(this.Rno)-0.301)*Z*PD**6-0.00000184341*(Math.log(this.Rno)-0.301)**2*Z*PD**6-0.00400252*(Math.log(this.Rno)-0.301)*AeAo**2
-        +0.000220915*(Math.log(this.Rno)-0.301)**2*AeAo**2
+        // KQ = -0.000591412+0.00696898*PD-0.0000666654*Z*PD**6+0.0160818*AeAo**2-0.000938091*(Math.log(this.Rno)-0.301)*PD-0.00059593*(Math.log(this.Rno)-0.301)*PD**2+0.0000782099*(Math.log(this.Rno)-0.301)**2*PD**2
+        // +0.0000052199*(Math.log(this.Rno)-0.301)*Z*AeAo*J**2-0.00000088528*(Math.log(this.Rno)-0.301)**2*Z*AeAo*PD*J+0.0000230171*(Math.log(this.Rno)-0.301)*Z*PD**6-0.00000184341*(Math.log(this.Rno)-0.301)**2*Z*PD**6-0.00400252*(Math.log(this.Rno)-0.301)*AeAo**2
+        // +0.000220915*(Math.log(this.Rno)-0.301)**2*AeAo**2
+        // }
+        // else{
+
+        //     KT = 0.00880496*J**0*PD**0*AeAo**0*Z**0-0.204554*J**1*PD**0*AeAo**0*Z**0 + 0.166351*J**0*PD**1*AeAo**0*Z**0 + 0.158114*J**0*PD**2*AeAo**0*Z**0 - 0.147581*J**2*PD**0*AeAo**1*Z**0 - 0.481497*J**1*PD**1*AeAo**1*Z**0 +
+        //      0.415437*J**0*PD**2*AeAo**1*Z**0 + 0.0144043*J**0*PD**0*AeAo**0*Z**1 - 0.0530054*J**2*PD**0*AeAo**0*Z**1 + 0.0143481*J**0*PD**1*AeAo**0*Z**1 + 0.0606826*J**1*PD**1*AeAo**0*Z**1 - 0.0125894*J**0*PD**0*AeAo**1*Z**1 +
+        //      0.0109689*J**1*PD**0*AeAo**1*Z**1 - 0.133698*J**0*PD**3*AeAo**0*Z**0 + 0.00638407*J**0*PD**6*AeAo**0*Z**0 - 0.00132718*J**2*PD**6*AeAo**0*Z**0 + 0.168496*J**3*PD**0*AeAo**1*Z**0 - 0.0507214*J**0*PD**0*AeAo**2*Z**0 +
+        //      0.0854559*J**2*PD**0*AeAo**2*Z**0 - 0.0504475*J**3*PD**0*AeAo**2*Z**0 + 0.010465*J**1*PD**6*AeAo**2*Z**0 - 0.00648272*J**2*PD**6*AeAo**2*Z**0 - 0.00841728*J**0*PD**3*AeAo**0*Z**1 + 0.0168424*J**1*PD**3*AeAo**0*Z**1 -
+        //      0.00102296*J**3*PD**3*AeAo**0*Z**1 - 0.0317791*J**0*PD**3*AeAo**1*Z**1 + 0.018604*J**1*PD**0*AeAo**2*Z**1  - 0.00410798*J**0*PD**2*AeAo**2*Z**1 - 0.000606848*J**0*PD**0*AeAo**0*Z**2 - 0.0049819*J**1*PD**0*AeAo**0*Z**2 +
+        //      0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 +
+        //      0.00421749*J**0*PD**3*AeAo**1*Z**2 + 0.0000565229*J**3*PD**6*AeAo**1*Z**2 - 0.00146564*J**0*PD**3*AeAo**2*Z**2
+
+        //      KQ = 0.00379368*J**0*PD**0*AeAo**0*Z**0 + 0.00886523*J**2*PD**0*AeAo**0*Z**0 - 0.032241*J**1*PD**1*AeAo**0*Z**0 - 0.00344778*J**0*PD**2*AeAo**0*Z**0 - 0.0408811*J**0*PD**1*AeAo**1*Z**0 - 0.108009*J**1*PD**1*AeAo**1*Z**0 -
+        //      0.0885381*J**2*PD**1*AeAo**1*Z**0 + 0.188561*J**0*PD**2*AeAo**1*Z**0 - 0.00370871*J**1*PD**0*AeAo**0*Z**1 + 0.00513696*J**0*PD**1*AeAo**0*Z**1 + 0.0209449*J**1*PD**1*AeAo**0*Z**1 + 0.00474319*J**2*PD**1*AeAo**0*Z**1 -
+        //      0.00723408*J**2*PD**0*AeAo**1*Z**1 + 0.00438388*J**1*PD**1*AeAo**1*Z**1 - 0.0269403*J**0*PD**2*AeAo**1*Z**1 + 0.0558082*J**3*PD**0*AeAo**1*Z**0 + 0.0161886*J**0*PD**3*AeAo**1*Z**0 + 0.00318086*J**1*PD**3*AeAo**1*Z**0 +
+        //      0.015896*J**0*PD**0*AeAo**2*Z**0 + 0.0471729*J**1*PD**0*AeAo**2*Z**0 + 0.0196283*J**3*PD**0*AeAo**2*Z**0 - 0.0502782*J**0*PD**1*AeAo**2*Z**0 - 0.030055*J**3*PD**1*AeAo**2*Z**0 + 0.0417122*J**2*PD**2*AeAo**2*Z**0 -
+        //      0.0397722*J**0*PD**3*AeAo**2*Z**0 - 0.00350024*J**0*PD**6*AeAo**2*Z**0 - 0.0106854*J**3*PD**0*AeAo**0*Z**1  + 0.00110903*J**3*PD**3*AeAo**0*Z**1 - 0.000313912*J**0*PD**6*AeAo**0*Z**1 + 0.0035985*J**3*PD**0*AeAo**1*Z**1 -
+        //      0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 +
+
+        //      0.000112451*J**3*PD**2*AeAo**0*Z**2 - 0.0000297228*J**3*PD**6*AeAo**0*Z**2 + 0.000269551*J**1*PD**0*AeAo**1*Z**2 + 0.00083265*J**2*PD**0*AeAo**1*Z**2 + 0.00155334*J**0*PD**2*AeAo**1*Z**2 + 0.000302683*J**0*PD**6*AeAo**1*Z**2 -
+        //      0.0001843*J**0*PD**0*AeAo**2*Z**2 - 0.000425399*J**0*PD**3*AeAo**2*Z**2 + 0.0000869243*J**3*PD**3*AeAo**2*Z**2 - 0.0004659*J**0*PD**6*AeAo**2*Z**2 + 0.0000554194*J**1*PD**6*AeAo**2*Z**2
+        // }
+        PD = PD*1
+        this.KT_coef = {
+          i_0:{  a : 0.0088049, b: 0, c: 0, d:0, e: 0 },
+
+          i_1:{  a : -0.204554, b: 1, c: 0, d:0, e: 0 },
+
+          i_2:{  a : 0.166351, b: 0, c: 1, d:0, e: 0 },
+
+          i_3:{  a : 0.158114, b: 0, c: 2, d:0, e: 0 },
+
+          i_4:{  a : -0.147581, b: 2, c: 0, d:1, e: 0 },
+
+          i_5:{  a : -0.481497, b: 1, c: 1, d:1, e: 0 },
+
+          i_6:{  a : 0.415437, b: 0, c: 2, d:1, e: 0 },
+
+          i_7:{  a : 0.00144043, b: 0, c: 0, d: 0, e: 1 },
+
+          i_8:{  a : -0.00530054, b: 2, c: 0, d: 0, e: 1 },
+
+          i_9:{  a : +0.0143481, b: 0, c: 1, d: 0, e: 1 },
+
+          i_10:{  a : +0.0606826, b: 1, c: 1, d: 0, e: 1 },
+
+          i_11:{  a : -0.0125894, b: 0, c: 0, d: 1, e: 1 },
+
+          i_12:{  a : 0.0109689, b: 1, c: 0, d: 1, e: 1 },
+
+          i_13:{  a : -0.0133698, b: 0, c: 3, d: 0, e: 0 },
+
+          i_14:{  a : 0.00638407, b: 0, c: 6, d: 0, e: 0 },
+
+          i_15:{  a : -0.00132718, b: 2, c: 6, d: 0, e: 0 },
+
+          i_16:{  a : 0.168496, b: 3, c: 0, d: 1, e: 0 },
+
+          i_17:{  a : -0.0507214, b: 0, c: 0, d: 2, e: 0 },
+
+          i_18:{  a : 0.0854559, b: 2, c: 0, d: 2, e: 0 },
+
+          i_19:{  a : -0.0504475, b: 3, c: 0, d: 2, e: 0 },
+
+          i_20:{  a : 0.010465, b: 1, c: 6, d: 2, e: 0 },
+
+          i_21:{  a : -0.00648272, b: 2, c: 6, d: 2, e: 0 },
+
+          i_22:{  a : -0.00841728, b: 0, c: 3, d: 0, e: 1 },
+
+          i_23:{  a : 0.0168424, b: 1, c: 3, d: 0, e: 1 },
+
+          i_24:{  a : -0.00102296, b: 3, c: 3, d: 0, e: 1 },
+
+          i_25:{  a : -0.0317791, b: 0, c: 3, d: 1, e: 1 },
+
+          i_26:{  a : 0.018604, b: 1, c: 0, d: 2, e: 1 },
+
+          i_27:{  a : -0.00410798, b: 0, c: 2, d: 2, e: 1 },
+
+          i_28:{  a : -0.000606848, b: 0, c: 0, d: 0, e: 2 },
+
+          i_29:{  a : -0.0049819, b: 1, c: 0, d: 0, e: 2 },
+
+          i_30:{  a : 0.0025983, b: 2, c: 0, d: 0, e: 2 },
+
+          i_31:{  a : -0.000560528, b: 3, c: 0, d: 0, e: 2 },
+
+          i_32:{  a : -0.00163652, b: 1, c: 2, d: 0, e: 2 },
+
+          i_33:{  a : -0.000328787, b: 1, c: 6, d: 0, e: 2 },
+
+          i_34:{  a : 0.000116502, b: 2, c: 6, d: 0, e: 2 },
+
+          i_35:{  a : 0.000690904, b: 0, c: 0, d: 1, e: 2 },
+
+          i_36:{  a : 0.00421749, b: 0, c: 3, d: 1, e: 2 },
+
+          i_37:{  a : 0.0000565229, b: 3, c: 6, d: 1, e: 2 },
+
+          i_38:{  a : -0.00146564, b: 0, c: 3, d: 2, e: 2 },
+
         }
-        else{
+        this.KQ_coef = {
+          i_0:{  a : 0.00379368, b: 0, c: 0, d:0, e: 0 },
 
-            KT = 0.00880496*J**0*PD**0*AeAo**0*Z**0-0.204554*J**1*PD**0*AeAo**0*Z**0 + 0.166351*J**0*PD**1*AeAo**0*Z**0 + 0.158114*J**0*PD**2*AeAo**0*Z**0 - 0.147581*J**2*PD**0*AeAo**1*Z**0 - 0.481497*J**1*PD**1*AeAo**1*Z**0 +
-             0.415437*J**0*PD**2*AeAo**1*Z**0 + 0.0144043*J**0*PD**0*AeAo**0*Z**1 - 0.0530054*J**2*PD**0*AeAo**0*Z**1 + 0.0143481*J**0*PD**1*AeAo**0*Z**1 + 0.0606826*J**1*PD**1*AeAo**0*Z**1 - 0.0125894*J**0*PD**0*AeAo**1*Z**1 +
-             0.0109689*J**1*PD**0*AeAo**1*Z**1 - 0.133698*J**0*PD**3*AeAo**0*Z**0 + 0.00638407*J**0*PD**6*AeAo**0*Z**0 - 0.00132718*J**2*PD**6*AeAo**0*Z**0 + 0.168496*J**3*PD**0*AeAo**1*Z**0 - 0.0507214*J**0*PD**0*AeAo**2*Z**0 +
-             0.0854559*J**2*PD**0*AeAo**2*Z**0 - 0.0504475*J**3*PD**0*AeAo**2*Z**0 + 0.010465*J**1*PD**6*AeAo**2*Z**0 - 0.00648272*J**2*PD**6*AeAo**2*Z**0 - 0.00841728*J**0*PD**3*AeAo**0*Z**1 + 0.0168424*J**1*PD**3*AeAo**0*Z**1 -
-             0.00102296*J**3*PD**3*AeAo**0*Z**1 - 0.0317791*J**0*PD**3*AeAo**1*Z**1 + 0.018604*J**1*PD**0*AeAo**2*Z**1  - 0.00410798*J**0*PD**2*AeAo**2*Z**1 - 0.000606848*J**0*PD**0*AeAo**0*Z**2 - 0.0049819*J**1*PD**0*AeAo**0*Z**2 +
-             0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 +
-             0.00421749*J**0*PD**3*AeAo**1*Z**2 + 0.0000565229*J**3*PD**6*AeAo**1*Z**2 - 0.00146564*J**0*PD**3*AeAo**2*Z**2
+          i_1:{  a : 0.00886523, b: 2, c: 0, d:0, e: 0 },
 
-             KQ = 0.00379368*J**0*PD**0*AeAo**0*Z**0 + 0.00886523*J**2*PD**0*AeAo**0*Z**0 - 0.032241*J**1*PD**1*AeAo**0*Z**0 - 0.00344778*J**0*PD**2*AeAo**0*Z**0 - 0.0408811*J**0*PD**1*AeAo**1*Z**0 - 0.108009*J**1*PD**1*AeAo**1*Z**0 -
-             0.0885381*J**2*PD**1*AeAo**1*Z**0 + 0.188561*J**0*PD**2*AeAo**1*Z**0 - 0.00370871*J**1*PD**0*AeAo**0*Z**1 + 0.00513696*J**0*PD**1*AeAo**0*Z**1 + 0.0209449*J**1*PD**1*AeAo**0*Z**1 + 0.00474319*J**2*PD**1*AeAo**0*Z**1 -
-             0.00723408*J**2*PD**0*AeAo**1*Z**1 + 0.00438388*J**1*PD**1*AeAo**1*Z**1 - 0.0269403*J**0*PD**2*AeAo**1*Z**1 + 0.0558082*J**3*PD**0*AeAo**1*Z**0 + 0.0161886*J**0*PD**3*AeAo**1*Z**0 + 0.00318086*J**1*PD**3*AeAo**1*Z**0 +
-             0.015896*J**0*PD**0*AeAo**2*Z**0 + 0.0471729*J**1*PD**0*AeAo**2*Z**0 + 0.0196283*J**3*PD**0*AeAo**2*Z**0 - 0.0502782*J**0*PD**1*AeAo**2*Z**0 - 0.030055*J**3*PD**1*AeAo**2*Z**0 + 0.0417122*J**2*PD**2*AeAo**2*Z**0 -
-             0.0397722*J**0*PD**3*AeAo**2*Z**0 - 0.00350024*J**0*PD**6*AeAo**2*Z**0 - 0.0106854*J**3*PD**0*AeAo**0*Z**1  + 0.00110903*J**3*PD**3*AeAo**0*Z**1 - 0.000313912*J**0*PD**6*AeAo**0*Z**1 + 0.0035985*J**3*PD**0*AeAo**1*Z**1 -
-             0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 +
+          i_2:{  a : -0.032241, b: 1, c: 1, d:0, e: 0 },
 
-             0.000112451*J**3*PD**2*AeAo**0*Z**2 - 0.0000297228*J**3*PD**6*AeAo**0*Z**2 + 0.000269551*J**1*PD**0*AeAo**1*Z**2 + 0.00083265*J**2*PD**0*AeAo**1*Z**2 + 0.00155334*J**0*PD**2*AeAo**1*Z**2 + 0.000302683*J**0*PD**6*AeAo**1*Z**2 -
-             0.0001843*J**0*PD**0*AeAo**2*Z**2 - 0.000425399*J**0*PD**3*AeAo**2*Z**2 + 0.0000869243*J**3*PD**3*AeAo**2*Z**2 - 0.0004659*J**0*PD**6*AeAo**2*Z**2 + 0.0000554194*J**1*PD**6*AeAo**2*Z**2
+          i_3:{  a : 0.00344778, b: 0, c: 2, d:0, e: 0 },
+
+          i_4:{  a : -0.0408811, b: 0, c: 1, d: 1, e: 0 },
+
+          i_5:{  a : -0.108009, b: 1, c: 1, d:1, e: 0 },
+
+          i_6:{  a : -0.0885381, b: 2, c: 1, d:1, e: 0 },
+
+          i_7:{  a : 0.188561, b: 0, c: 2, d:1, e: 0 },
+
+          i_8:{  a : -0.00370871, b: 1, c: 0, d:0, e: 1 },
+
+          i_9:{  a : 0.0051696, b: 0, c: 1, d: 0, e: 1 },
+
+          i_10:{  a : 0.0209449, b: 1, c: 1, d: 0, e: 1 },
+
+          i_11:{  a : 0.00474319, b: 2, c: 1, d: 0, e: 1 },
+
+          i_12:{  a : -0.00723408, b: 2, c: 0, d: 1, e: 1 },
+
+          i_13:{  a : 0.00438388, b: 1, c: 1, d: 1, e: 1 },
+
+          i_14:{  a : -0.0269403, b: 0, c: 2, d: 1, e: 1 },
+
+          i_15:{  a : 0.0558082, b: 3, c: 0, d: 1, e: 0 },
+
+          i_16:{  a : 0.0161886, b: 0, c: 3, d: 1, e: 0 },
+
+          i_17:{  a : 0.00318086, b: 1, c: 3, d: 1, e: 0 },
+
+          i_18:{  a : 0.015896, b: 0, c: 0, d: 2, e: 0 },
+
+          i_19:{  a : 0.0471729, b: 1, c: 0, d: 2, e: 0 },
+
+          i_20:{  a : 0.0196283, b: 3, c: 0, d: 2, e: 0 },
+
+          i_21:{  a : -0.0502782, b: 0, c: 1, d: 2, e: 0 },
+
+          i_22:{  a : -0.030055, b: 3, c: 1, d: 2, e: 0 },
+
+          i_23:{  a : 0.0417122, b: 2, c: 2, d: 2, e: 0 },
+
+          i_24:{  a : -0.0397722, b: 0, c: 3, d: 2, e: 0 },
+
+          i_25:{  a : -0.00350024, b: 0, c: 6, d: 2, e: 0 },
+
+          i_26:{  a : -0.0106854, b: 3, c: 0, d: 0, e: 1 },
+
+          i_27:{  a : 0.00110903, b: 3, c: 3, d: 0, e: 1 },
+
+          i_28:{  a : -0.000313912, b: 0, c: 6, d: 0, e: 1 },
+
+          i_29:{  a : 0.0035985, b: 3, c: 0, d: 1, e: 1 },
+
+          i_30:{  a : -0.00142121, b: 0, c: 6, d: 1, e: 1 },
+
+          i_31:{  a : -0.00383637, b: 1, c: 0, d: 2, e: 1 },
+
+          i_32:{  a : 0.0126803, b: 0, c: 2, d: 2, e: 1 },
+
+          i_33:{  a : -0.00318278, b: 2, c: 3, d: 2, e: 1 },
+
+          i_34:{  a : 0.00334268, b: 0, c: 6, d: 2, e: 1 },
+
+          i_35:{  a : -0.00183491, b: 1, c: 1, d: 0, e: 2 },
+
+          i_36:{  a : 0.000112451, b: 3, c: 2, d: 0, e: 1 },
+
+          i_37:{  a : -0.0000297228, b: 3, c: 6, d: 0, e: 1 },
+
+          i_38:{  a : 0.000269551, b: 1, c: 0, d: 1, e: 2 },
+
+          i_39:{  a : 0.00083265, b: 2, c: 0, d: 1, e: 2 },
+
+          i_40:{  a : 0.00155334, b: 0, c: 2, d: 1, e: 2 },
+
+          i_41:{  a : 0.000302683, b: 0, c: 6, d: 1, e: 2 },
+
+          i_42:{  a : -0.0001843, b: 0, c: 0, d: 2, e: 2 },
+
+          i_43:{  a : -0.000425399, b: 0, c: 3, d: 2, e: 2 },
+
+          i_44:{  a : 0.0000869243, b: 3, c: 3, d: 2, e: 2 },
+
+          i_45:{  a : -0.0004659, b: 0, c: 6, d: 2, e: 2 },
+
+          i_46:{  a : 0.0000554194, b: 1, c: 6, d: 2, e: 2 },
+             
         }
+       
+        this.new_KT =  this.KT_coef.i_0.a*J**this.KT_coef.i_0.b*PD**this.KT_coef.i_0.c*AeAo**this.KT_coef.i_0.d*Z**this.KT_coef.i_0.e +
+        this.KT_coef.i_1.a*J**this.KT_coef.i_1.b*PD**this.KT_coef.i_1.c*AeAo**this.KT_coef.i_1.d*Z**this.KT_coef.i_1.e +
+         this.KT_coef.i_2.a*J**this.KT_coef.i_2.b*PD**this.KT_coef.i_2.c*AeAo**this.KT_coef.i_2.d*Z**this.KT_coef.i_2.e +
+          this.KT_coef.i_3.a*J**this.KT_coef.i_3.b*PD**this.KT_coef.i_3.c*AeAo**this.KT_coef.i_3.d*Z**this.KT_coef.i_3.e +
+         this.KT_coef.i_4.a*J**this.KT_coef.i_4.b*PD**this.KT_coef.i_4.c*AeAo**this.KT_coef.i_4.d*Z**this.KT_coef.i_4.e +
+         this.KT_coef.i_5.a*J**this.KT_coef.i_5.b*PD**this.KT_coef.i_5.c*AeAo**this.KT_coef.i_5.d*Z**this.KT_coef.i_5.e +
+         this.KT_coef.i_6.a*J**this.KT_coef.i_6.b*PD**this.KT_coef.i_6.c*AeAo**this.KT_coef.i_6.d*Z**this.KT_coef.i_6.e +
+         this.KT_coef.i_7.a*J**this.KT_coef.i_7.b*PD**this.KT_coef.i_7.c*AeAo**this.KT_coef.i_7.d*Z**this.KT_coef.i_7.e +
+         this.KT_coef.i_8.a*J**this.KT_coef.i_8.b*PD**this.KT_coef.i_8.c*AeAo**this.KT_coef.i_8.d*Z**this.KT_coef.i_8.e +
+         this.KT_coef.i_9.a*J**this.KT_coef.i_9.b*PD**this.KT_coef.i_9.c*AeAo**this.KT_coef.i_9.d*Z**this.KT_coef.i_9.e +
+         this.KT_coef.i_10.a*J**this.KT_coef.i_10.b*PD**this.KT_coef.i_10.c*AeAo**this.KT_coef.i_10.d*Z**this.KT_coef.i_10.e +
+         this.KT_coef.i_11.a*J**this.KT_coef.i_11.b*PD**this.KT_coef.i_11.c*AeAo**this.KT_coef.i_11.d*Z**this.KT_coef.i_11.e +
+         this.KT_coef.i_12.a*J**this.KT_coef.i_12.b*PD**this.KT_coef.i_12.c*AeAo**this.KT_coef.i_12.d*Z**this.KT_coef.i_12.e +
+         this.KT_coef.i_13.a*J**this.KT_coef.i_13.b*PD**this.KT_coef.i_13.c*AeAo**this.KT_coef.i_13.d*Z**this.KT_coef.i_13.e +
+         this.KT_coef.i_14.a*J**this.KT_coef.i_14.b*PD**this.KT_coef.i_14.c*AeAo**this.KT_coef.i_14.d*Z**this.KT_coef.i_14.e +
+         this.KT_coef.i_15.a*J**this.KT_coef.i_15.b*PD**this.KT_coef.i_15.c*AeAo**this.KT_coef.i_15.d*Z**this.KT_coef.i_15.e +
+         this.KT_coef.i_16.a*J**this.KT_coef.i_16.b*PD**this.KT_coef.i_16.c*AeAo**this.KT_coef.i_16.d*Z**this.KT_coef.i_16.e +
+         this.KT_coef.i_17.a*J**this.KT_coef.i_17.b*PD**this.KT_coef.i_17.c*AeAo**this.KT_coef.i_17.d*Z**this.KT_coef.i_17.e +
+         this.KT_coef.i_18.a*J**this.KT_coef.i_18.b*PD**this.KT_coef.i_18.c*AeAo**this.KT_coef.i_18.d*Z**this.KT_coef.i_18.e +
+         this.KT_coef.i_19.a*J**this.KT_coef.i_19.b*PD**this.KT_coef.i_19.c*AeAo**this.KT_coef.i_19.d*Z**this.KT_coef.i_19.e +
+         this.KT_coef.i_20.a*J**this.KT_coef.i_20.b*PD**this.KT_coef.i_20.c*AeAo**this.KT_coef.i_20.d*Z**this.KT_coef.i_20.e +
+         this.KT_coef.i_21.a*J**this.KT_coef.i_21.b*PD**this.KT_coef.i_21.c*AeAo**this.KT_coef.i_21.d*Z**this.KT_coef.i_21.e +
+         this.KT_coef.i_22.a*J**this.KT_coef.i_22.b*PD**this.KT_coef.i_22.c*AeAo**this.KT_coef.i_22.d*Z**this.KT_coef.i_22.e +
+         this.KT_coef.i_23.a*J**this.KT_coef.i_23.b*PD**this.KT_coef.i_23.c*AeAo**this.KT_coef.i_23.d*Z**this.KT_coef.i_23.e +
+         this.KT_coef.i_24.a*J**this.KT_coef.i_24.b*PD**this.KT_coef.i_24.c*AeAo**this.KT_coef.i_24.d*Z**this.KT_coef.i_24.e +
+         this.KT_coef.i_25.a*J**this.KT_coef.i_25.b*PD**this.KT_coef.i_25.c*AeAo**this.KT_coef.i_25.d*Z**this.KT_coef.i_25.e +
+         this.KT_coef.i_26.a*J**this.KT_coef.i_26.b*PD**this.KT_coef.i_26.c*AeAo**this.KT_coef.i_26.d*Z**this.KT_coef.i_26.e +
+         this.KT_coef.i_27.a*J**this.KT_coef.i_27.b*PD**this.KT_coef.i_27.c*AeAo**this.KT_coef.i_27.d*Z**this.KT_coef.i_27.e +
+         this.KT_coef.i_28.a*J**this.KT_coef.i_28.b*PD**this.KT_coef.i_28.c*AeAo**this.KT_coef.i_28.d*Z**this.KT_coef.i_28.e +
+         this.KT_coef.i_29.a*J**this.KT_coef.i_29.b*PD**this.KT_coef.i_29.c*AeAo**this.KT_coef.i_29.d*Z**this.KT_coef.i_29.e +
+         this.KT_coef.i_30.a*J**this.KT_coef.i_30.b*PD**this.KT_coef.i_30.c*AeAo**this.KT_coef.i_30.d*Z**this.KT_coef.i_30.e +
+         this.KT_coef.i_31.a*J**this.KT_coef.i_31.b*PD**this.KT_coef.i_31.c*AeAo**this.KT_coef.i_31.d*Z**this.KT_coef.i_31.e +
+         this.KT_coef.i_32.a*J**this.KT_coef.i_32.b*PD**this.KT_coef.i_32.c*AeAo**this.KT_coef.i_32.d*Z**this.KT_coef.i_32.e +
+         this.KT_coef.i_33.a*J**this.KT_coef.i_33.b*PD**this.KT_coef.i_33.c*AeAo**this.KT_coef.i_33.d*Z**this.KT_coef.i_33.e +
+         this.KT_coef.i_35.a*J**this.KT_coef.i_35.b*PD**this.KT_coef.i_35.c*AeAo**this.KT_coef.i_35.d*Z**this.KT_coef.i_35.e +
+         this.KT_coef.i_36.a*J**this.KT_coef.i_36.b*PD**this.KT_coef.i_36.c*AeAo**this.KT_coef.i_36.d*Z**this.KT_coef.i_36.e +
+         this.KT_coef.i_37.a*J**this.KT_coef.i_37.b*PD**this.KT_coef.i_37.c*AeAo**this.KT_coef.i_37.d*Z**this.KT_coef.i_37.e +
+         this.KT_coef.i_38.a*J**this.KT_coef.i_38.b*PD**this.KT_coef.i_38.c*AeAo**this.KT_coef.i_38.d*Z**this.KT_coef.i_38.e 
+
+
+         this.new_KQ =  this.KQ_coef.i_0.a*J**this.KQ_coef.i_0.b*PD**this.KQ_coef.i_0.c*AeAo**this.KQ_coef.i_0.d*Z**this.KQ_coef.i_0.e +
+         this.KQ_coef.i_1.a*J**this.KQ_coef.i_1.b*PD**this.KQ_coef.i_1.c*AeAo**this.KQ_coef.i_1.d*Z**this.KQ_coef.i_1.e +
+          this.KQ_coef.i_2.a*J**this.KQ_coef.i_2.b*PD**this.KQ_coef.i_2.c*AeAo**this.KQ_coef.i_2.d*Z**this.KQ_coef.i_2.e +
+           this.KQ_coef.i_3.a*J**this.KQ_coef.i_3.b*PD**this.KQ_coef.i_3.c*AeAo**this.KQ_coef.i_3.d*Z**this.KQ_coef.i_3.e +
+          this.KQ_coef.i_4.a*J**this.KQ_coef.i_4.b*PD**this.KQ_coef.i_4.c*AeAo**this.KQ_coef.i_4.d*Z**this.KQ_coef.i_4.e +
+          this.KQ_coef.i_5.a*J**this.KQ_coef.i_5.b*PD**this.KQ_coef.i_5.c*AeAo**this.KQ_coef.i_5.d*Z**this.KQ_coef.i_5.e +
+          this.KQ_coef.i_6.a*J**this.KQ_coef.i_6.b*PD**this.KQ_coef.i_6.c*AeAo**this.KQ_coef.i_6.d*Z**this.KQ_coef.i_6.e +
+          this.KQ_coef.i_7.a*J**this.KQ_coef.i_7.b*PD**this.KQ_coef.i_7.c*AeAo**this.KQ_coef.i_7.d*Z**this.KQ_coef.i_7.e +
+          this.KQ_coef.i_8.a*J**this.KQ_coef.i_8.b*PD**this.KQ_coef.i_8.c*AeAo**this.KQ_coef.i_8.d*Z**this.KQ_coef.i_8.e +
+          this.KQ_coef.i_9.a*J**this.KQ_coef.i_9.b*PD**this.KQ_coef.i_9.c*AeAo**this.KQ_coef.i_9.d*Z**this.KQ_coef.i_9.e +
+          this.KQ_coef.i_10.a*J**this.KQ_coef.i_10.b*PD**this.KQ_coef.i_10.c*AeAo**this.KQ_coef.i_10.d*Z**this.KQ_coef.i_10.e +
+          this.KQ_coef.i_11.a*J**this.KQ_coef.i_11.b*PD**this.KQ_coef.i_11.c*AeAo**this.KQ_coef.i_11.d*Z**this.KQ_coef.i_11.e +
+          this.KQ_coef.i_12.a*J**this.KQ_coef.i_12.b*PD**this.KQ_coef.i_12.c*AeAo**this.KQ_coef.i_12.d*Z**this.KQ_coef.i_12.e +
+          this.KQ_coef.i_13.a*J**this.KQ_coef.i_13.b*PD**this.KQ_coef.i_13.c*AeAo**this.KQ_coef.i_13.d*Z**this.KQ_coef.i_13.e +
+          this.KQ_coef.i_14.a*J**this.KQ_coef.i_14.b*PD**this.KQ_coef.i_14.c*AeAo**this.KQ_coef.i_14.d*Z**this.KQ_coef.i_14.e +
+          this.KQ_coef.i_15.a*J**this.KQ_coef.i_15.b*PD**this.KQ_coef.i_15.c*AeAo**this.KQ_coef.i_15.d*Z**this.KQ_coef.i_15.e +
+          this.KQ_coef.i_16.a*J**this.KQ_coef.i_16.b*PD**this.KQ_coef.i_16.c*AeAo**this.KQ_coef.i_16.d*Z**this.KQ_coef.i_16.e +
+          this.KQ_coef.i_17.a*J**this.KQ_coef.i_17.b*PD**this.KQ_coef.i_17.c*AeAo**this.KQ_coef.i_17.d*Z**this.KQ_coef.i_17.e +
+          this.KQ_coef.i_18.a*J**this.KQ_coef.i_18.b*PD**this.KQ_coef.i_18.c*AeAo**this.KQ_coef.i_18.d*Z**this.KQ_coef.i_18.e +
+          this.KQ_coef.i_19.a*J**this.KQ_coef.i_19.b*PD**this.KQ_coef.i_19.c*AeAo**this.KQ_coef.i_19.d*Z**this.KQ_coef.i_19.e +
+          this.KQ_coef.i_20.a*J**this.KQ_coef.i_20.b*PD**this.KQ_coef.i_20.c*AeAo**this.KQ_coef.i_20.d*Z**this.KQ_coef.i_20.e +
+          this.KQ_coef.i_21.a*J**this.KQ_coef.i_21.b*PD**this.KQ_coef.i_21.c*AeAo**this.KQ_coef.i_21.d*Z**this.KQ_coef.i_21.e +
+          this.KQ_coef.i_22.a*J**this.KQ_coef.i_22.b*PD**this.KQ_coef.i_22.c*AeAo**this.KQ_coef.i_22.d*Z**this.KQ_coef.i_22.e +
+          this.KQ_coef.i_23.a*J**this.KQ_coef.i_23.b*PD**this.KQ_coef.i_23.c*AeAo**this.KQ_coef.i_23.d*Z**this.KQ_coef.i_23.e +
+          this.KQ_coef.i_24.a*J**this.KQ_coef.i_24.b*PD**this.KQ_coef.i_24.c*AeAo**this.KQ_coef.i_24.d*Z**this.KQ_coef.i_24.e +
+          this.KQ_coef.i_25.a*J**this.KQ_coef.i_25.b*PD**this.KQ_coef.i_25.c*AeAo**this.KQ_coef.i_25.d*Z**this.KQ_coef.i_25.e +
+          this.KQ_coef.i_26.a*J**this.KQ_coef.i_26.b*PD**this.KQ_coef.i_26.c*AeAo**this.KQ_coef.i_26.d*Z**this.KQ_coef.i_26.e +
+          this.KQ_coef.i_27.a*J**this.KQ_coef.i_27.b*PD**this.KQ_coef.i_27.c*AeAo**this.KQ_coef.i_27.d*Z**this.KQ_coef.i_27.e +
+          this.KQ_coef.i_28.a*J**this.KQ_coef.i_28.b*PD**this.KQ_coef.i_28.c*AeAo**this.KQ_coef.i_28.d*Z**this.KQ_coef.i_28.e +
+          this.KQ_coef.i_29.a*J**this.KQ_coef.i_29.b*PD**this.KQ_coef.i_29.c*AeAo**this.KQ_coef.i_29.d*Z**this.KQ_coef.i_29.e +
+          this.KQ_coef.i_30.a*J**this.KQ_coef.i_30.b*PD**this.KQ_coef.i_30.c*AeAo**this.KQ_coef.i_30.d*Z**this.KQ_coef.i_30.e +
+          this.KQ_coef.i_31.a*J**this.KQ_coef.i_31.b*PD**this.KQ_coef.i_31.c*AeAo**this.KQ_coef.i_31.d*Z**this.KQ_coef.i_31.e +
+          this.KQ_coef.i_32.a*J**this.KQ_coef.i_32.b*PD**this.KQ_coef.i_32.c*AeAo**this.KQ_coef.i_32.d*Z**this.KQ_coef.i_32.e +
+          this.KQ_coef.i_33.a*J**this.KQ_coef.i_33.b*PD**this.KQ_coef.i_33.c*AeAo**this.KQ_coef.i_33.d*Z**this.KQ_coef.i_33.e +
+          this.KQ_coef.i_35.a*J**this.KQ_coef.i_35.b*PD**this.KQ_coef.i_35.c*AeAo**this.KQ_coef.i_35.d*Z**this.KQ_coef.i_35.e +
+          this.KQ_coef.i_36.a*J**this.KQ_coef.i_36.b*PD**this.KQ_coef.i_36.c*AeAo**this.KQ_coef.i_36.d*Z**this.KQ_coef.i_36.e +
+          this.KQ_coef.i_37.a*J**this.KQ_coef.i_37.b*PD**this.KQ_coef.i_37.c*AeAo**this.KQ_coef.i_37.d*Z**this.KQ_coef.i_37.e +
+          this.KQ_coef.i_38.a*J**this.KQ_coef.i_38.b*PD**this.KQ_coef.i_38.c*AeAo**this.KQ_coef.i_38.d*Z**this.KQ_coef.i_38.e +
+          this.KQ_coef.i_39.a*J**this.KQ_coef.i_39.b*PD**this.KQ_coef.i_39.c*AeAo**this.KQ_coef.i_39.d*Z**this.KQ_coef.i_39.e +
+          this.KQ_coef.i_40.a*J**this.KQ_coef.i_40.b*PD**this.KQ_coef.i_40.c*AeAo**this.KQ_coef.i_40.d*Z**this.KQ_coef.i_40.e +
+          this.KQ_coef.i_41.a*J**this.KQ_coef.i_41.b*PD**this.KQ_coef.i_41.c*AeAo**this.KQ_coef.i_41.d*Z**this.KQ_coef.i_41.e +
+          this.KQ_coef.i_42.a*J**this.KQ_coef.i_42.b*PD**this.KQ_coef.i_42.c*AeAo**this.KQ_coef.i_42.d*Z**this.KQ_coef.i_42.e +
+          this.KQ_coef.i_43.a*J**this.KQ_coef.i_43.b*PD**this.KQ_coef.i_43.c*AeAo**this.KQ_coef.i_43.d*Z**this.KQ_coef.i_43.e +
+          this.KQ_coef.i_44.a*J**this.KQ_coef.i_44.b*PD**this.KQ_coef.i_44.c*AeAo**this.KQ_coef.i_44.d*Z**this.KQ_coef.i_44.e +
+          this.KQ_coef.i_45.a*J**this.KQ_coef.i_45.b*PD**this.KQ_coef.i_45.c*AeAo**this.KQ_coef.i_45.d*Z**this.KQ_coef.i_45.e +
+          this.KQ_coef.i_46.a*J**this.KQ_coef.i_46.b*PD**this.KQ_coef.i_46.c*AeAo**this.KQ_coef.i_46.d*Z**this.KQ_coef.i_46.e 
+
+
+
+
+
+
+        this.KT =  0.00880496*J**0*PD**0*AeAo**0*Z**0 - 0.204554*J**1*PD**0*AeAo**0*Z**0 +
+         0.166351*J**0*PD**1*AeAo**0*Z**0 + 0.158114*J**0*PD**2*AeAo**0*Z**0 - 
+         0.147581*J**2*PD**0*AeAo**1*Z**0 - 0.481497*J**1*PD**1*AeAo**1*Z**0 +
+        0.415437*J**0*PD**2*AeAo**1*Z**0 + 0.0144043*J**0*PD**0*AeAo**0*Z**1 - 
+        0.0530054*J**2*PD**0*AeAo**0*Z**1 + 0.0143481*J**0*PD**1*AeAo**0*Z**1 +
+         0.0606826*J**1*PD**1*AeAo**0*Z**1 - 0.0125894*J**0*PD**0*AeAo**1*Z**1 +
+        0.0109689*J**1*PD**0*AeAo**1*Z**1 - 0.133698*J**0*PD**3*AeAo**0*Z**0 + 
+        0.00638407*J**0*PD**6*AeAo**0*Z**0 - 0.00132718*J**2*PD**6*AeAo**0*Z**0 +
+         0.168496*J**3*PD**0*AeAo**1*Z**0 - 0.0507214*J**0*PD**0*AeAo**2*Z**0 +
+        0.0854559*J**2*PD**0*AeAo**2*Z**0 - 0.0504475*J**3*PD**0*AeAo**2*Z**0 + 
+        0.010465*J**1*PD**6*AeAo**2*Z**0 - 0.00648272*J**2*PD**6*AeAo**2*Z**0 - 
+        0.00841728*J**0*PD**3*AeAo**0*Z**1 + 0.0168424*J**1*PD**3*AeAo**0*Z**1 -
+        0.00102296*J**3*PD**3*AeAo**0*Z**1 - 0.0317791*J**0*PD**3*AeAo**1*Z**1 + 
+        0.018604*J**1*PD**0*AeAo**2*Z**1  - 0.00410798*J**0*PD**2*AeAo**2*Z**1 - 
+        0.000606848*J**0*PD**0*AeAo**0*Z**2 - 0.0049819*J**1*PD**0*AeAo**0*Z**2 +
+        0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 
+        0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 
+        0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 +
+        0.00421749*J**0*PD**3*AeAo**1*Z**2 + 0.0000565229*J**3*PD**6*AeAo**1*Z**2 - 
+        0.00146564*J**0*PD**3*AeAo**2*Z**2
+
+        this.KQ = 0.00379368*J**0*PD**0*AeAo**0*Z**0 + 0.00886523*J**2*PD**0*AeAo**0*Z**0 -
+         0.032241*J**1*PD**1*AeAo**0*Z**0 - 0.00344778*J**0*PD**2*AeAo**0*Z**0 - 
+         0.0408811*J**0*PD**1*AeAo**1*Z**0 - 0.108009*J**1*PD**1*AeAo**1*Z**0 -
+        0.0885381*J**2*PD**1*AeAo**1*Z**0 + 0.188561*J**0*PD**2*AeAo**1*Z**0 - 
+        0.00370871*J**1*PD**0*AeAo**0*Z**1 + 0.00513696*J**0*PD**1*AeAo**0*Z**1 + 
+        0.0209449*J**1*PD**1*AeAo**0*Z**1 + 0.00474319*J**2*PD**1*AeAo**0*Z**1 -
+        0.00723408*J**2*PD**0*AeAo**1*Z**1 + 0.00438388*J**1*PD**1*AeAo**1*Z**1 - 
+        0.0269403*J**0*PD**2*AeAo**1*Z**1 + 0.0558082*J**3*PD**0*AeAo**1*Z**0 + 
+        0.0161886*J**0*PD**3*AeAo**1*Z**0 + 0.00318086*J**1*PD**3*AeAo**1*Z**0 +
+        0.015896*J**0*PD**0*AeAo**2*Z**0 + 0.0471729*J**1*PD**0*AeAo**2*Z**0 + 
+        0.0196283*J**3*PD**0*AeAo**2*Z**0 - 0.0502782*J**0*PD**1*AeAo**2*Z**0 - 
+        0.030055*J**3*PD**1*AeAo**2*Z**0 + 0.0417122*J**2*PD**2*AeAo**2*Z**0 -
+        0.0397722*J**0*PD**3*AeAo**2*Z**0 - 0.00350024*J**0*PD**6*AeAo**2*Z**0 - 
+        0.0106854*J**3*PD**0*AeAo**0*Z**1  + 0.00110903*J**3*PD**3*AeAo**0*Z**1 - 
+        0.000313912*J**0*PD**6*AeAo**0*Z**1 + 0.0035985*J**3*PD**0*AeAo**1*Z**1 -
+        0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 
+        0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 
+        0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 +
+        0.000112451*J**3*PD**2*AeAo**0*Z**2 - 0.0000297228*J**3*PD**6*AeAo**0*Z**2 +
+         0.000269551*J**1*PD**0*AeAo**1*Z**2 + 0.00083265*J**2*PD**0*AeAo**1*Z**2 + 
+         0.00155334*J**0*PD**2*AeAo**1*Z**2 + 0.000302683*J**0*PD**6*AeAo**1*Z**2 -
+        0.0001843*J**0*PD**0*AeAo**2*Z**2 - 0.000425399*J**0*PD**3*AeAo**2*Z**2 + 
+        0.0000869243*J**3*PD**3*AeAo**2*Z**2 - 0.0004659*J**0*PD**6*AeAo**2*Z**2 + 
+        0.0000554194*J**1*PD**6*AeAo**2*Z**2
+
+        
+        this.KT_change =  0.000353485*J**0*PD**0*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0 -
+        0.00333758*J**2*PD**0*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**0 -
+       0.00478125*J**1*PD**1*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**0 
+       + 0.000257792*J**2*PD**0*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**2 +
+        0.0000643192*J**2*PD**6*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 
+        - 0.0000110636*J**2*PD**6*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**2 -
+        0.0000276305*J**2*PD**0*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**2  
+        +  0.0000954*J**1*PD**1*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**1 +
+        0.0000032049*J**1*PD**3*AeAo**1*Z**2*Math.log10(this.Rno  - 0.301)**1
+       
+
+        this.KQ_change =  -0.000591412*J**0*PD**0*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0  +
+        0.00696898*J**0*PD**1*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0 -
+        0.0000666654*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**0 
+        + 0.0160818*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**0  -
+        0.000938091*J**0*PD**1*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 
+         - 0.00059593*J**0*PD**2*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 +
+         0.000078299*J**0*PD**2*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**2  
+         +  0.0000052199*J**2*PD**0*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**1 -
+         0.00000088538*J**1*PD**1*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**2 +
+         0.0000230171*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**1 -
+         0.00000184341*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**2 -
+         0.00400252*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**1 +
+         0.000220915*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**2
+         console.log("testing", this.KT_change, this.KQ_change)
+
+         KT = this.KT //+ //this.KT_change
+         KQ = this.KQ //+ this.KQ_change
+         console.log("OLD.",KT,KQ)
+         console.log("this.",this.new_KT,this.new_KQ)
+          // This is just for the Gunnerus case study
+          this.X = J// the J is updated for gunnerus aleady
+         this.KT_gunnerus = -0.0657*this.X**3 + 0.177*this.X**2 - 0.6979*this.X + 0.8227
+         this.KQ_10_gunnerus = -0.104*this.X**3 - 0.110*this.X**2 - 0.022*this.X + 0.873
+         this.KQ_10_gunnerus
+         KT =  this.KT_gunnerus  // update the torque coefficient 
+         KQ = this.KQ_10_gunnerus/10 // update the thrust coefficient
+
+        // this.new_KTandKQ  = function(){
+        // this.KT_change = 
+        //  0.000353485*J**0*PD**0*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0 
+        // - 0.00333758*J**2*PD**0*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**0 -
+        // 0.00478125*J**1*PD**1*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**0 
+        // + 0.000257792*J**2*PD**0*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**2 +
+        //  0.0000643192*J**2*PD**6*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 
+        //  - 0.0000110636*J**2*PD**6*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**2 -
+        //  0.0000276305*J**2*PD**0*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**2  
+        //  +  0.0000954*J**1*PD**1*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**1 +
+        //  0.0000032049*J**1*PD**3*AeAo**1*Z**2*Math.log10(this.Rno  - 0.301)**1
+        
+
+        //  this.KQ_change =  -0.000591412*J**0*PD**0*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0  +
+        //  0.00696898*J**0*PD**1*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0 -
+        //  0.0000666654*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**0 
+        //  + 0.0160818*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**0  -
+        //  0.000938091*J**0*PD**1*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 
+        //   - 0.00059593*J**0*PD**2*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 +
+        //   0.000078299*J**0*PD**2*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**2  
+        //   +  0.0000052199*J**2*PD**0*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**1 -
+        //   0.00000088538*J**1*PD**1*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**2 +
+        //   0.0000230171*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**1 -
+        //   0.00000184341*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**2 -
+        //   0.00400252*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**1 +
+        //   0.000220915*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**2
+
+
+        // }
           console.log(KT,"KT", KQ,"KQ")
         NH = (1- TFactor)/(1-W) // Hull efficiency
          No = (KT*J)/(KQ*2*3.14)
@@ -654,6 +1077,8 @@ function propellerProperties (){
         KQ = KQ.toFixed(3)
         propel_speed = (1-W)*shipSpeed/(D*J)
         propel_speed = (propel_speed.toFixed(2))*1
+        //this.tested_power = KQ*2*Math.PI*density*this.input_propeller_speed**3*D**5
+        console.log("tested power", this.tested_power)
 
     }
 
@@ -661,7 +1086,6 @@ function propellerProperties (){
     
    // Power when the vessel is  extream condition 
         Pe = RT*shipSpeed // effective power
-      
         Pt  = RT*shipSpeed*((1-W)/(1-TFactor))
         Pd = Pt/NB   //deliver power to the propeller
         ND = Pe/Pd
@@ -669,20 +1093,29 @@ function propellerProperties (){
         Pb = ((Pd/Ns).toFixed(2))*1
         // engine_torgue = Pb_calm/(2*Math.PI*propel_speed)
         // propel_torque = Pd/(2*Math.PI*propel_speed)
-
         Pe_calm = (RT_calm*shipSpeed).toFixed(2)*1 // effective power
         Pt_calm  = (RT_calm*shipSpeed*((1-W)/(1-TFactor))).toFixed(2)*1 // thruster poer
         Pd_calm = (Pt_calm/NB).toFixed(2) //deliver power to the propeller
         ND_calm = Pe_calm/Pd_calm
         Ps_calm = (Pd_calm/NT).toFixed(2)*1
         Pb_calm = ((Pd_calm/Ns).toFixed(2))*1
+        this.X = shipSpeedKnots // Jjust for gunnerus case study.
+        this.gunnerus_P = 3.973*this.X3 - 84.90*this.X**2 + 669.1*this.X - 1754.4
+        
         engine_torgue = Pb_calm/(2*Math.PI*propel_speed)
         propel_torque = Pd_calm/(2*Math.PI*propel_speed)
        speedRPM = (propel_speed *60).toFixed(1)*1//for low speed engine
        torque =   engine_torgue.toFixed(1)
+       this.Gunrus_power = NTNU_Gunnerus()
+       this.speed =shipSpeedKnots
+       this.estimated_power = 3.97306397*this.speed**3 -84.90620491*this.speed**2 + 669.15103415*this.speed -1754.43001443
+       //if(this.estimated_power > 0 ) Pb_calm  = this.estimated_power //this  is used for just NTNU GUNURUS VESSEL CASE STUDY.
+       console.log("gurn",this.estimated_power)
+       Pb= Pb_calm
    }
 
 }
+
 let track_dynalic = 1
   class environment_load {
     // update wave height and wind Speed, to have a dynamic laod
@@ -775,13 +1208,18 @@ let track_dynalic = 1
            this.dynamic_load = 0;  // dynamic load in calm water
            this.fuel_SFOC_cal_1 = 0;
            this.fuel_consumption_final = 0;
+           this.load_before_reduce = 0;
            this.fuel_SFOC_cal_2 = 0;
            this.Fuel_cons_2 =0;
            this.supplier = supplier;
            this.waiting_off_engine = false
-           this.sfoc = sfoc;        
+           this.sfoc = sfoc;  
+           this.load_before_reduce = 0      
            this.fuel_consumption = 0; 
+           this.main_fuel_consumption = 0
+           this.main_load  =0
            this.count = 0
+           try_tsting = 0  
            if(sellected_battery){
             this.battery_pack = new battery_system();
             this.charging_power = this.battery_pack.charging_power
@@ -826,7 +1264,6 @@ let track_dynalic = 1
         this.combine_load = this.total_combine_load +this.dynamic_load
         this.waiting_connection= false;
         this.stand_by_engine = false;
-   
         this.standy_by_ready_time = 0; 
         if(this.operation === "DP"){
           // when DP operation things change like Load
@@ -947,13 +1384,15 @@ let track_dynalic = 1
      if(!this.dynamic_load ){
       this.dynamic_load  = 0
      }
+     
      this.load_with_dynamics = this.dynamic_load + this.total_combine_load
+     
      this.engine_optimzed = function(){
       this.length = Object.keys(this.engine_online_obj).length
       this.online_engine = this.length      
       
       let i = 1 ;
-      if (this.stand_by_engine === true) this.engine_normal_load = this.engine_power*1.1 // allowing the engine to take load to the 
+      //if (this.stand_by_engine === true) this.engine_normal_load = this.engine_power*1.1 // allowing the engine to take load to the 
       
      Object.keys(this.engine_online_obj).forEach(key => {
          this.check_load = (this.combine_load-this.engine_normal_load)/this.engine_power
@@ -979,18 +1418,16 @@ let track_dynalic = 1
           this.engine_online_obj[key]["sfoc"] = this.SFOC_cal_2;
           this.engine_online_obj[key]["Fuel_cost"] += this.fuel_result.aux_cost
           this.engine_online_obj[key]["CO2"]  += this.fuel_result.aux_CO2 
-          this.fuel_consumption_final += this.fuel_consumption*1000
+          this.fuel_consumption_final += this.fuel_consumption
+          try_tsting += this.fuel_consumption
           this.last_engine_load = this.assigned_load
         }else{
           //this capture the result of the Fuel consumption without the effect of the battery pack for comparison 
-     
           this.FC_without_battery += this.fuel_consumption
-
         }
       
         console.log(this.assigned_load," assigned load")
         console.log(i)
-     
         console.log(this.length)
        //  this.fuel_SFOC_cal_2 = this.fuel_SFOC_cal_2-100
 
@@ -1017,23 +1454,19 @@ let track_dynalic = 1
       }
       
      }
-      if(this.environment_loads){
-        // if(operation ==="P"){
-
-        // }
-        
+      if(this.environment_loads){        
         if(sellected_battery && bat_SOC> 0){ 
           if(this.total_combine_load+this.dynamic_load> (this.combine_engines_power+this.discharge_power)){
             //checking if the battery rated power and online engine can take the load 
             this.discharge_power = this.discharge_battery(); // battery taking the dynamics based on the rated power of the battery pack
             this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
+            this.combine_load = this.combine_load-this.discharge_power  // if battery pack is installed 
             this.BlackOut_prevention() // reduce the load to be assigned to teh gen sets if necessary   
             this.engine_optimzed();
           }else{
      
-           if(this.total_combine_load+dynamic_load-this.discharge_powepppr > this.combine_engines_power) {
+           if(this.total_combine_load+dynamic_load-this.discharge_power > this.combine_engines_power) {
               this.used_battery = true; // used to capture the effect of the battery useage for analysis purposed 
-              this.combine_load = this.combine_engines_power // updating the load  due to the environment load 
               this.engine_optimzed(); // before en
               this.discharge_power = this.discharge_battery(); // battery taking the dynamics based on the rated power of the battery pack
               this.combine_load = this.total_combine_load + this.dynamic_load; // updating the load  due to the environment load 
@@ -1060,13 +1493,14 @@ let track_dynalic = 1
       // this.combine_load = this.total_combine_load + this.dynamic_load; // updating the load  due to the environment load 
       }else{
         this.combine_load = this.total_combine_load
+        
         this.BlackOut_prevention() // reduce the load to be assigned to teh gen sets if necessary   
         this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
         this.engine_optimzed();
       }
       if(this.combine_load < this.combine_engines_power*0.8 && this.charging_activated ===true){
         if(bat_SOC < bat_capacity*bat_DOD){
-         if(this.charging_power +this.combine_load < this.combine_engines_power*0.8 ){
+         if(this.charging_power +this.combine_load < this.combine_engines_power*0.8 ){ // start changine the battry 
           this.used_battery = true; // used to ensure is running just the section of the battery in the next function
            this.engine_optimzed();
            this.battery_charge_power = this.charge_battery(); //return actuall charging power
@@ -1090,7 +1524,9 @@ let track_dynalic = 1
         console.log(this.stand_by_engine, "stand by engine ")
         console.log(this.standy_by_ready_time, "standby ready time")
         console.log(this.waiting_connection, "waiting connection")
-        return this.fuel_consumption_final  // include the effect of the of the battery packs if available 
+        this.main_fuel_consumption += this.fuel_consumption_final
+        try_tsting += this.fuel_consumption_final
+        return  this.main_fuel_consumption // include the effect of the of the battery packs if available 
       
     }
     turn_on_new_engine(){
@@ -1125,30 +1561,40 @@ let track_dynalic = 1
        
       }
       FLR(){
-        this.engine_normal_load  // 80% when battery is install and without battery pack is 65%
-        this.engine_load_limit = this.engine_power*1.1; // max load 110 % for 10 seconds   
-        this.combine_engine_limit = this.engine_load_limit*this.online_engine
-        if(this.combine_load > this.combine_engine_limit){
-          this.limit_load = this.combine_engine_limit
-          this.combine_load = this.limit_load
-        }else{
-          this.limit_load = this.combine_load
-        }
-        // this.limit_load = Math.min(this.combine_load,this.combine_engine_limit)
-        // const testing  = this.limit_load;
-      
-           // TODO:
+          this.engine_normal_load  // 80% when battery is install and without battery pack is 65%
+          this.online_engine = this.length
+          this.combine_engine_limit = this.engine_power*this.online_engine
+          if(Object.is(this.main_load,this.total_combine_load+this.dynamic_load)===false){
+            this.main_load = this.total_combine_load+this.dynamic_load
+            if(this.combine_engine_limit < this.total_combine_load+this.dynamic_load)
+            this.engine_load_limit = this.engine_power*1.1; // max load 110 % for 10 seconds  
+            const engine_10_rule = setTimeout(
+              function(){this.combine_engine_limit = this.engine_power*this.online_engine}
+              ,10000)
+            if(this.main_load  > this.combine_engine_limit) engine_10_rule  //this reduces the load on the engine after 10 second from 110% to 100$
+
+          } 
+
+          this.limit_load = Math.min(this.combine_load,this.combine_engine_limit)
+          this.step_load = 0.25*this.engine_power *this.online_engine
+
+               // Ensure that the step increase on the emgine is not above 25% of the power
+
+          if(this.load_before_reduce-this.limit_load > this.step_load) this.combine_load = this.load_before_reduce+ this.step_load
+
+          this.load_before_reduce = this.combine_load //capture the previous load on the engine
+
+        
+
       }
+   
 
       BlackOut_prevention(){
-        this.online_engine = this.length
-        this.engine_normal_load  // 80% when battery is installed but without battery pack is 65% of the engine capacity
-        this.engine_load_limit = this.engine_power*1.1; // max load 110 % for 10 seconds 
         this.combine_engines_power = this.engine_power*this.online_engine
         this.FLR(); // fast load reducering algrithyms 
         if(this.limit_load > this.combine_engines_power*0.8 && this.limit_load < this.combine_engines_power*0.9 && this.stand_by_engine === false){
           // TODO: activate standby engine 
-          //NOTE: TODO: A typical engine start time from starting, stand to connection of løaod is 45s
+          //NOTE: TODO: A typical engine start time from starting to connection of løaod is 45s
           this.stand_by_engine = true;
           setTimeout(() => {        
               this.standy_by_ready_time = 20000 // it take 20 seconds for the stand by engine to be ready       
@@ -1163,7 +1609,7 @@ let track_dynalic = 1
             }
             },this.off_standby_engine_time );
          }
-         else if(this.limit_load >= this.combine_engines_power*1.05 && this.waiting_connection ===false){
+         else if(this.limit_load >= this.combine_engines_power && this.waiting_connection ===false){
            //TODO: start new engine 
            if(this.standy_by_ready_time === 20000 && this.stand_by_engine === true){
             //typicall it takes 10 seconds to connection the genset and ready to take load after stand by 
@@ -1886,9 +2332,37 @@ const EngineCal = new engineAnalysis()
 
  // Environment Data and load 
  const environment = new environment_load()
-
+//const Gunrus = new NTNU_Gunnerus()
  
  // Power management system PMS
 
  const created_engine = engineData.custom_created
   const created_genset =Generator_sets.custom_created
+
+      // Fit a quadratic function by learning the coefficients a, b, c.
+      const xs = tf.tensor1d([0, 1, 2, 3]);
+      const ys = tf.tensor1d([1.1, 5.9, 16.8, 33.9]);
+      // const xs = tf.tensor1d([20, 40, 60, 90]);
+      // const ys = tf.tensor1d([245, 220, 218, 215]);
+
+      const a = tf.scalar(Math.random()).variable();
+      const b = tf.scalar(Math.random()).variable();
+      const c = tf.scalar(Math.random()).variable();
+      // y = a * x^2 + b * x + c.
+      const f = (x) => a.mul(x.square()).add(b.mul(x)).add(c);
+      const loss = (pred, label) => pred.sub(label).square().mean();
+
+      const learningRate = 0.01;
+      const optimizer = tf.train.sgd(learningRate);
+
+      // Train the model.
+      for (let i = 0; i < 10; i++) {
+        optimizer.minimize(() => loss(f(xs), ys));
+      }
+
+      // Make predictions.
+      console.log(`a: ${a.dataSync()}, b: ${b.dataSync()}, c: ${c.dataSync()}`);
+      const preds = f(xs).dataSync();
+      preds.forEach((pred, i) => {
+        console.log(`x: ${i}, pred: ${pred}`);
+      });
