@@ -8,7 +8,7 @@
     Ns,Pb,RPM_pro,SMCR,Ptotal,engine_torque,propel_speed,simulate,DP_time, habor_time,standby_time,aux_ratedSpeed,No_of_eng,No_of_genset,aux_load,main_inst_power,
     star_time,end_time,power_aval,transit_time, FC_total, FC,calm_simulate, aux_enginePower,aux_inst_power,create_type,sellected_genset,sellected_battery,sellected_engine,propulsion_syst,
     gen_supplier,FC_ton,FC_ton_aux, main_engine_power,aux_engineStrokes,aux_meanPressure,aux_cylinderBore,aux_cylinders,aux_pistonStroke,aux_ratedsfoc,main_enginePower,emission_comparison,
-    LNG_emission,wind_speed,RAA_wind,Lw,DP_Va,Pe_calm,operation,Pt_calm,Pd_calm,Ps_calm,ND_calm, dynamic_load,wave_height_cal, wind_speed_cal,environment_type,
+    LNG_emission,wind_speed,RAA_wind,Lw,DP_Va,Pe_calm,operation,Pt_calm,Pd_calm,Ps_calm,ND_calm, dynamic_load,wave_height_cal, wind_speed_cal,environment_type,DP_thruster_power,
      eng_power, gen_pwer,bat_capacity,bat_SOC,bat_DOD,bat_volt,bat_C_rated,bat_C_rated_peak,simu_time_show, total_insta_power,show_propulsion, recent_chose_engine,online_engine,simulation_environment,S_APP_input, engine_test_type,power
 
   let c1,c2,c3s,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,Fnt, phi,m1,m2, m3, m4 ,LR, CP1, p_b , Fni,try_tsting //for  testing vaues 
@@ -94,8 +94,10 @@
        }
        // this.SFOC_main = this.sfocBase*this.sfocRelative;
        // sfoc_cal = this.SFOC_main;
+       this.EL =  100*this.EL; //this the
+       console.log("engine poqwer percent ", this.EL)
        this.gunnerus_sfoc = 0.0008*this.EL**2 - 0.22*this.EL + 212 //This is just for Gunnerus vessel case study 
-       sfoc_cal_aux = this.gunnerus_sfoc
+       sfoc_cal_aux = this.gunnerus_sfoc.toFixed(2)*1
        return {
          sfoc_cal_aux,
          sfoc_cal 
@@ -125,10 +127,10 @@ function ship(){
         this.c23 = (0.453 + 0.4425*Cb - 0.2862*Cm - 0.00346*(Bwl/T) + 0.3696*Cwp)
         Sa = Lwl*(2*T+Bwl)*Math.sqrt(Cm)* (0.615989*this.c23 + 0.111439*Cm**3 +0.000571111*stern +
         0.245357*(this.c23/Cm)) + 3.45538*AT + (ABT/Cb)*(1.4660538 + 0.5839497/Cm) // Surface weted area
-
-      
         shipVolume = 579 // This is jsut to test a specific model 
         //Sa = 7381
+       // Cp  = 0.724
+        //Cm = 0.861
      }
 
     this.hull = function(){
@@ -155,12 +157,14 @@ function ship(){
           lcb = -(0.44*Fn-0.094)
 
         }
-       // lcb = -0.75 ;// NOTE :this is used for one time test so delete it after this time 
+        lcb = -3.5 ;// NOTE :this is used for one time test so delete it after this time 
 
         if(!T) T = 0.5*(Tf + TA)
         
         // this.Sa =1.025*((shipVolume/this.T)+1.7*this.Lpp*this.T) // Surface weted area
+
     }
+
 }
 
 function resistance(){
@@ -456,7 +460,6 @@ function resistance(){
         Lb //  Distance of the bow to 95% of maximum beam on the waterline [m]
         Rwave =  (1/6)*density*g* wave_height**2*Bwl*Math.sqrt(Bwl/Lb) //Note TODO: this formula sholdnt use this.lwl
         Rwave = ((Rwave/1000).toFixed(2))*1
-
         // Fouling resistance
         Rfoul = 10*RT_calm  //// TODO: Confirm this again
         Rfoul = ((Rfoul/1000).toFixed(2))*1
@@ -482,38 +485,8 @@ function resistance(){
            //Total resistnace
         RT = RT_calm // + Rwave+ RAA_wind // + Rfoul
         RT = RT.toFixed(2)*1
-        // SM = ((RT*shipSpeed/RT_calm*shipSpeed)-1)
-        // alert(SM)
-        console.log("c1",c1)
-        console.log("c2",c2)
-        console.log("c3",c3s)
-        console.log("c4",c4)
-        console.log("c5",c5)
-        console.log("c6",c6)
-        console.log("c7",c7)
-        console.log("c8",c8)
-        console.log("c9",c9)
-        console.log("c10",c10)
-        console.log("c11",c11)
-        console.log("c13",c12)
-        console.log("c13",c13)
-        console.log("c14",c14)
-        console.log("c15",c15)
-        console.log("c16",c16)
-        console.log("c17",c17)
-        console.log("c18",c18)
-        console.log("c19",c19)
-        console.log("c20",c20)
-        console.log("m1",m1)
-        console.log("m2",m2)
-        console.log("m3",m3)
-        console.log("m4",m4)
-        console.log("phi",phi)
-        console.log("iE",iE)
-        console.log("LR",LR)
-        console.log("CP",Cp)
-        console.log("P_b",p_b)
-        console.log("Fni",Fni)
+
+
        
     }
 }
@@ -629,11 +602,7 @@ function propellerProperties (){
         //For Dp Operation
         this.DP_speed = 3*0.51 // Dp speed is assumed to be 3 knot according to the literatures (tranvser speed)
         DP_Va = this.DP_speed*(1-W)
-        console.log("c8", this.c8)
-        console.log("c9", this.c9)
-        console.log("c20", this.c20)
-        console.log("c11", this.c11)
-        console.log("c19", this.c19)
+
     }
 
     this.KTandKQ = function(){
@@ -858,7 +827,7 @@ function propellerProperties (){
           i_46:{  a : 0.0000554194, b: 1, c: 6, d: 2, e: 2 },
              
         }
-       
+       //new updated equations 
         this.new_KT =  this.KT_coef.i_0.a*J**this.KT_coef.i_0.b*PD**this.KT_coef.i_0.c*AeAo**this.KT_coef.i_0.d*Z**this.KT_coef.i_0.e +
         this.KT_coef.i_1.a*J**this.KT_coef.i_1.b*PD**this.KT_coef.i_1.c*AeAo**this.KT_coef.i_1.d*Z**this.KT_coef.i_1.e +
          this.KT_coef.i_2.a*J**this.KT_coef.i_2.b*PD**this.KT_coef.i_2.c*AeAo**this.KT_coef.i_2.d*Z**this.KT_coef.i_2.e +
@@ -1111,6 +1080,8 @@ function propellerProperties (){
        this.estimated_power = 3.97306397*this.speed**3 -84.90620491*this.speed**2 + 669.15103415*this.speed -1754.43001443
        //if(this.estimated_power > 0 ) Pb_calm  = this.estimated_power //this  is used for just NTNU GUNURUS VESSEL CASE STUDY.
        console.log("gurn",this.estimated_power)
+       
+       if(operation === "DP")  Pb = DP_thruster_power
        Pb= Pb_calm
    }
 
@@ -1213,6 +1184,7 @@ let track_dynalic = 1
            this.Fuel_cons_2 =0;
            this.supplier = supplier;
            this.waiting_off_engine = false
+           this.battery_saved_power = 0
            this.sfoc = sfoc;  
            this.load_before_reduce = 0      
            this.fuel_consumption = 0; 
@@ -1220,6 +1192,7 @@ let track_dynalic = 1
            this.main_load  =0
            this.count = 0
            try_tsting = 0  
+           battery_testing = new battery_system
            if(sellected_battery){
             this.battery_pack = new battery_system();
             this.charging_power = this.battery_pack.charging_power
@@ -1243,7 +1216,6 @@ let track_dynalic = 1
            this.combine_load = this.dynamic_load  + this.break_power +this.Aux_load;
            this.total_combine_load = this.combine_load;
            console.log(this.combine_load,"load combine")
-         
            if(this.engine_nums > 5){
             // only 5 engines are allow to be installed at this stage
              alert( `maximum accepted numers of installed  generator set  is 4, but you installed ${this.engine_nums}`)
@@ -1270,7 +1242,7 @@ let track_dynalic = 1
             if(sellected_battery && bat_SOC >5){
               // if battery pack is installed 
               this.battery_SOC = bat_SOC; 
-              this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
+              this.engine_normal_load = this.engine_power*0.9;  //normal operating load of teh engine 
              }else {
               this.engine_normal_load = this.engine_power*0.65;  //normal operating load of the engine when nor battery pack installed 
             }
@@ -1279,9 +1251,9 @@ let track_dynalic = 1
           if(sellected_battery && bat_SOC >5){
             // if battery pack is installed 
             this.battery_SOC = bat_SOC; 
-            this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
+            this.engine_normal_load = this.engine_power*0.9;  //normal operating load of teh engine 
            }else{
-            this.engine_normal_load = this.engine_power*0.8;  //normal operating load of teh engine 
+            this.engine_normal_load = this.engine_power*0.9;  //normal operating load of teh engine 
 
            }
         }
@@ -1459,10 +1431,13 @@ let track_dynalic = 1
           if(this.total_combine_load+this.dynamic_load> (this.combine_engines_power+this.discharge_power)){
             //checking if the battery rated power and online engine can take the load 
             this.discharge_power = this.discharge_battery(); // battery taking the dynamics based on the rated power of the battery pack
+            this.battery_saved_power =this.battery_saved_power+this.discharge_power
             this.used_battery = false; // used to capture the effect of the battery useage for analysis purposed 
             this.combine_load = this.combine_load-this.discharge_power  // if battery pack is installed 
             this.BlackOut_prevention() // reduce the load to be assigned to teh gen sets if necessary   
             this.engine_optimzed();
+            console
+            console.log(battery_system)
           }else{
      
            if(this.total_combine_load+dynamic_load-this.discharge_power > this.combine_engines_power) {
@@ -1583,12 +1558,8 @@ let track_dynalic = 1
           if(this.load_before_reduce-this.limit_load > this.step_load) this.combine_load = this.load_before_reduce+ this.step_load
 
           this.load_before_reduce = this.combine_load //capture the previous load on the engine
-
-        
-
       }
    
-
       BlackOut_prevention(){
         this.combine_engines_power = this.engine_power*this.online_engine
         this.FLR(); // fast load reducering algrithyms 
@@ -1677,7 +1648,10 @@ let track_dynalic = 1
         //TODO: confirm if is a good pratices to charging a battery pack during a DP operation 
       }
       discharge_battery(){
-       this.discharging_propteries = this.battery_pack.discharge_battery(this.environment_loads)
+        console.log(environment.dynamic_load)
+        console.log(this.battery_pack)
+       this.discharging_propteries = this.battery_pack.discharge_battery(environment.dynamic_load,time_step)
+       console.log(this.battery_pack)
        this.discharge_status =this.discharging_propteries.discharge_status;
        this.discharge_step = this.discharging_propteries.discharge_step
       this.discharging_power = this.discharging_propteries.discharge_power
@@ -1737,38 +1711,44 @@ let track_dynalic = 1
       this.status = "not used";
       this.capacity = bat_capacity;
       this.charging_power  = this.capacity*this.c_rate;
+      this.discharge_power = this.charging_power
       this.scaled_charging_time = 2*60*1000; // conditioning the charging time to be complete on in 2 minutes, so result can be analysis faster 
       this.actual_charging_time = (60/this.c_rate)*60*1000; // the actual charging time in milliseconds 
       this.charging_step =  (this.actual_charging_time)/(this.scaled_charging_time/500);
       this.charging_step_hours =  this.charging_step/(3600*1000);
       this.discharge_step = this.charging_step_hours; 
       this.DOD =bat_DOD;
+      this.SOC = bat_SOC
       this.charging_time = 0
+      this.discharged_energy = 0
       this.DOD = this.DOD/100;
      this.test = 0;
       this.discharging_time = 0; 
+      this.dischart_count = 0
     }
-
+   
    charge_battery (){
         // scale every thing down to complete every given charging in 2 minutes
         // the battery is condition to complete its charging in 2 minutes using it original rate C rate
+        this.start = 1
+        if(this.start ===1 )  this.SOC = 0
+        this.start = 1
         this.status = "Charging"
-        if(bat_SOC < this.capacity*this.DOD){
+        if(this.SOC < this.capacity*this.DOD){
           this.charging_check = this.charging_power * this.charging_step_hours
-          if(this.charging_check+bat_SOC> this.capacity*this.DOD){
+          if(this.charging_check+this.SOC> this.capacity*this.DOD){
             //checking/preventing over charging of the battery pack
-            this.charging_load = (this.capacity*this.DOD - bat_SOC)/this.charging_step_hours;// getting the remaining capacity to have 100% SOC and convering to required power
+            this.charging_load = (this.capacity*this.DOD - this.SOC)/this.charging_step_hours;// getting the remaining capacity to have 100% SOC and convering to required power
             this.charging_load = this.charging_load *this.charging_step_hours
           }else{
             this.charging_load  = this.charging_power * this.charging_step_hours
           }
-          bat_SOC += this.charging_load
-          this.charging_status =  bat_SOC /(this.capacity*this.DOD)*100;
+          this.SOC += this.charging_load
+          this.charging_status =  this.SOC /(this.capacity*this.DOD)*100;
           this.charging_time += this.charging_step_hours*60
         }else{
           this.charging_load = 0
-          this.charging_status =  bat_SOC /(this.capacity*this.DOD)*100
-
+          this.charging_status =  this.SOC /(this.capacity*this.DOD)*100
         }
         this.test ++
         console.log(bat_SOC ,"SOC")
@@ -1778,7 +1758,8 @@ let track_dynalic = 1
           console.log(this.test ,"count")
           console.log(this.charging_step_hours,"step")
           console.log(this.charging_power,"charge power")
-        
+
+        bat_SOC += this.SOC
        return {
          charging_load : this.charging_load,
          charging_status: this.charging_status,
@@ -1787,30 +1768,49 @@ let track_dynalic = 1
 
        }
     };
-    discharge_battery (load){
+    discharge_battery (battery_load,time_step){
       //conditioning the discharge to be complete in 2 minues of the simualation time.
-      this.load = load; //dynamics load
-      if(bat_SOC > 0 ){
-        this.status = "discharging"
-        if(this.load < this.disCharge_power){
-          this.check_remain_bat = (this.load*this.discharge_step)
+      this.load = battery_load; //dynamics load
+      this.scaled_discharging_time = time_step // this is the scaled to the real siumalation # update during the case study
 
-          if(this.check_remain_bat < bat_SOC){
-          dynamic_load = dynamic_load- this.load; // update the dynamics load so it can be taken by other source 
-          }else {
-            
-          this.load = bat_SOC/this.discharge_step; // recalculate the minimum accepted load of the bact if is less than the c rated
-          dynamic_load = dynamic_load- this.load; // update the dynamics load so it can be taken by other source 
+      console.log("battery system is working ")
+      if(this.SOC > 0 ){
+        console.log(this.load,this.new_test ,"first")
+        this.status = "discharging"
+
+        if(this.load < this.discharge_power){
+          // this.check_remain_bat = (this.load*this.discharge_step) //
+          this.check_remain_bat = (this.load*this.scaled_discharging_time) //updated during case study 
+          console.log(this.load,this.new_test,this.SOC ,"second")
+          if(this.check_remain_bat <this.SOC){
+          dynamic_load = Math.max(0, dynamic_load- this.load) ; // update the dynamics load so it can be taken by other source 
+          }else {    
+          //this.load = this.SOC/this.discharge_step; // recalculate the minimum accepted load of the bact if is less than the c rated
+          this.load = this.SOC/this.scaled_discharging_time; // recalculate the minimum accepted load of the bact if is less than the c rated     # update during the case study
+          dynamic_load = Math.max(0, dynamic_load- this.load) ; // update the dynamics load so it can be taken by other source 
+          console.log(this.load,this.new_test,this.SOC ,"third")
           }
 
         }else {
-          dynamics_load = this.load-this.disCharge_power
-          this.load = this.disCharge_power;
+          console.log(this.load,this.new_test,this.SOC ,"fourth_try")
+          dynamic_load = Math.max(0,this.load-this.discharge_power)
+          this.load = this.discharge_power;
+          console.log(this.load,this.new_test,this.SOC ,"fourth")
         }
-        bat_SOC = bat_SOC-(this.load*(500/(360*1000))); //update the state of charge of the battery pack
-        this.discharging_time += this.discharge_step;
+        console.log(this.load,this.new_test,this.SOC ,"fity")
+      //  this.SOC = this.SOC -(this.load*(500/(3600*1000))); //update the state of charge of the battery pack
+        this.SOC = this.SOC -(this.load* this.scaled_discharging_time); //update the state of charge of the battery pack,   # updated during the case study
+
+        this.discharging_time += this.scaled_discharging_time
+        this.discharged_energy += this.scaled_discharging_time*this.load
+
       }
-      this.charging_status = bat_SOC/(this.DOD*this.capacity)
+      this.charging_status = this.SOC/(this.DOD*this.capacity)
+      console.log(this.load,this.new_test,this.SOC ,"last")
+
+      bat_SOC = this.SOC
+
+      this.dischart_count +=1
       return{
          discharge_status: this.charging_status,
          discharge_load :this.load*this.discharge_step,
@@ -1819,7 +1819,7 @@ let track_dynalic = 1
     };
 
   }
-
+  let battery_testing
   function fuel_properties() {
 
       this.LNG = function(fuel_tonn,type) {
