@@ -486,7 +486,6 @@ function resistance(){
         RT = RT_calm // + Rwave+ RAA_wind // + Rfoul
         RT = RT.toFixed(2)*1
 
-
        
     }
 }
@@ -523,7 +522,6 @@ function NTNU_Gunnerus(){
 function propellerProperties (){
     this.Thrust =function(){
         //cth = thrust loading cofficient
-      
         this.Cpi = 1.45*Cp - 0.315-0.0225*lcb
         if(Lwl/Bwl < 5.2){
             this.c10 = 0.25-0.003328402/(Bwl*Lwl - 0.134615385)
@@ -610,46 +608,41 @@ function propellerProperties (){
          this.input_propeller_speed = this.RPM_input/60 // USED FOR TESTING 
          this.input_propeller_speed = 1.659
         // AeAo = 0.7393
-        this.K = shipSpeedKnots
-        this.gunnerus_propeller_speed = 0.09427609*this.K**3 - 1.804040*this.K**2 + 27.419*this.K - 30.68888 
         this.gunnerus_propeller_speed = this.gunnerus_propeller_speed/60
         this.Co7r = 2.073*AeAo *D/Z
-      //  J =   Va/(this.input_propeller_speed *D)
-        J =   Va/(this.gunnerus_propeller_speed *D)  // This if just for gunnerus 
+       J =   Va/(this.input_propeller_speed *D)
         this.Rno = (this.Co7r*Math.sqrt(Va**2 + (0.75*Math.PI*n*D)**2))/viscosity
-
         n = this.input_propeller_speed
+      
         //this.AE_Ao = 0.08+((1.3 + 0.2*Z)*thrust)/(D**2)
-        
-        // if(n && this.Rno > 2*10**6){
-         
-        // KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.log(this.Rno)-0.301)**2*AeAo*J**2+0.0000643192*(Math.log(this.Rno)-0.301)*PD**6*J**2
-        // - 0.0000110636*(Math.log(this.Rno)-0.301)**2*PD**6*J**2- 0.0000276305**(Math.log(this.Rno)-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.log(this.Rno)-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.log(this.Rno)-0.301)*Z**2*AeAo*PD**3*J
+        if(n && this.Rno > 2*10**6){
+        KT = 0.000353485 - 0.00333758*AeAo*J**2-0.00478125*AeAo*PD*J +0.000257792*(Math.log(this.Rno)-0.301)**2*AeAo*J**2+0.0000643192*(Math.log(this.Rno)-0.301)*PD**6*J**2
+        - 0.0000110636*(Math.log(this.Rno)-0.301)**2*PD**6*J**2- 0.0000276305**(Math.log(this.Rno)-0.301)**2*Z*AeAo*J**2+0.0000954*(Math.log(this.Rno)-0.301)*Z*AeAo*PD*J+0.0000032049*(Math.log(this.Rno)-0.301)*Z**2*AeAo*PD**3*J
 
-        // KQ = -0.000591412+0.00696898*PD-0.0000666654*Z*PD**6+0.0160818*AeAo**2-0.000938091*(Math.log(this.Rno)-0.301)*PD-0.00059593*(Math.log(this.Rno)-0.301)*PD**2+0.0000782099*(Math.log(this.Rno)-0.301)**2*PD**2
-        // +0.0000052199*(Math.log(this.Rno)-0.301)*Z*AeAo*J**2-0.00000088528*(Math.log(this.Rno)-0.301)**2*Z*AeAo*PD*J+0.0000230171*(Math.log(this.Rno)-0.301)*Z*PD**6-0.00000184341*(Math.log(this.Rno)-0.301)**2*Z*PD**6-0.00400252*(Math.log(this.Rno)-0.301)*AeAo**2
-        // +0.000220915*(Math.log(this.Rno)-0.301)**2*AeAo**2
-        // }
-        // else{
+        KQ = -0.000591412+0.00696898*PD-0.0000666654*Z*PD**6+0.0160818*AeAo**2-0.000938091*(Math.log(this.Rno)-0.301)*PD-0.00059593*(Math.log(this.Rno)-0.301)*PD**2+0.0000782099*(Math.log(this.Rno)-0.301)**2*PD**2
+        +0.0000052199*(Math.log(this.Rno)-0.301)*Z*AeAo*J**2-0.00000088528*(Math.log(this.Rno)-0.301)**2*Z*AeAo*PD*J+0.0000230171*(Math.log(this.Rno)-0.301)*Z*PD**6-0.00000184341*(Math.log(this.Rno)-0.301)**2*Z*PD**6-0.00400252*(Math.log(this.Rno)-0.301)*AeAo**2
+        +0.000220915*(Math.log(this.Rno)-0.301)**2*AeAo**2
+        }
+         else{
 
-        //     KT = 0.00880496*J**0*PD**0*AeAo**0*Z**0-0.204554*J**1*PD**0*AeAo**0*Z**0 + 0.166351*J**0*PD**1*AeAo**0*Z**0 + 0.158114*J**0*PD**2*AeAo**0*Z**0 - 0.147581*J**2*PD**0*AeAo**1*Z**0 - 0.481497*J**1*PD**1*AeAo**1*Z**0 +
-        //      0.415437*J**0*PD**2*AeAo**1*Z**0 + 0.0144043*J**0*PD**0*AeAo**0*Z**1 - 0.0530054*J**2*PD**0*AeAo**0*Z**1 + 0.0143481*J**0*PD**1*AeAo**0*Z**1 + 0.0606826*J**1*PD**1*AeAo**0*Z**1 - 0.0125894*J**0*PD**0*AeAo**1*Z**1 +
-        //      0.0109689*J**1*PD**0*AeAo**1*Z**1 - 0.133698*J**0*PD**3*AeAo**0*Z**0 + 0.00638407*J**0*PD**6*AeAo**0*Z**0 - 0.00132718*J**2*PD**6*AeAo**0*Z**0 + 0.168496*J**3*PD**0*AeAo**1*Z**0 - 0.0507214*J**0*PD**0*AeAo**2*Z**0 +
-        //      0.0854559*J**2*PD**0*AeAo**2*Z**0 - 0.0504475*J**3*PD**0*AeAo**2*Z**0 + 0.010465*J**1*PD**6*AeAo**2*Z**0 - 0.00648272*J**2*PD**6*AeAo**2*Z**0 - 0.00841728*J**0*PD**3*AeAo**0*Z**1 + 0.0168424*J**1*PD**3*AeAo**0*Z**1 -
-        //      0.00102296*J**3*PD**3*AeAo**0*Z**1 - 0.0317791*J**0*PD**3*AeAo**1*Z**1 + 0.018604*J**1*PD**0*AeAo**2*Z**1  - 0.00410798*J**0*PD**2*AeAo**2*Z**1 - 0.000606848*J**0*PD**0*AeAo**0*Z**2 - 0.0049819*J**1*PD**0*AeAo**0*Z**2 +
-        //      0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 +
-        //      0.00421749*J**0*PD**3*AeAo**1*Z**2 + 0.0000565229*J**3*PD**6*AeAo**1*Z**2 - 0.00146564*J**0*PD**3*AeAo**2*Z**2
+            KT = 0.00880496*J**0*PD**0*AeAo**0*Z**0-0.204554*J**1*PD**0*AeAo**0*Z**0 + 0.166351*J**0*PD**1*AeAo**0*Z**0 + 0.158114*J**0*PD**2*AeAo**0*Z**0 - 0.147581*J**2*PD**0*AeAo**1*Z**0 - 0.481497*J**1*PD**1*AeAo**1*Z**0 +
+             0.415437*J**0*PD**2*AeAo**1*Z**0 + 0.0144043*J**0*PD**0*AeAo**0*Z**1 - 0.0530054*J**2*PD**0*AeAo**0*Z**1 + 0.0143481*J**0*PD**1*AeAo**0*Z**1 + 0.0606826*J**1*PD**1*AeAo**0*Z**1 - 0.0125894*J**0*PD**0*AeAo**1*Z**1 +
+             0.0109689*J**1*PD**0*AeAo**1*Z**1 - 0.133698*J**0*PD**3*AeAo**0*Z**0 + 0.00638407*J**0*PD**6*AeAo**0*Z**0 - 0.00132718*J**2*PD**6*AeAo**0*Z**0 + 0.168496*J**3*PD**0*AeAo**1*Z**0 - 0.0507214*J**0*PD**0*AeAo**2*Z**0 +
+             0.0854559*J**2*PD**0*AeAo**2*Z**0 - 0.0504475*J**3*PD**0*AeAo**2*Z**0 + 0.010465*J**1*PD**6*AeAo**2*Z**0 - 0.00648272*J**2*PD**6*AeAo**2*Z**0 - 0.00841728*J**0*PD**3*AeAo**0*Z**1 + 0.0168424*J**1*PD**3*AeAo**0*Z**1 -
+             0.00102296*J**3*PD**3*AeAo**0*Z**1 - 0.0317791*J**0*PD**3*AeAo**1*Z**1 + 0.018604*J**1*PD**0*AeAo**2*Z**1  - 0.00410798*J**0*PD**2*AeAo**2*Z**1 - 0.000606848*J**0*PD**0*AeAo**0*Z**2 - 0.0049819*J**1*PD**0*AeAo**0*Z**2 +
+             0.0025983*J**2*PD**0*AeAo**0*Z**2 - 0.000560528*J**3*PD**0*AeAo**0*Z**2 - 0.00163652*J**1*PD**2*AeAo**0*Z**2 - 0.000328787*J**1*PD**6*AeAo**0*Z**2 + 0.000116502*J**2*PD**6*AeAo**0*Z**2 + 0.000690904*J**0*PD**0*AeAo**1*Z**2 +
+             0.00421749*J**0*PD**3*AeAo**1*Z**2 + 0.0000565229*J**3*PD**6*AeAo**1*Z**2 - 0.00146564*J**0*PD**3*AeAo**2*Z**2
 
-        //      KQ = 0.00379368*J**0*PD**0*AeAo**0*Z**0 + 0.00886523*J**2*PD**0*AeAo**0*Z**0 - 0.032241*J**1*PD**1*AeAo**0*Z**0 - 0.00344778*J**0*PD**2*AeAo**0*Z**0 - 0.0408811*J**0*PD**1*AeAo**1*Z**0 - 0.108009*J**1*PD**1*AeAo**1*Z**0 -
-        //      0.0885381*J**2*PD**1*AeAo**1*Z**0 + 0.188561*J**0*PD**2*AeAo**1*Z**0 - 0.00370871*J**1*PD**0*AeAo**0*Z**1 + 0.00513696*J**0*PD**1*AeAo**0*Z**1 + 0.0209449*J**1*PD**1*AeAo**0*Z**1 + 0.00474319*J**2*PD**1*AeAo**0*Z**1 -
-        //      0.00723408*J**2*PD**0*AeAo**1*Z**1 + 0.00438388*J**1*PD**1*AeAo**1*Z**1 - 0.0269403*J**0*PD**2*AeAo**1*Z**1 + 0.0558082*J**3*PD**0*AeAo**1*Z**0 + 0.0161886*J**0*PD**3*AeAo**1*Z**0 + 0.00318086*J**1*PD**3*AeAo**1*Z**0 +
-        //      0.015896*J**0*PD**0*AeAo**2*Z**0 + 0.0471729*J**1*PD**0*AeAo**2*Z**0 + 0.0196283*J**3*PD**0*AeAo**2*Z**0 - 0.0502782*J**0*PD**1*AeAo**2*Z**0 - 0.030055*J**3*PD**1*AeAo**2*Z**0 + 0.0417122*J**2*PD**2*AeAo**2*Z**0 -
-        //      0.0397722*J**0*PD**3*AeAo**2*Z**0 - 0.00350024*J**0*PD**6*AeAo**2*Z**0 - 0.0106854*J**3*PD**0*AeAo**0*Z**1  + 0.00110903*J**3*PD**3*AeAo**0*Z**1 - 0.000313912*J**0*PD**6*AeAo**0*Z**1 + 0.0035985*J**3*PD**0*AeAo**1*Z**1 -
-        //      0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 +
+             KQ = 0.00379368*J**0*PD**0*AeAo**0*Z**0 + 0.00886523*J**2*PD**0*AeAo**0*Z**0 - 0.032241*J**1*PD**1*AeAo**0*Z**0 - 0.00344778*J**0*PD**2*AeAo**0*Z**0 - 0.0408811*J**0*PD**1*AeAo**1*Z**0 - 0.108009*J**1*PD**1*AeAo**1*Z**0 -
+             0.0885381*J**2*PD**1*AeAo**1*Z**0 + 0.188561*J**0*PD**2*AeAo**1*Z**0 - 0.00370871*J**1*PD**0*AeAo**0*Z**1 + 0.00513696*J**0*PD**1*AeAo**0*Z**1 + 0.0209449*J**1*PD**1*AeAo**0*Z**1 + 0.00474319*J**2*PD**1*AeAo**0*Z**1 -
+             0.00723408*J**2*PD**0*AeAo**1*Z**1 + 0.00438388*J**1*PD**1*AeAo**1*Z**1 - 0.0269403*J**0*PD**2*AeAo**1*Z**1 + 0.0558082*J**3*PD**0*AeAo**1*Z**0 + 0.0161886*J**0*PD**3*AeAo**1*Z**0 + 0.00318086*J**1*PD**3*AeAo**1*Z**0 +
+             0.015896*J**0*PD**0*AeAo**2*Z**0 + 0.0471729*J**1*PD**0*AeAo**2*Z**0 + 0.0196283*J**3*PD**0*AeAo**2*Z**0 - 0.0502782*J**0*PD**1*AeAo**2*Z**0 - 0.030055*J**3*PD**1*AeAo**2*Z**0 + 0.0417122*J**2*PD**2*AeAo**2*Z**0 -
+             0.0397722*J**0*PD**3*AeAo**2*Z**0 - 0.00350024*J**0*PD**6*AeAo**2*Z**0 - 0.0106854*J**3*PD**0*AeAo**0*Z**1  + 0.00110903*J**3*PD**3*AeAo**0*Z**1 - 0.000313912*J**0*PD**6*AeAo**0*Z**1 + 0.0035985*J**3*PD**0*AeAo**1*Z**1 -
+             0.00142121*J**0*PD**6*AeAo**1*Z**1 - 0.00383637*J**1*PD**0*AeAo**2*Z**1 + 0.0126803*J**0*PD**2*AeAo**2*Z**1 - 0.00318278*J**2*PD**3*AeAo**2*Z**1 + 0.00334268*J**0*PD**6*AeAo**2*Z**2 - 0.00183491*J**1*PD**1*AeAo**0*Z**2 +
 
-        //      0.000112451*J**3*PD**2*AeAo**0*Z**2 - 0.0000297228*J**3*PD**6*AeAo**0*Z**2 + 0.000269551*J**1*PD**0*AeAo**1*Z**2 + 0.00083265*J**2*PD**0*AeAo**1*Z**2 + 0.00155334*J**0*PD**2*AeAo**1*Z**2 + 0.000302683*J**0*PD**6*AeAo**1*Z**2 -
-        //      0.0001843*J**0*PD**0*AeAo**2*Z**2 - 0.000425399*J**0*PD**3*AeAo**2*Z**2 + 0.0000869243*J**3*PD**3*AeAo**2*Z**2 - 0.0004659*J**0*PD**6*AeAo**2*Z**2 + 0.0000554194*J**1*PD**6*AeAo**2*Z**2
-        // }
+             0.000112451*J**3*PD**2*AeAo**0*Z**2 - 0.0000297228*J**3*PD**6*AeAo**0*Z**2 + 0.000269551*J**1*PD**0*AeAo**1*Z**2 + 0.00083265*J**2*PD**0*AeAo**1*Z**2 + 0.00155334*J**0*PD**2*AeAo**1*Z**2 + 0.000302683*J**0*PD**6*AeAo**1*Z**2 -
+             0.0001843*J**0*PD**0*AeAo**2*Z**2 - 0.000425399*J**0*PD**3*AeAo**2*Z**2 + 0.0000869243*J**3*PD**3*AeAo**2*Z**2 - 0.0004659*J**0*PD**6*AeAo**2*Z**2 + 0.0000554194*J**1*PD**6*AeAo**2*Z**2
+        }
         PD = PD*1
         this.KT_coef = {
           i_0:{  a : 0.0088049, b: 0, c: 0, d:0, e: 0 },
@@ -918,8 +911,7 @@ function propellerProperties (){
 
 
 
-
-
+         //testing models (these this.kt and this.kq models are stil unders testing mode )
         this.KT =  0.00880496*J**0*PD**0*AeAo**0*Z**0 - 0.204554*J**1*PD**0*AeAo**0*Z**0 +
          0.166351*J**0*PD**1*AeAo**0*Z**0 + 0.158114*J**0*PD**2*AeAo**0*Z**0 - 
          0.147581*J**2*PD**0*AeAo**1*Z**0 - 0.481497*J**1*PD**1*AeAo**1*Z**0 +
@@ -993,46 +985,6 @@ function propellerProperties (){
          0.000220915*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**2
          console.log("testing", this.KT_change, this.KQ_change)
 
-         KT = this.KT //+ //this.KT_change
-         KQ = this.KQ //+ this.KQ_change
-         console.log("OLD.",KT,KQ)
-         console.log("this.",this.new_KT,this.new_KQ)
-          // This is just for the Gunnerus case study
-          this.X = J// the J is updated for gunnerus aleady
-         this.KT_gunnerus = -0.0657*this.X**3 + 0.177*this.X**2 - 0.6979*this.X + 0.8227
-         this.KQ_10_gunnerus = -0.104*this.X**3 - 0.110*this.X**2 - 0.022*this.X + 0.873
-         this.KQ_10_gunnerus
-         KT =  this.KT_gunnerus  // update the torque coefficient 
-         KQ = this.KQ_10_gunnerus/10 // update the thrust coefficient
-
-        // this.new_KTandKQ  = function(){
-        // this.KT_change = 
-        //  0.000353485*J**0*PD**0*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0 
-        // - 0.00333758*J**2*PD**0*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**0 -
-        // 0.00478125*J**1*PD**1*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**0 
-        // + 0.000257792*J**2*PD**0*AeAo**1*Z**0*Math.log10(this.Rno  - 0.301)**2 +
-        //  0.0000643192*J**2*PD**6*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 
-        //  - 0.0000110636*J**2*PD**6*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**2 -
-        //  0.0000276305*J**2*PD**0*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**2  
-        //  +  0.0000954*J**1*PD**1*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**1 +
-        //  0.0000032049*J**1*PD**3*AeAo**1*Z**2*Math.log10(this.Rno  - 0.301)**1
-        
-
-        //  this.KQ_change =  -0.000591412*J**0*PD**0*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0  +
-        //  0.00696898*J**0*PD**1*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**0 -
-        //  0.0000666654*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**0 
-        //  + 0.0160818*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**0  -
-        //  0.000938091*J**0*PD**1*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 
-        //   - 0.00059593*J**0*PD**2*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**1 +
-        //   0.000078299*J**0*PD**2*AeAo**0*Z**0*Math.log10(this.Rno  - 0.301)**2  
-        //   +  0.0000052199*J**2*PD**0*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**1 -
-        //   0.00000088538*J**1*PD**1*AeAo**1*Z**1*Math.log10(this.Rno  - 0.301)**2 +
-        //   0.0000230171*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**1 -
-        //   0.00000184341*J**0*PD**6*AeAo**0*Z**1*Math.log10(this.Rno  - 0.301)**2 -
-        //   0.00400252*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**1 +
-        //   0.000220915*J**0*PD**0*AeAo**2*Z**0*Math.log10(this.Rno  - 0.301)**2
-
-
         // }
           console.log(KT,"KT", KQ,"KQ")
         NH = (1- TFactor)/(1-W) // Hull efficiency
@@ -1046,8 +998,7 @@ function propellerProperties (){
         KQ = KQ.toFixed(3)
         propel_speed = (1-W)*shipSpeed/(D*J)
         propel_speed = (propel_speed.toFixed(2))*1
-        //this.tested_power = KQ*2*Math.PI*density*this.input_propeller_speed**3*D**5
-        console.log("tested power", this.tested_power)
+        
 
     }
 
@@ -1068,18 +1019,11 @@ function propellerProperties (){
         ND_calm = Pe_calm/Pd_calm
         Ps_calm = (Pd_calm/NT).toFixed(2)*1
         Pb_calm = ((Pd_calm/Ns).toFixed(2))*1
-        this.X = shipSpeedKnots // Jjust for gunnerus case study.
-        this.gunnerus_P = 3.973*this.X3 - 84.90*this.X**2 + 669.1*this.X - 1754.4
         
         engine_torgue = Pb_calm/(2*Math.PI*propel_speed)
         propel_torque = Pd_calm/(2*Math.PI*propel_speed)
        speedRPM = (propel_speed *60).toFixed(1)*1//for low speed engine
        torque =   engine_torgue.toFixed(1)
-       this.Gunrus_power = NTNU_Gunnerus()
-       this.speed =shipSpeedKnots
-       this.estimated_power = 3.97306397*this.speed**3 -84.90620491*this.speed**2 + 669.15103415*this.speed -1754.43001443
-       //if(this.estimated_power > 0 ) Pb_calm  = this.estimated_power //this  is used for just NTNU GUNURUS VESSEL CASE STUDY.
-       console.log("gurn",this.estimated_power)
        
        if(operation === "DP")  Pb = DP_thruster_power
        Pb= Pb_calm
