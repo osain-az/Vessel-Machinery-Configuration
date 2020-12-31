@@ -6,11 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Ship Machinery Configuration </title>
- 
-    
-     <!-- tensorflow -->
-  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@2.0.0/dist/tf.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+ <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
 
     <!-- Load c3.css -->
 <link href="./c3-0.7.15/c3.css" rel="stylesheet">
@@ -32,11 +29,11 @@
 
     .topnav {
     overflow: hidden;
-    background-color: #333;
+    background-color: #5F1EA6;
 
     }
     .topnav a:hover {
-    background-color: #ddd;
+    background-color: #62BAAC;
     color: black;
     }
     .topnav a {
@@ -47,49 +44,68 @@
     text-decoration: none;
     font-size: 17px;
     }
-    .status{
-      /* text-align: center; */
-      margin-left: auto;
-      margin-right: auto;
-      border: solid  red 2px;
-      /* background-color: rgb(109, 77, 160); */
-      /* width: 50%; */
-    }
+
 
     .topnav a.active {
-    background-color: #4CAF50;
+    background-color: #F8ABFF;
     color: rgb(87, 43, 158);
     }
 
- table,td,th {
-  border: 1px solid #ddd;
-  /* padding: 1px; */
+    table,td,th {
+      border: 1px solid #ddd;
+      /* padding: 1px; */
 
-}
+    }
 
 
+    thead{
+      background-color: blueviolet;
+      text-align: center;
+      text-transform: uppercase;
+      text-decoration-color: #f2f2f2;
+    }
+    tr:nth-child(even){background-color: #f2f2f2;}
+    tr:hover {background-color: #ddd;}
+    /*  */
+    #Table,#resisTable,#bat_Table, #genset_Table{
+      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+      /* border-collapse: collapse; */
+      border-spacing: 1px;
+      margin-left: auto;
+      margin-right: auto;
+      width: 50%;
+    }
+    h2{
+    text-align: center;
 
-thead{
-  background-color: blueviolet;
-  text-align: center;
-  text-transform: uppercase;
-  text-decoration-color: #f2f2f2;
-}
-tr:nth-child(even){background-color: #f2f2f2;}
-tr:hover {background-color: #ddd;}
-/*  */
-#Table,#resisTable,#bat_Table, #genset_Table{
-  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-  /* border-collapse: collapse; */
-  border-spacing: 1px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
-}
+    }
 
-      h2,h1{
-          text-align: center;
-      }
+    .front_text h1{
+       color: #EDA1FF;
+     }
+     .col-4 button{
+      border-radius: 20%;
+      background-color: rgb(98, 186, 172, 0.2);
+      
+  
+     }
+     .analysis_type{
+       border: solid 1px;
+       font-size: 15pt;
+       color: #866C9C;
+     }
+    
+     .resistance_top h2{
+       display: center;
+       margin-top: 10px;
+       margin-bottom: 10px;
+       color: #EDA1FF;;
+      
+     }
+    .main_container{
+      background-color: rgb(177, 168, 185, 0.4);
+      width: 100%;
+    }
       .engine, .battery, .genset{
           display: block;
           margin-left: auto;
@@ -212,7 +228,7 @@ tr:hover {background-color: #ddd;}
 			border-radius:4px;
 			padding:8px 5px 8px 5px;
 			border:1px solid #ddd;
-      display: inline-block;
+      /* display: inline-block; */
       vertical-align: middle;
       text-align: center;
 		}
@@ -224,7 +240,7 @@ tr:hover {background-color: #ddd;}
 			padding:8px 5px 8px 5px;
       margin-right:15px;
 			border:1px solid #ddd;
-      display: inline-block;
+      /* display: inline-block; */
       vertical-align: middle;
       text-align: center;
 		}
@@ -243,8 +259,9 @@ tr:hover {background-color: #ddd;}
          grid-template-rows: 1fr;
          grid-template-columns:  55% 45%;
         grid-auto-flow: column;
-        margin: 15px;
-        margin-left: 0;
+        width: 98%;
+        margin: auto;
+       
         border: solid pink 2px;
     }
 
@@ -701,6 +718,30 @@ tr:hover {background-color: #ddd;}
        transform: rotate(90deg);
 
      }
+    video {
+      object-fit: cover;
+      width: 100vw;
+      height: 100vh;
+      position: fixed;
+      position:fixed;
+      z-index: -1;
+      top: 0;
+      left: 0;
+    }
+    /* for too large screen */
+    @media (min-aspect-ratio: 16/9) {
+    #videoBG {
+        width:100%;
+        height: auto;
+     }
+  }
+  /* when is the screen ratio is below 16/9. */
+  @media (max-aspect-ratio: 16/9) {
+    #videoBG { 
+        width:auto;
+        height: 100%;
+    }
+  }  
      /* .ship_move{
       animation: mymove 12s infinite;
       animation-timing-function: linear;
@@ -712,12 +753,14 @@ tr:hover {background-color: #ddd;}
      } */
 
     </style>
-    <div class="topnav">
+    <div class="topnav navbar sticky-top">
         <a class="active" href="#home">Home</a>
         <a href="https://github.com/osain-az/Vessel-Machinery-Configuration">GitHub Rep</a>
         <a  href="information/index.html">information</a>
          <!-- <a href="Flowchat/"> Flowchat and Status </a> -->
-        <!--  <a href="update/index.html">Project Update status</a>-->
+         <a href="update/index.html">Update status</a>
+         <a  href="caseStudy-tutorials/index.html"> Case studies and tutorials</a>
+
         <!-- <a href="#about"></a> -->
       </div>
 
@@ -725,21 +768,71 @@ tr:hover {background-color: #ddd;}
 
     this:<input type="range" step="5" oninput="myFunction(this.value)">
     <p id="demo"></p> -->
-       <h2 class="status">Note: Interface update soon, check the update section  </h2>
 
     <div class="main">
-        <h1>Ship Machinery Configuration and Simulation</h1>
+      <br><br>
+       <div class="front_text center">
+        <h1>Ship Machinery Configuration Hub </h1>
+       </div>
+       
+        <br><br>
         <div>
-            <h2>Hull dimensions  and resistance display </h2>
-         <div class="resistance_hull_container">
-             <div class="resistance_parameters">
+          <video id="videoBG" poster="image/cameron-venti.jpg" autoplay muted loop>
+            <source src="image/video.mp4" type="video/mp4">
+        </video>
+        </div>
+        <div id="analysis_type" class="container analysis_type" onchange="display_analysis_type(event)">
+
+          <div class="row justify-content-around">
+            <div class=" center">
+              <h3>Choose operation </h3>
+            </div>
+             <div class="col-4">
+             <button> <input type="checkbox" id="resistance_checkbox" name="ship_resistance" value="ship_resistance" >
+              <label for="Ship resistance"> Ship resistance</label> </button>
+             </div>
+
+             <div class="col-4">
+              <button> <input type="checkbox" id="" name="Power_estimation" value="proulsion_system_section">
+              <label for="Power estimation"> Propulsion machinery</label></button>
+             </div>
+             <div class="col-4">
+              <button> 
+              <input type="checkbox" id="propeller_checkbox" name="Propeller_analysis" value="Propeller_analysis">
+              <label for="Propeller_analysis"> Propeller analysis</label>
+            </button>
+             </div>
+
+             <div class="col-4">
+              <button> 
+              <input type="checkbox" id="" name="Engine_performance" value="Engine_performance">
+              <label for="Engine_performance"> Engine performance</label>
+            </button>
+             </div>
+
+             <div class="col-4">
+              <button> 
+              <input type="checkbox" id="" name="complete_analysis" value="complete_analysis">
+              <label for="complete_analysis"> All analysis</label>
+            </button>
+             </div>
+
+          </div>
+        </div>
+        <div id="main_container" class="main_container hide">
+          <div class="resistance_top">
+            <h2>Ship analysis and configuration </h2>
+           
+          </div>
+    
+         <div class="resistance_hull_container hide" id="resistance_hull_container">
+             <div class="resistance_parameters " id="resistance_parameters">
               <form action="" onchange="shipDimension(event)" onclick="handle_inputs(event)">
                 <div class="input_div align">
                   <span class="span_name">speed</span>
                    <span data-name=" kn" id="shipSpeed_minus">--</span>
                    <input type="text" name="" class="" id="shipSpeed" min="5" value="10 kn" max="30" step="0.1" >
                    <span  data-name=" kn" id="shipSpeed_plus">+</span>
-
                 </div>
                 <div class="input_div align_right " >
                 <span class="span_name">Waterline length Lwl</span>
@@ -816,21 +909,18 @@ tr:hover {background-color: #ddd;}
                  <span data-name=" " id="LCB_minus">--</span>
                  <input type="text" id="LCB" min="-10" value="1.53 " max="10" step="0.01">
                  <span  data-name=" " id="LCB_plus">+</span>
-
-                 <div class="input_div align">
-                  <span class="span_name">Wetted Area Appendages  S_APP</span>
-                  <span data-name=" m^2" id="S_APP_minus">--</span>
-                  <input type="text" id="S_APP" min="5" value="0 m" max="1000" step="1" >
-                  <span  data-name=" m^2" id="S_APP_plus">+</span>
-                 </div>
-
                </div> <br>
+               <div class="input_div align">
+                <span class="span_name">Wetted Area Appendages  S_APP</span>
+                <span data-name=" m^2" id="S_APP_minus">--</span>
+                <input type="text" id="S_APP" min="5" value="0 m" max="1000" step="1" >
+                <span  data-name=" m^2" id="S_APP_plus">+</span>
+               </div>
               </form>
               <form action="" onchange="appendageCal(event)" onclick="handle_inputs(event)">
-            <div class="">
-
+              
+            <div class="hide" id="appenages_section">
               <br>
-
                <div  class="header"><span><strong>Appendages </strong></span></div>
                <br>
 
@@ -848,6 +938,7 @@ tr:hover {background-color: #ddd;}
               <input type="text" name="" class="" id="DomeArea" min="0" value="0 m^2" step="0.1" max="60">
             <span  data-name=" m^2" id="DomeArea_plus">+</span>
             </div>
+
             <div class="input_div align_right">
               <input type="checkbox" id="ShaftBracketAreaCheck" name="bulbous bow" value="" class="input_check">
               <label for="Shafts Area"> Shafts Bracket  Area: </label>
@@ -945,18 +1036,19 @@ tr:hover {background-color: #ddd;}
      <option value="Normal"> Normal</option>
      <option value="PramWithGondola">Pram With Gondola</option>
      </select>
-  </div>
-</div>
-<div class="">
+    </div>
+   </div>
+   <div class="">
   <form action=""onchange="appendageCal(event)">
      <input type="checkbox" id="bulbous" name="bulbous bow" value="bulbous" >
      <label for="bulbous bow"> Bulbous bow</label><br>
    </form>
  </div>
- <br>
- <div class="header"><span >Added resistance </span></div>
- <br>
-   <div class="added_resistance">
+
+   <div class="added_resistance hide" id="added_resistance">
+    <br>
+    <div class="header"><span >Added resistance </span></div>
+    <br>
       <div onchange="appendageCal(event)" class="input_div">
           <input type="checkbox" id="Roughness" name="Roughness" value="Roughness" class="input_check">
           <label for="Roughness"> Roughness above 150 μm</label><br>
@@ -996,229 +1088,237 @@ tr:hover {background-color: #ddd;}
 </div>
 </div>
 
-   </div>
-   <div>
-      <div class="resistance">
-        <div id="resistanceGraph"> </div>
-        <div  id="resistanceTable" class="">
-          <table id="resisTable" class="Table">
-            <thead>
+ <div class="center" id="show_more_input" onchange="display_analysis_type(event)">
+  <br> <br>
+   <button> <input type="checkbox" name="more_appendages" id="more_appendages" value="more_appendages"> show more Appendages</button>
+   <button><input type="checkbox" name="" id="show_added_resistance" value="show_added_resistance"> show Added resistance </button>
+   <button><input type="checkbox" name="" id="show_machinery" value="show_machinery"> show propulsion system</button>
 
-              <th colspan="12">Different Resistance </th>
-
-            </thead>
-            <thead>
-
-              <th colspan="">Resistance</th>
-              <th colspan=""> kN</th>
-            </thead>
-            <tr>
-              <td>Frictional </td>
-              <td><span id="Fr">0</span></td>
-            </tr>
-            <tr>
-              <td>Wave making</td>
-              <td><span id="Rw">0</span></td>
-            </tr>
-            <tr>
-              <td>Appendages</td>
-              <td><span id="Rapp">0</span></td>
-            </tr>
-            <tr>
-              <td>thruster resistance</td>
-              <td><span id="Rtb">0</span></td>
-            </tr>
-            <tr>
-              <td>pressure bulbous bow</td>
-              <td><span id="Rb">0</span></td>
-            </tr>
-            <tr>
-              <td>pressure at Transom</td>
-              <td><span id="Rtr">0</span></td>
-            </tr>
-            <tr>
-              <td>Mid-ship Correlation</td>
-              <td><span id="RA">0</span></td>
-            </tr>
-            <tr>
-              <td>Air resistance</td>
-              <td><span id="RAA">0</span></td>
-            </tr>
-            <tr>
-              <td>Wind resistance</td>
-              <td><span id="RAA_wind">0</span></td>
-            </tr>
-            <tr>
-              <td>Fouling Resistance </td>
-              <td><span id="Rfouling">0</span></td>
-            </tr>
-            <tr>
-              <td>Wave resistance  </td>
-              <td><span id="Rwave">0</span></td>
-            <!-- </tr>
-            <td>Wave m </td>
-            <td><span id="Rwave">0</span></td>
-          </tr> -->
-            <tr>
-              <td>Calm water resistance</td>
-              <td><span id="RT_calm">0</span></td>
-            </tr>
-            <td> Extrem condition Resistance </td>
-            <td><span id="RT">0</span></td>
-          </tr>
-          </table>
-
-          <div class="propellChoice">
-            <div class="reductionGear">
-              <input type="checkbox" id="gear" name="Reduction Gear" value="thruster" onchange="propellers(event)">
-              <label for="Reduction Gear">Reduction Gear </label>
-            </div>
-            <div class="screw">
-              <strong>Choose Screw type</strong>
-              <select class="" onchange="Shaft(event)" id="screw">
-                <option value="singleScrew" selected id="">Single Screw</option>
-              <option value="TwinScrew"> Twin Screw</option>
-              </select>
-            </div>
-          </div>
-
-         <div onclick="switch_propeller_model(event)">
-          <h2>Propeller analysis </h2>
-          <span>Choose propeller analysis model</span> <br> 
-           <span class="hide"> <input type="radio" name="proppel_model" id="fourier_model"> <span><strong>Fouriers series : </strong></span>  <span>Note: this allows only few pre-defined models </span> </span><br>
-           <input type="radio" name="proppel_model" id="polynomia_model" checked> <span><strong>Polynomia model </strong></span> <br>
-            <div class="propeller " id="polynomia_propeller" onchange="propellers(event)">
-            
-              <form action="" >
-              Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="1.9" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
-              N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
-              Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.70" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
-              P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
-              Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
-             </form>
-           </div>
-
-           <div id="fourier_model_propeller" class="hide " onchange="propeller_furier(event)">
-             <div class="propeller_model hide" id="propeller_model">
-               <span> <input type="radio" name="B_series" id="B4_70_check"> <span>B4 70 </span></span> <br>
-               <span> <input type="radio" name="B_series" id="B4_check"> <span>B: 4-40, 4-55, 4-85, 4-10 @  P/D = 1.0</span></span> <br>
-               <span> <input type="radio" name="B_series" id="B_other_check"> <span>B: 3-65, 5-75, 6-80, B7-85 @  P/D = 1.0</span></span> <br> <br>
-               <span><strong>Angle of attack :beta &#946</strong></span>
-               <input type="range" class="beta_angle" id="beta_angle_min" value="0" min="0" step="5" max="360">
-               <input type="range"  class="beta_angle" id="beta_angle_max" value="90" min="0" step="5" max="360">
-               <span>Possible  angle  </span id="beta_min_display"> &#946 555 -<span  id="beta_max_display">- &#946 676</span> <br> <br>
-             </div>
-             <div>
-                <span class="B_series_other hide" id="B_series_other">
-                  <span><strong> Choode proppeller model : </strong></span>
-                <select id=B_series_drop_choice>
-                <option value="B_3_65"><strong>B 3-65</strong> </option>
-                <option value="B_5_75"><strong>B 5-75</strong></option>
-                <option value="B_6_80"><strong>B 6-80</strong></option>
-                <option value="B_7_85"><strong>B 7-85</strong></option>
-                </select>
-                <span><strong> Propeller model </strong> </span> <span id="B_series_other_display"></span>
-              </span>
-               <span class=" hide B4_70" id="B4_70">
-                 <span><strong>Choose P/D</strong></span>  <input type="range" name="B4_70_PD " id="B4_70_range" min="0.6" step="0.2" max="1.4"> <span> P/D = <span id="B_70_PD_display"> update</span></span> <span> and EA/EO = 0.7</span>
-               </span> <br><br>
-               <span class=" hide B4" id="B4">
-                <!-- FOR  B: 4-40,4-55,4-85,4-10 @  P/D = 1.0 -->
-                <span><strong>Choose EA/EO</strong> <input type="range" name="B4_EA/EO " id="B4_EA/EO_range" min="0.40" step="0.15" max="1.00"> <span> EA/EO = <span id="B4_EAEO_display"></span></span> <span> and P/D = 1.0</span>
-                </span> <br><br>
-
-             </div>  
-           </div>
-         </div>
-     </div>
-    </div>
-    <!-- <div class="cavitation center">
-      <span><strong>cavitation analysis </strong></span> <br><br>
-      <span> updating.... <input type="text" name="" id=""></span> <br>
-      <span>updatin.... <input type="text" name="" id=""></span><br><br>
-   </div> -->
-
-   <div class="propellerTable">
-    <table id="propellerTable" class="Table">
-      <thead>
-        <th colspan="12">Propeller parameters using  Wageningen B-Screw Series  </th>
-      </thead>
-      <thead>
-
-        <th colspan="">Parameters</th>
-        <th colspan=""> Values</th>
-      </thead>
-
-      <tr>
-        <td>Wake </td>
-        <td><span id="wake">0</span></td>
-      </tr>
-      <tr>
-        <td>KT</td>
-        <td><span id="KT">0</span></td>
-      </tr>
-      <tr>
-        <td>KQ</td>
-        <td><span id="KQ">0</span></td>
-      </tr>
-      <tr>
-        <td>Hull efficiency </td>
-        <td><span id="NH">0</span></td>
-      </tr>
-      <tr>
-        <td>Open water efficiency  </td>
-        <td><span id="No">0</span></td>
-      </tr>
-      <tr>
-        <td>Thrust factor</td>
-        <td><span id="thrustFactor">0</span></td>
-      </tr>
-      <tr>
-        <td>advance propeller speed </td>
-        <td><span id="Va">0</span></td>
-      </tr>
-      <tr>
-        <td>propeller speed rps </td>
-        <td><span id="propeller_speed">0</span></td>
-      </tr>
-      <!-- <tr>
-        <td>Thrust loading Cth</td>
-        <td><span id="Cth">0</span></td>
-      </tr> -->
-      <tr>
-        <td>Thrust T</td>
-        <td><span id="thrust">0</span></td>
-      </tr>
-      <tr>
-        <td>Thrust Power</td>
-        <td><span id="thrustP">0</span></td>
-      </tr>
-    <tr>
-        <td> Power delivered to propeller </td>
-        <td><span id="Pd">0</span></td>
-      </tr>
-     <tr>
-        <td>Effective power </td>
-        <td><span id="Pe">0</span></td>
-      </tr>
-      <tr>
-        <td>Break  Power: Calm water </td>
-        <td><span id="pb_calm">0</span></td>
-      </tr>
-      <tr>
-        <td>Break Power: extrem condition </td>
-        <td><span id="pb">0</span></td>
-      </tr>
-      <!-- <tr>
-      <td>SMCR  Power </td>
-      <td><span id="smcr">0</span></td>
-    </tr>  -->
-    </table>
-  </div>
-   </div>
 </div>
 
-    <div class="prop_system">
+             </div>
+          <div>
+          <div class="resistance">
+            <div id="resistanceGraph"> </div>
+            <div  id="resistanceTable" class="">
+              <table id="resisTable" class="Table">
+                <thead>
+
+                  <th colspan="12">Different Resistance </th>
+
+                </thead>
+                <thead>
+
+                  <th colspan="">Resistance</th>
+                  <th colspan=""> kN</th>
+                </thead>
+                <tr>
+                  <td>Frictional </td>
+                  <td><span id="Fr">0</span></td>
+                </tr>
+                <tr>
+                  <td>Wave making</td>
+                  <td><span id="Rw">0</span></td>
+                </tr>
+                <tr>
+                  <td>Appendages</td>
+                  <td><span id="Rapp">0</span></td>
+                </tr>
+                <tr>
+                  <td>thruster resistance</td>
+                  <td><span id="Rtb">0</span></td>
+                </tr>
+                <tr>
+                  <td>pressure bulbous bow</td>
+                  <td><span id="Rb">0</span></td>
+                </tr>
+                <tr>
+                  <td>pressure at Transom</td>
+                  <td><span id="Rtr">0</span></td>
+                </tr>
+                <tr>
+                  <td>Mid-ship Correlation</td>
+                  <td><span id="RA">0</span></td>
+                </tr>
+                <tr>
+                  <td>Air resistance</td>
+                  <td><span id="RAA">0</span></td>
+                </tr>
+                <tr>
+                  <td>Wind resistance</td>
+                  <td><span id="RAA_wind">0</span></td>
+                </tr>
+                <tr>
+                  <td>Fouling Resistance </td>
+                  <td><span id="Rfouling">0</span></td>
+                </tr>
+                <tr>
+                  <td>Wave resistance  </td>
+                  <td><span id="Rwave">0</span></td>
+                <!-- </tr>
+                <td>Wave m </td>
+                <td><span id="Rwave">0</span></td>
+              </tr> -->
+                <tr>
+                  <td>Calm water resistance</td>
+                  <td><span id="RT_calm">0</span></td>
+                </tr>
+                <td> Extrem condition Resistance </td>
+                <td><span id="RT">0</span></td>
+              </tr>
+              </table>
+
+              <div id="propellChoice" class="propellChoice hide">
+                <div class="reductionGear">
+                  <input type="checkbox" id="gear" name="Reduction Gear" value="thruster" onchange="propellers(event)">
+                  <label for="Reduction Gear">Reduction Gear </label>
+                </div>
+                <div class="screw">
+                  <strong>Choose Screw type</strong>
+                  <select class="" onchange="Shaft(event)" id="screw">
+                    <option value="singleScrew" selected id="">Single Screw</option>
+                  <option value="TwinScrew"> Twin Screw</option>
+                  </select>
+                </div>
+              </div>
+
+            <div onclick="switch_propeller_model(event)" id="propeller_section" class="propeller_section hide">
+              <h2>Propeller analysis </h2>
+              <span>Choose propeller analysis model</span> <br> 
+              <span class="hide"> <input type="radio" name="proppel_model" id="fourier_model"> <span><strong>Fouriers series : </strong></span>  <span>Note: this allows only few pre-defined models </span> </span><br>
+              <input type="radio" name="proppel_model" id="polynomia_model" checked> <span><strong>Polynomia model </strong></span> <br>
+                <div class="propeller " id="polynomia_propeller" onchange="propellers(event)">
+                
+                  <form action="" >
+                  Propeller D: <input type="range" name="" class="inputArea" id="D" min="1" value="1.9" step="0.01" max="12"><span class="displayD spanNew"id="displayD"> </span> <br> <br>
+                  N0 of blades Z : <input type="range" name="inputArea" class="inputArea" id="Z" min="2" value="4" step="1" max="7"><span class="displayZ spanNew"id="displayZ"> </span> <br> <br>
+                  Ae/Ao : <input type="range" name="" class="inputArea" id="AeAo" min="0.3" value="0.70" step="0.05" max="1.05"><span class="displayAeAo spanNew"id="displayAeAo"> </span> <br> <br>
+                  P/D : <input type="range" name="" class="inputArea" id="PD" min="0.5" value="0.7" step="0.1" max="1.4"><span class="displayPD spanNew"id="displayPD"> </span> <br> <br>
+                  Advance N0 J : <input type="range" name="" class="inputArea" id="J" min="0" value="0.4" step="0.01" max="2"><span class="displayJ spanNew"id="displayJ"> </span> <br> <br>
+                </form>
+              </div>
+
+              <div id="fourier_model_propeller" class="hide " onchange="propeller_furier(event)">
+                <div class="propeller_model hide" id="propeller_model">
+                  <span> <input type="radio" name="B_series" id="B4_70_check"> <span>B4 70 </span></span> <br>
+                  <span> <input type="radio" name="B_series" id="B4_check"> <span>B: 4-40, 4-55, 4-85, 4-10 @  P/D = 1.0</span></span> <br>
+                  <span> <input type="radio" name="B_series" id="B_other_check"> <span>B: 3-65, 5-75, 6-80, B7-85 @  P/D = 1.0</span></span> <br> <br>
+                  <span><strong>Angle of attack :beta &#946</strong></span>
+                  <input type="range" class="beta_angle" id="beta_angle_min" value="0" min="0" step="5" max="360">
+                  <input type="range"  class="beta_angle" id="beta_angle_max" value="90" min="0" step="5" max="360">
+                  <span>Possible  angle  </span id="beta_min_display"> &#946 555 -<span  id="beta_max_display">- &#946 676</span> <br> <br>
+                </div>
+                <div>
+                    <span class="B_series_other hide" id="B_series_other">
+                      <span><strong> Choode proppeller model : </strong></span>
+                    <select id=B_series_drop_choice>
+                    <option value="B_3_65"><strong>B 3-65</strong> </option>
+                    <option value="B_5_75"><strong>B 5-75</strong></option>
+                    <option value="B_6_80"><strong>B 6-80</strong></option>
+                    <option value="B_7_85"><strong>B 7-85</strong></option>
+                    </select>
+                    <span><strong> Propeller model </strong> </span> <span id="B_series_other_display"></span>
+                  </span>
+                  <span class=" hide B4_70" id="B4_70">
+                    <span><strong>Choose P/D</strong></span>  <input type="range" name="B4_70_PD " id="B4_70_range" min="0.6" step="0.2" max="1.4"> <span> P/D = <span id="B_70_PD_display"> update</span></span> <span> and EA/EO = 0.7</span>
+                  </span> <br><br>
+                  <span class=" hide B4" id="B4">
+                    <!-- FOR  B: 4-40,4-55,4-85,4-10 @  P/D = 1.0 -->
+                    <span><strong>Choose EA/EO</strong> <input type="range" name="B4_EA/EO " id="B4_EA/EO_range" min="0.40" step="0.15" max="1.00"> <span> EA/EO = <span id="B4_EAEO_display"></span></span> <span> and P/D = 1.0</span>
+                    </span> <br><br>
+
+                </div>  
+              </div>
+            </div>
+        </div>
+        </div>
+        <!-- <div class="cavitation center">
+          <span><strong>cavitation analysis </strong></span> <br><br>
+          <span> updating.... <input type="text" name="" id=""></span> <br>
+          <span>updatin.... <input type="text" name="" id=""></span><br><br>
+      </div> -->
+
+      <div class="propellerTable hide" id="propellerTable_section">
+        <table id="propellerTable" class="Table">
+          <thead>
+            <th colspan="12">Propeller parameters using  Wageningen B-Screw Series  </th>
+          </thead>
+          <thead>
+
+            <th colspan="">Parameters</th>
+            <th colspan=""> Values</th>
+          </thead>
+
+          <tr>
+            <td>Wake </td>
+            <td><span id="wake">0</span></td>
+          </tr>
+          <tr>
+            <td>KT</td>
+            <td><span id="KT">0</span></td>
+          </tr>
+          <tr>
+            <td>KQ</td>
+            <td><span id="KQ">0</span></td>
+          </tr>
+          <tr>
+            <td>Hull efficiency </td>
+            <td><span id="NH">0</span></td>
+          </tr>
+          <tr>
+            <td>Open water efficiency  </td>
+            <td><span id="No">0</span></td>
+          </tr>
+          <tr>
+            <td>Thrust factor</td>
+            <td><span id="thrustFactor">0</span></td>
+          </tr>
+          <tr>
+            <td>advance propeller speed </td>
+            <td><span id="Va">0</span></td>
+          </tr>
+          <tr>
+            <td>propeller speed rps </td>
+            <td><span id="propeller_speed">0</span></td>
+          </tr>
+          <!-- <tr>
+            <td>Thrust loading Cth</td>
+            <td><span id="Cth">0</span></td>
+          </tr> -->
+          <tr>
+            <td>Thrust T</td>
+            <td><span id="thrust">0</span></td>
+          </tr>
+          <tr>
+            <td>Thrust Power</td>
+            <td><span id="thrustP">0</span></td>
+          </tr>
+        <tr>
+            <td> Power delivered to propeller </td>
+            <td><span id="Pd">0</span></td>
+          </tr>
+        <tr>
+            <td>Effective power </td>
+            <td><span id="Pe">0</span></td>
+          </tr>
+          <tr>
+            <td>Break  Power: Calm water </td>
+            <td><span id="pb_calm">0</span></td>
+          </tr>
+          <tr>
+            <td>Break Power: extrem condition </td>
+            <td><span id="pb">0</span></td>
+          </tr>
+          <!-- <tr>
+          <td>SMCR  Power </td>
+          <td><span id="smcr">0</span></td>
+        </tr>  -->
+        </table>
+      </div>
+      </div>
+</div>
+
+    <div class="prop_system  hide" id="prop_system">
     <div class= >
        <h2> Propulsion System </h2>
       <form class="propulsion_type" onchange="dispProSystem(event)">
@@ -1272,7 +1372,7 @@ tr:hover {background-color: #ddd;}
              <span><input type="radio" name="use_result" id="define_result"><strong>Define new propulsion power</strong></span> <br>
            </div>
         </div>
-       </div>
+      
        <div class="battery_sizing hide" id="battery_sizing"  >
         <div class="sizing_info">
               <H3>Tips for sizing </H3>
@@ -1299,6 +1399,7 @@ tr:hover {background-color: #ddd;}
             <span>peak discharge/charge power : </span> <span id="cont_dischargeCharge_peak"></span><br><br>
          </div>
        </div>
+      </div>
         <div class="sim_environment hide" id="sim_environment">
               <h3 class="center">Simulation inputs and parameters configuration</h3>
           <form name="myform" onsubmit="preview(event)" id="view_data">
@@ -1680,11 +1781,18 @@ var layout = {
 
     },
     title: 'Resistance curve  ',
+    font: {
+    family: 'Courier New, monospace',
+    size: 18,
+    color: '#866C9C'
+  },
 
 //   plot_bgcolor: 'yellow',
   // width:600,
   // height:600,
 //   paper_bgcolor: 'purple'
+  paper_bgcolor: 'rgba(0,0,0,0)',
+  plot_bgcolor: 'rgba(0,4,0,0)',
 
 
 };
@@ -2330,6 +2438,75 @@ function currentSfocDisplay (){
     }
     let x = 0
 
+
+function display_analysis_type(event){
+  const eventID = event.target.id;
+  const eventVal = event.target.value;
+  const checked = event.target.checked;
+  const propeller_checked = document.getElementById('propeller_checkbox').checked
+  const resistance_checked = document.getElementById('resistance_checkbox').checked
+
+
+  //resistance section
+  if(eventVal ==="ship_resistance" && checked === true ){
+    document.getElementById("main_container").classList.remove("hide");
+    document.getElementById("resistance_hull_container").classList.remove("hide");
+    document.getElementById("resistance_parameters").classList.remove("hide");
+
+  }
+  else if(eventVal ==="ship_resistance" && checked === false){
+    document.getElementById("main_container").classList.add("hide");
+    document.getElementById("resistance_hull_container").classList.add("hide");
+    document.getElementById("resistance_parameters").classList.add("hide");
+  }
+  // propeller section 
+  else if(eventVal ==="Propeller_analysis" && checked === true){
+    document.getElementById("main_container").classList.remove("hide");
+    document.getElementById("resistance_hull_container").classList.remove("hide");
+    document.getElementById("propeller_section").classList.remove("hide");
+    document.getElementById("propellerTable_section").classList.remove("hide");
+
+    document.getElementById("propellChoice").classList.remove("hide");
+    
+  }
+  else if(eventVal ==="Propeller_analysis" && checked === false){
+    document.getElementById("propellChoice").classList.add("hide");
+    document.getElementById("propeller_section").classList.add("hide");
+    document.getElementById("propellerTable_section").classList.add("hide");
+  }
+
+  else if(eventVal ==="show_added_resistance" && checked === true){
+    document.getElementById("added_resistance").classList.remove("hide");
+
+  }
+  else if(eventVal ==="show_added_resistance" && checked === false){
+    document.getElementById("added_resistance").classList.add("hide");
+
+  }
+  //Load more appendages 
+  else if(eventVal ==="more_appendages" && checked === true){
+    document.getElementById("appenages_section").classList.remove("hide");
+
+  }
+  else if(eventVal ==="more_appendages" && checked === false){
+    document.getElementById("appenages_section").classList.add("hide");
+
+  }
+
+  // show machinery and power 
+  else if(eventVal==="show_machinery" ||eventVal=== "proulsion_system_section" && checked === true){
+    document.getElementById("main_container").classList.remove("hide");
+   document.getElementById("prop_system").classList.remove("hide");
+  }
+  else if(eventVal==="show_machinery" ||eventVal=== "proulsion_system_section" && checked === false){
+   document.getElementById("prop_system").classList.add("hide");
+  }
+
+
+  //keep the resisatnce orpropller  sction open when other are closed if needed
+  if(resistance_checked===true || propeller_checked ===true) document.getElementById("main_container").classList.remove("hide");
+
+}
  function appendageCal(event){
          let BKA,SkegCheck, RBSCheck,RBSkegCheck,hullBossings,thrustersCheck,thrustersNO,thrusterD, bulbousCkeck,
          StaFinsVal, bKeelVal,domeCheckVal, sBracketVal,sBossingsVal,shaftsCheckVal,RBS,RBStern,
