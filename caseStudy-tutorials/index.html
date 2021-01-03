@@ -49,7 +49,10 @@
         margin-top: 60px;
         color: red;
     }
-
+    #tutorials, #case_studies{
+      margin-right: 5px;
+      margin-left: 5px;
+    }
     </style>
 
         <div class="topnav navbar sticky-top">
@@ -64,12 +67,25 @@
         </div>
         <div class="main">
             <div>
-                <h1>Case studies and tutorails </h1>
+                <h1>Case studies and tutorials </h1>
             </div>
-            <div class="intro">
-                <button><input type="radio" name="" id=""> Tutorails </button>
-                <button><input type="radio" name="" id="">Case studies</button>
-            </div>
+
+            <div class="form-check form-check-inline">
+                <button type="button" class="btn btn-outline-primary">           
+                     <input class="form-check-input" type="radio" name="tutor_case" id="tutorials">
+                    <label class="form-check-label" for="Tutorials ">
+                        Tutorials 
+                    </label></button>
+
+              </div>
+              <div class="form-check form-check-inline">
+                <button type="button" class="btn btn-outline-primary">          
+                   <input class="form-check-input" type="radio" name="tutor_case" id="case_studies" checked>
+                    <label class="form-check-label" for="Case_studies">
+                        Case studies
+                    </label></button>
+
+              </div>
             <div>
                 <h2>
                     Case Study 1
